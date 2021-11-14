@@ -1,0 +1,33 @@
+{
+  "name": "manufacturer-product",
+  "version": "0.0.0-development",
+  "description": "description",
+  "manufacturer": "manufacturer",
+  "product": [
+    "product"
+  ],
+  "shortname": "shortname",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier",
+    "eslint": "eslint",
+    "semantic-release": "semantic-release"
+  },
+  "keywords": [
+    "keyword"
+  ],
+  "author": "Johnny Estilles <johnny@estilles.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "eslint": "^8.1.0",
+    "prettier": "^2.4.1",
+    "semantic-release": "^18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estilles/companion-module-template-es6.git"
+  }
+}
