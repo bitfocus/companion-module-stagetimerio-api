@@ -6,30 +6,29 @@ module.exports = {
 				id: 'info',
 				width: 12,
 				label: 'Information',
-				value: '[replace with module description]',
+				value: `
+					This module allows you to control timers from your stagetimer.io account.<br />
+					<hr />
+					<span style="font-style: italic">
+					Stagetimer uses simple token-based authentication. An API key is required.<br />
+					You can generate an API key on the controller page. (You will need a Pro account)
+					</span>
+				`,
 			},
-			/**
-			 * replace with configuration fields for your module
-			 * see https://github.com/bitfocus/companion/wiki/Module-Configuration
-			 */
-			// {
-			// 	type: 'textinput',
-			// 	id: 'ip',
-			// 	label: 'Target IP',
-			// 	width: 6,
-			// 	regex: this.REGEX_IP,
-			// 	default: this.DEFAULT_IP,
-			// 	required: true,
-			// },
-			// {
-			// 	type: 'textinput',
-			// 	id: 'port',
-			// 	label: 'Target Port',
-			// 	width: 6,
-			// 	regex: this.REGEX_PORT,
-			// 	default: this.DEFAULT_PORT,
-			// 	required: true,
-			// },
+			{
+				type: 'textinput',
+				label: 'Room ID',
+				width: 6,
+				id: 'roomId',
+				required: true,
+			},
+			{
+				type: 'textinput',
+				label: 'API Key',
+				width: 6,
+				id: 'apiKey',
+				required: true,
+			},
 		]
 	},
 }

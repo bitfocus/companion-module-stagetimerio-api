@@ -1,12 +1,12 @@
 {
-  "name": "manufacturer-product",
+  "name": "hermann-stagetimerio",
   "version": "0.0.0-development",
-  "description": "description",
-  "manufacturer": "manufacturer",
+  "description": "Companion module for stagetimer.io",
+  "manufacturer": "Lukas Hermann",
   "product": [
-    "product"
+    "Stagetimer.io"
   ],
-  "shortname": "shortname",
+  "shortname": "stagetimer",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,7 +15,8 @@
     "semantic-release": "semantic-release"
   },
   "keywords": [
-    "keyword"
+    "Companion",
+    "stagetimer.io"
   ],
   "author": "Johnny Estilles <johnny@estilles.com>",
   "license": "ISC",
@@ -28,6 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/estilles/companion-module-template-es6.git"
+    "url": "https://github.com/estilles/companion-module-hermann-stagetimerio.git"
+  },
+  "dependencies": {
+    "needle": "^3.0.0"
   }
 }

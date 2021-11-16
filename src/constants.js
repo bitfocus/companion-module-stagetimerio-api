@@ -3,6 +3,6 @@ module.exports = {
 	 * Replace with your instance wide constants
 	 */
 	initConstants() {
-		this.defineConst('SAMPLE_CONSTANT', 'Some Constant Value')
+		this.defineConst('API_URL_BASE', 'https://api.stagetimer.io/v0')
 	},
 }

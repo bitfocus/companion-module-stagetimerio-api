@@ -7,7 +7,9 @@ const presets = require('./presets')
 const variables = require('./variables')
 const feedbacks = require('./feedbacks')
 
-class Instance extends instance_skel {
+const api = require('./api')
+
+class StagetimerInstance extends instance_skel {
 	constructor(system, id, config) {
 		super(system, id, config)
 
@@ -18,22 +20,30 @@ class Instance extends instance_skel {
 			...presets,
 			...variables,
 			...feedbacks,
+			...api,
 		})
 
+		this.initConstants()
 		this.config = config
 
 		// instance state store
-		this.state = {
-			someState: 'default state',
-		}
+		// this.state = {
+		// 	someState: 'default state',
+		// }
+
+		// Access Denied: Wrong API key
+		// Room not found
 	}
 
 	init() {
-		this.initConstants()
+		if (!this.isValidConfig()) {
+			return
+		}
+
 		this.initActions()
-		this.initPresets()
 		this.initFeedbacks()
-		this.initVariables()
+		this.initPresets()
+		// this.initVariables()
 
 		this.status(this.STATUS_OK)
 	}
@@ -41,15 +51,30 @@ class Instance extends instance_skel {
 	updateConfig(config) {
 		this.config = config
 
+		if (!this.isValidConfig()) {
+			return
+		}
+
 		// reinitialize actions/presets/feedbacks if necessary
-		// this.initActions()
-		// this.initPresets()
-		// this.initFeedbacks()
+		this.initActions()
+		this.initFeedbacks()
+		this.initPresets()
+		// this.initVariables()
 
 		this.status(this.STATUS_OK)
+	}
+
+	isValidConfig() {
+		if (this.config.roomId === undefined || this.config.apiKey === undefined) {
+			this.log('error', 'Please configure instances. Needs Room ID and API Key.')
+			this.status(this.STATUS_UNKNOWN, 'Needs Configration')
+			return false
+		}
+
+		return true
 	}
 
 	destroy() {}
 }
 
-module.exports = Instance
+module.exports = StagetimerInstance
