@@ -17,7 +17,6 @@ module.exports = {
 
 		url = `${url}/${cmd}`
 
-		console.log({ url, body, headers })
 		needle('POST', url, body, { headers, json: true, open_timeout: timeout, response_timeout: timeout })
 			.then((res) => res.body)
 			.catch((error) => {
