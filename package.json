@@ -1,37 +1,42 @@
 {
-  "name": "hermann-stagetimerio",
-  "version": "1.0.0",
-  "description": "Companion module for stagetimer.io",
-  "manufacturer": "Lukas Hermann",
-  "product": [
-    "Stagetimer.io"
-  ],
-  "shortname": "stagetimer",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier",
-    "eslint": "eslint",
-    "semantic-release": "semantic-release"
-  },
-  "keywords": [
-    "Companion",
-    "stagetimer.io"
-  ],
-  "author": "Johnny Estilles <johnny@estilles.com>",
-  "license": "ISC",
-  "devDependencies": {
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "eslint": "^8.1.0",
-    "prettier": "^2.4.1",
-    "semantic-release": "^18.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bitfocus/companion-module-hermann-stagetimerio.git"
-  },
-  "dependencies": {
-    "needle": "^3.0.0"
-  }
+	"name": "hermann-stagetimerio",
+	"version": "1.0.0",
+	"description": "Companion module for stagetimer.io",
+	"manufacturer": "Lukas Hermann",
+	"product": [
+		"Stagetimer.io"
+	],
+	"shortname": "stagetimer",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"prettier": "prettier",
+		"eslint": "eslint",
+		"semantic-release": "semantic-release"
+	},
+	"keywords": [
+		"Companion",
+		"stagetimer.io"
+	],
+	"author": "Johnny Estilles <johnny@estilles.com>",
+	"license": "ISC",
+	"devDependencies": {
+		"@semantic-release/changelog": "^6.0.1",
+		"@semantic-release/git": "^10.0.1",
+		"eslint": "^8.1.0",
+		"prettier": "^2.4.1",
+		"semantic-release": "^18.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-hermann-stagetimerio.git"
+	},
+	"dependencies": {
+		"needle": "^3.0.0"
+	},
+	"homepage": "https://github.com/bitfocus/companion-module-hermann-stagetimerio#readme",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-hermann-stagetimerio/issues"
+	},
+	"api_version": "1.0.0"
 }
