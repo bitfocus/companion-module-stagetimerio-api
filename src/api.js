@@ -2,7 +2,7 @@ const needle = require('needle')
 
 module.exports = {
 	sendCommand({ cmd, timer, message, body = {}, timeout = 2000 }) {
-		let url = `${this.API_URL_BASE}/room/${this.config.roomId}`
+		let url = `${this.config.useCustomApiUrl ? this.config.customApiUrl : DEFAULT_API_URL_BASE}/room/${this.config.roomId}`
 		const headers = {
 			Authorization: `Bearer ${this.config.apiKey}`,
 		}
