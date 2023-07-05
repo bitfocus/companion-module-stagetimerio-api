@@ -1,2 +1,10 @@
+# nodejs
 node_modules/
 package-lock.json
+
+# companion
+/pkg
+/pkg.tgz
+
+# other
+.DS_Store

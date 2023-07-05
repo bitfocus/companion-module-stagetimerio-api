@@ -1,80 +1,62 @@
-const instance_skel = require('../../../instance_skel')
+import { InstanceBase, runEntrypoint, InstanceStatus } from '@companion-module/base'
+import { initialConfig, validateConfig, configFields } from './config.js'
+import { initialState, startState } from './state.js'
+import { ApiClient } from './api.js'
+import { socketStart, socketStop } from './socket.js'
+import { loadActions } from './actions.js'
+import { loadFeedbacks } from './feedbacks.js'
+import { loadVariables } from './variables.js'
+import { loadPresets } from './presets.js'
 
-const configs = require('./configs')
-const actions = require('./actions')
-const constants = require('./constants')
-const presets = require('./presets')
-const variables = require('./variables')
-const feedbacks = require('./feedbacks')
-
-const api = require('./api')
-
-class StagetimerInstance extends instance_skel {
-	constructor(system, id, config) {
-		super(system, id, config)
-
-		Object.assign(this, {
-			...configs,
-			...actions,
-			...constants,
-			...presets,
-			...variables,
-			...feedbacks,
-			...api,
-		})
-
-		this.initConstants()
-		this.config = config
-
-		// instance state store
-		// this.state = {
-		// 	someState: 'default state',
-		// }
-
-		// Access Denied: Wrong API key
-		// Room not found
+export class ModuleInstance extends InstanceBase {
+	constructor(internal) {
+		super(internal)
 	}
 
-	init() {
-		if (!this.isValidConfig()) {
+	config = initialConfig
+	state = initialState
+
+	async init(config) {
+		await this.configure(config)
+	}
+
+	async configUpdated(config) {
+		await this.configure(config)
+	}
+
+	async configure(config) {
+		try {
+			validateConfig(config)
+		} catch (error) {
+			this.updateStatus(InstanceStatus.BadConfig)
+			this.log('error', error.message)
 			return
 		}
 
-		this.initActions()
-		this.initFeedbacks()
-		this.initPresets()
-		// this.initVariables()
-
-		this.status(this.STATUS_OK)
-	}
-
-	updateConfig(config) {
 		this.config = config
+		this.apiClient = new ApiClient(config)
 
-		if (!this.isValidConfig()) {
-			return
+		startState(this)
+
+		socketStart(this)
+
+		try {
+			loadActions(this)
+			loadFeedbacks(this)
+			loadVariables(this)
+			loadPresets(this)
+		} catch (error) {
+			throw new Error(`Failed to start. Error: ${error.message}`)
 		}
-
-		// reinitialize actions/presets/feedbacks if necessary
-		this.initActions()
-		this.initFeedbacks()
-		this.initPresets()
-		// this.initVariables()
-
-		this.status(this.STATUS_OK)
 	}
 
-	isValidConfig() {
-		if (this.config.roomId === undefined || this.config.apiKey === undefined) {
-			this.log('error', 'Please configure instances. Needs Room ID and API Key.')
-			this.status(this.STATUS_UNKNOWN, 'Needs Configration')
-			return false
-		}
-
-		return true
+	getConfigFields() {
+		return configFields
 	}
 
-	destroy() {}
+	async destroy() {
+		socketStop()
+	}
 }
 
-module.exports = StagetimerInstance
+runEntrypoint(ModuleInstance, [])
