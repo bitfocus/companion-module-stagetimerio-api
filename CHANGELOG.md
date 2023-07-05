@@ -1,6 +1,10 @@
-# 1.0.0 (2021-11-16)
+# Changelog
 
+## 2.0.0 (2023-07-05)
 
-### Features
+New Stagetimer.io module for Companion, rewritten from scratch for Companion v3.
+Uses the new Stagetimer.io API v1.
 
-* add initial actions and presets ([aedc551](https://github.com/bitfocus/companion-module-hermann-stagetimerio/commit/aedc55146a0a8ea7c04dc464c4606c5313116dd0))
+## 1.0.0 (2021-11-16)
+
+Initial version of Stagetimer.io module for Companion.

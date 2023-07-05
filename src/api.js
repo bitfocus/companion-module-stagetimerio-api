@@ -1,93 +1,99 @@
-const needle = require('needle')
+// Custom error
+class NetworkError extends Error {
+	get name() {
+		return this.constructor.name
+	}
+}
 
-module.exports = {
-	sendCommand({ cmd, timer, message, body = {}, timeout = 2000 }) {
-		let url = `${this.API_URL_BASE}/room/${this.config.roomId}`
-		const headers = {
-			Authorization: `Bearer ${this.config.apiKey}`,
-		}
+class HttpError extends Error {
 
-		if (timer !== undefined) {
-			url = `${url}/timer/${timer}`
-		}
+	/** @param {Response} response */
+	constructor(response) {
+		super(`${response.status} ${response.statusText}`)
+	}
 
-		if (message !== undefined) {
-			url = `${url}/message/${message}`
-		}
+	get name() {
+		return this.constructor.name
+	}
+}
 
-		url = `${url}/${cmd}`
+class ApiError extends Error {
+	get name() {
+		return this.constructor.name
+	}
+}
 
-		needle('POST', url, body, { headers, json: true, open_timeout: timeout, response_timeout: timeout })
-			.then((res) => res.body)
-			.catch((error) => {
-				this.log('error', `Error calling API: ${error}`)
+/**
+ * API Client class for communicating with the Stagetimer.io HTTP RPC API (v1)
+ */
+export class ApiClient {
+
+	/**
+	 * API Client constructor. Configured with the same
+	 * API URL, key, and room ID from the module config
+	 *
+	 * @param {StagetimerConfig} config
+	 */
+	constructor(config) {
+		this.apiUrl = config.apiUrl
+		this.apiKey = config.apiKey
+		this.roomId = config.roomId
+		return this
+	}
+
+	/**
+	 * Sends an action to the Stagetimer API
+	 *
+	 * @param {string} path
+	 * @param {object} queryParams
+	 * @returns {Promise<ApiResponse>}
+	 */
+	async send(path = '', queryParams = {}) {
+		try {
+
+			const params = {
+				room_id: this.roomId,
+				api_key: this.apiKey,
+				...queryParams,
+			}
+
+			let query = ''
+			query = new URLSearchParams(params).toString()
+			query = query && `?${query}`
+
+			const url = `${this.apiUrl}${path}${query}`
+
+			const response = await fetch(url, {
+				// Time out before the default Companion IPC action timeout
+				signal: AbortSignal.timeout(4900)
 			})
-	},
 
-	// Room Endpoints
-	startHighlightedTimer() {
-		this.sendCommand({ cmd: 'start' })
-	},
+			if (!response.ok) {
 
-	stopHighlightedTimer() {
-		this.sendCommand({ cmd: 'stop' })
-	},
+				// Handle both JSON and non-JSON response body
+				const maybeJSON = await response.json().catch(() => {
+					throw new HttpError(response)
+				})
 
-	toggleHighlightedTimer() {
-		this.sendCommand({ cmd: 'start-stop' })
-	},
+				throw new ApiError(maybeJSON.message)
+			}
 
-	resetHighlightedTimer() {
-		this.sendCommand({ cmd: 'reset' })
-	},
+			return await response.json()
 
-	highlightNextTimer() {
-		this.sendCommand({ cmd: 'next' })
-	},
+		} catch (error) {
+			switch (error.name) {
+				// Handle the timeout with a friendly message
+				case 'TimeoutError':
+					throw new NetworkError('Request took longer than 5s and timed out')
 
-	highlightPreviousTimer() {
-		this.sendCommand({ cmd: 'previous' })
-	},
+				// fetch() throws TypeError on network problems
+				case 'TypeError':
+					throw new NetworkError('There is a problem with the connection')
 
-	tweakTimer(amount) {
-		this.sendCommand({ cmd: 'tweak', body: { amount } })
-	},
-
-	flashTimer() {
-		this.sendCommand({ cmd: 'flash' })
-	},
-
-	blackoutTimer() {
-		this.sendCommand({ cmd: 'blackout' })
-	},
-
-	// Timer Endpoints
-	setTimer(timer = 0) {
-		this.sendCommand({ timer, cmd: 'set' })
-	},
-
-	startTimer(timer = 0) {
-		this.sendCommand({ timer, cmd: 'start' })
-	},
-
-	stopTimer(timer = 0) {
-		this.sendCommand({ timer, cmd: 'stop' })
-	},
-
-	toggleTimer(timer = 0) {
-		this.sendCommand({ timer, cmd: 'start-stop' })
-	},
-
-	// Message Endpoints
-	showMessage(message = 0) {
-		this.sendCommand({ message, cmd: 'show' })
-	},
-
-	hideMessage(message = 0) {
-		this.sendCommand({ message, cmd: 'hide' })
-	},
-
-	toggleMessage(message = 0) {
-		this.sendCommand({ message, cmd: 'toggle' })
-	},
+				// Pass errors through
+				default:
+					throw error
+			}
+		}
+	}
 }
