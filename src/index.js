@@ -9,22 +9,22 @@ import { loadVariables } from './variables.js'
 import { loadPresets } from './presets.js'
 
 export class ModuleInstance extends InstanceBase {
-  constructor(internal) {
+  constructor (internal) {
     super(internal)
   }
 
   config = initialConfig
   state = initialState
 
-  async init(config) {
+  async init (config) {
     await this.configure(config)
   }
 
-  async configUpdated(config) {
+  async configUpdated (config) {
     await this.configure(config)
   }
 
-  async configure(config) {
+  async configure (config) {
     try {
       validateConfig(config)
     } catch (error) {
@@ -50,11 +50,11 @@ export class ModuleInstance extends InstanceBase {
     }
   }
 
-  getConfigFields() {
+  getConfigFields () {
     return configFields
   }
 
-  async destroy() {
+  async destroy () {
     socketStop()
   }
 }

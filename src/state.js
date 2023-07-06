@@ -11,7 +11,7 @@ let instance = null
  * @param {ModuleInstance} theInstance
  * @returns {void}
  */
-export function startState(theInstance) {
+export function startState (theInstance) {
   instance = theInstance
 }
 
@@ -20,12 +20,12 @@ export function startState(theInstance) {
 //
 let timerKeeperId = null
 
-function startTimeKeeper() {
+function startTimeKeeper () {
   if (timerKeeperId !== null) { return }
   timerKeeperId = setInterval(updatePlaybackState, 500)
 }
 
-function stopTimeKeeper() {
+function stopTimeKeeper () {
   clearInterval(timerKeeperId)
   timerKeeperId = null
 }
@@ -53,7 +53,7 @@ export const timerPhases = {
  * @param {number} [redTime]
  * @returns {timerPhases}
  */
-export function getTimerPhase(timeRemaining, yellowTime, redTime) {
+export function getTimerPhase (timeRemaining, yellowTime, redTime) {
   if (timeRemaining < 0) return timerPhases.negative
   if (timeRemaining <= 0) return timerPhases.zero
   if (timeRemaining <= redTime * 1000) return timerPhases.red
@@ -102,7 +102,7 @@ export const initialState = {
  * @param { RoomState } newState
  * @returns {void}
  */
-export function updateRoomState(newState) {
+export function updateRoomState (newState) {
 
   const updatedState = {
     ...instance.state.room,
@@ -127,14 +127,14 @@ export function updateRoomState(newState) {
  * @param { PlaybackState } [newState]
  * @returns {void}
  */
-export function updatePlaybackState(newState = instance.state.playback_status) {
+export function updatePlaybackState (newState = instance.state.playback_status) {
 
   const updatedState = createTimeset(newState)
 
   updatedState.phase = getTimerPhase(
     updatedState.remaining,
     instance.state.timer.wrap_up_yellow,
-    instance.state.timer.wrap_up_red
+    instance.state.timer.wrap_up_red,
   )
 
   instance.state.playback_status = updatedState
@@ -162,7 +162,7 @@ export function updatePlaybackState(newState = instance.state.playback_status) {
     feedbackType.isOnTime,
     feedbackType.isOverTime,
     feedbackType.isWarningYellow,
-    feedbackType.isWarningRed
+    feedbackType.isWarningRed,
   )
 
 }
@@ -171,7 +171,7 @@ export function updatePlaybackState(newState = instance.state.playback_status) {
  * @param { TimerState } newState
  * @returns {void}
  */
-export function updateTimerState(newState) {
+export function updateTimerState (newState) {
 
   const updatedState = {
     ...instance.state.timer,
@@ -184,7 +184,7 @@ export function updateTimerState(newState) {
   instance.state.playback_status.phase = getTimerPhase(
     instance.state.playback_status.remaining,
     instance.state.timer.wrap_up_yellow,
-    instance.state.timer.wrap_up_red
+    instance.state.timer.wrap_up_red,
   )
 
   instance.setVariableValues({
@@ -196,7 +196,7 @@ export function updateTimerState(newState) {
 
   instance.checkFeedbacks(
     feedbackType.isWarningYellow,
-    feedbackType.isWarningRed
+    feedbackType.isWarningRed,
   )
 
 }
@@ -205,7 +205,7 @@ export function updateTimerState(newState) {
  * @param { MessageState } newState
  * @returns {void}
  */
-export function updateMessageState(newState) {
+export function updateMessageState (newState) {
 
   instance.state.message = {
     ...instance.state.message,
@@ -222,7 +222,7 @@ export function updateMessageState(newState) {
  * @param {number} count
  * @returns {void}
  */
-export function updateFlashingState(count) {
+export function updateFlashingState (count) {
 
   let shouldFlash = false
 
@@ -239,7 +239,7 @@ export function updateFlashingState(count) {
   instance.state.viewer.isFlashing = shouldFlash
 
   instance.checkFeedbacks(
-    feedbackType.isFlashing
+    feedbackType.isFlashing,
   )
 
 }

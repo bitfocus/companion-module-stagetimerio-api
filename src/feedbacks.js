@@ -29,7 +29,7 @@ export const feedbackType = {
  * @param { ModuleInstance } instance
  * @returns {Feedbacks}
  */
-function generateFeedbacks(instance) {
+function generateFeedbacks (instance) {
 
   feedbacks = {
 
@@ -171,10 +171,10 @@ function generateFeedbacks(instance) {
  * @param { ModuleInstance } instance
  * @returns {void}
  */
-export function loadFeedbacks(instance) {
+export function loadFeedbacks (instance) {
 
   instance.setFeedbackDefinitions(
-    generateFeedbacks(instance)
+    generateFeedbacks(instance),
   )
 
 }

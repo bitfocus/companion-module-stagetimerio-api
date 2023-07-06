@@ -1,6 +1,6 @@
 // Custom error
 class NetworkError extends Error {
-  get name() {
+  get name () {
     return this.constructor.name
   }
 }
@@ -8,17 +8,17 @@ class NetworkError extends Error {
 class HttpError extends Error {
 
   /** @param {Response} response */
-  constructor(response) {
+  constructor (response) {
     super(`${response.status} ${response.statusText}`)
   }
 
-  get name() {
+  get name () {
     return this.constructor.name
   }
 }
 
 class ApiError extends Error {
-  get name() {
+  get name () {
     return this.constructor.name
   }
 }
@@ -34,7 +34,7 @@ export class ApiClient {
    *
    * @param {StagetimerConfig} config
    */
-  constructor(config) {
+  constructor (config) {
     this.apiUrl = config.apiUrl
     this.apiKey = config.apiKey
     this.roomId = config.roomId
@@ -48,7 +48,7 @@ export class ApiClient {
    * @param {object} queryParams
    * @returns {Promise<ApiResponse>}
    */
-  async send(path = '', queryParams = {}) {
+  async send (path = '', queryParams = {}) {
     try {
 
       const params = {
@@ -65,7 +65,7 @@ export class ApiClient {
 
       const response = await fetch(url, {
         // Time out before the default Companion IPC action timeout
-        signal: AbortSignal.timeout(4900)
+        signal: AbortSignal.timeout(4900),
       })
 
       if (!response.ok) {

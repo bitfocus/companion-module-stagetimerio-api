@@ -30,7 +30,7 @@ export const stagetimerEvents = {
  *
  * @returns {void}
  */
-export function socketStop() {
+export function socketStop () {
   if (socket) {
     socket.disconnect()
   }
@@ -42,7 +42,7 @@ export function socketStop() {
  * @param {ModuleInstance} instance
  * @returns {void}
  */
-export function socketStart(instance) {
+export function socketStart (instance) {
 
   if (!instance || !instance.config) {
     throw Error('Module instance required')
@@ -148,7 +148,7 @@ export function socketStart(instance) {
   })
 
   socket.io.on('reconnect_failed', () => {
-    instance.log('error', `Unable to connect to Stagetimer.io!`)
+    instance.log('error', 'Unable to connect to Stagetimer.io!')
     instance.updateStatus(InstanceStatus.ConnectionFailure)
   })
 
@@ -218,7 +218,7 @@ export function socketStart(instance) {
  * @param {ModuleInstance} instance
  * @param {string} timer_id
  */
-function getTimerAndUpdateState(instance, timer_id) {
+function getTimerAndUpdateState (instance, timer_id) {
 
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {

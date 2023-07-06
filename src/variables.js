@@ -41,6 +41,6 @@ const variables = [
  * @param { ModuleInstance } instance
  * @returns {void}
  */
-export function loadVariables(instance) {
+export function loadVariables (instance) {
   instance.setVariableDefinitions(variables)
 }

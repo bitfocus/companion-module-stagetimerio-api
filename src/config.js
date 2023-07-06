@@ -15,7 +15,7 @@ export const initialConfig = {
  * @returns {boolean}
  * @throws
  */
-export function validateConfig(config) {
+export function validateConfig (config) {
 
   if (
     roomIdRegExp.test(config.roomId)

@@ -12,7 +12,7 @@ let presets = {}
  *
  * @returns {CompanionPresetDefinitions}
  */
-function generatePresets() {
+function generatePresets () {
 
   /** @type {PresetDefinitions} */
   const presets_template = {
@@ -49,8 +49,8 @@ function generatePresets() {
           bgcolor: colors.black,
         },
         feedbacks: [
-          getFeedbackDefaults(feedbackType.isRunning)
-        ]
+          getFeedbackDefaults(feedbackType.isRunning),
+        ],
       },
       {
         name: 'Stop',
@@ -65,8 +65,8 @@ function generatePresets() {
           bgcolor: colors.black,
         },
         feedbacks: [
-          getFeedbackDefaults(feedbackType.isStopped)
-        ]
+          getFeedbackDefaults(feedbackType.isStopped),
+        ],
       },
       {
         name: 'Previous',
@@ -204,7 +204,7 @@ function generatePresets() {
         actionId: '',
         style: {
           size: '18',
-          text: `Ready`,
+          text: 'Ready',
           color: colors.white,
           bgcolor: colors.black,
         },
@@ -457,7 +457,7 @@ function generatePresets() {
  * @param {CompanionPresetFeedback['style']} [styleOverrides]
  * @returns {CompanionPresetFeedback}
  */
-export function getFeedbackDefaults(feedbackId, styleOverrides) {
+export function getFeedbackDefaults (feedbackId, styleOverrides) {
 
   if (feedbacks[feedbackId]) {
     return {
@@ -477,10 +477,10 @@ export function getFeedbackDefaults(feedbackId, styleOverrides) {
  * @param { ModuleInstance } instance
  * @returns {void}
  */
-export function loadPresets(instance) {
+export function loadPresets (instance) {
 
   instance.setPresetDefinitions(
-    generatePresets()
+    generatePresets(),
   )
 
 }

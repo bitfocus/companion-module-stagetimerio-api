@@ -126,7 +126,7 @@ const actionOptions = {
  * @param { ModuleInstance } theInstance
  * @returns {void}
 */
-export function loadActions(theInstance) {
+export function loadActions (theInstance) {
 
   instance = theInstance
 
@@ -303,7 +303,7 @@ export function loadActions(theInstance) {
  * @param {CompanionActionEvent} event
  * @returns {Promise<void>}
  */
-const sendActionToApi = async ({ actionId, options }) => {
+async function sendActionToApi ({ actionId, options }) {
 
   instance.log('debug', `Action: ${actionId}`)
 
@@ -330,10 +330,10 @@ const sendActionToApi = async ({ actionId, options }) => {
  * @param {CompanionOptionValues} options
  * @returns {object}
  */
-function assignTruthyOptionsToParams(options) {
+function assignTruthyOptionsToParams (options) {
 
   return Object.fromEntries(
-    Object.entries(options).filter(([_key, value]) => value)
+    Object.entries(options).filter(([_key, value]) => value),
   )
 
 }

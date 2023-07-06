@@ -4,7 +4,7 @@ import { format } from 'date-fns'
  * @param {number} number
  * @returns {boolean}
  */
-export function isNegative(number) {
+export function isNegative (number) {
   return Math.sign(number) == -1 ? true : false
 }
 
@@ -18,7 +18,7 @@ export function isNegative(number) {
  * @param {number} ms Duration of time as milliseconds.
  * @returns {number}
  */
-function floor50(ms) {
+function floor50 (ms) {
   return Math.floor(ms / 50) * 50
 }
 
@@ -27,7 +27,7 @@ function floor50(ms) {
  *
  * @returns {number}
  */
-function zero() {
+function zero () {
   return new Date().setHours(0, 0, 0, 0)
 }
 
@@ -38,7 +38,7 @@ function zero() {
  * @param {number} now Date in ms
  * @returns {PlaybackState}
  */
-export function createTimeset(timeset, now = Date.now()) {
+export function createTimeset (timeset, now = Date.now()) {
   const tenMin = 60000
   if (now <= 0) now = Date.now()
 
@@ -75,9 +75,14 @@ export function createTimeset(timeset, now = Date.now()) {
  *
  * @returns {string} The formatted duration string.
  */
-export function formatDuration(
+export function formatDuration (
   milliseconds = 0,
-  { includeH = true, includeS = true, includeMs = false, includePrefix = true, customFormat = null } = {}
+  { includeH = true,
+    includeS = true,
+    includeMs = false,
+    includePrefix = true,
+    customFormat = null,
+  } = {},
 ) {
   // Return an empty string if milliseconds is not a number or is NaN
   if (typeof milliseconds !== 'number' || isNaN(milliseconds)) return ''
