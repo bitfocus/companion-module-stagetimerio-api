@@ -5,7 +5,7 @@ import { format } from 'date-fns'
  * @returns {boolean}
  */
 export function isNegative(number) {
-	return Math.sign(number) == -1 ? true : false
+  return Math.sign(number) == -1 ? true : false
 }
 
 //
@@ -19,7 +19,7 @@ export function isNegative(number) {
  * @returns {number}
  */
 function floor50(ms) {
-	return Math.floor(ms / 50) * 50
+  return Math.floor(ms / 50) * 50
 }
 
 /**
@@ -28,7 +28,7 @@ function floor50(ms) {
  * @returns {number}
  */
 function zero() {
-	return new Date().setHours(0, 0, 0, 0)
+  return new Date().setHours(0, 0, 0, 0)
 }
 
 /**
@@ -39,26 +39,26 @@ function zero() {
  * @returns {PlaybackState}
  */
 export function createTimeset(timeset, now = Date.now()) {
-	const tenMin = 60000
-	if (now <= 0) now = Date.now()
+  const tenMin = 60000
+  if (now <= 0) now = Date.now()
 
-	// Calculate 'total' (round 10 ms due to inaccuracies)
-	const total = timeset.deadline ? timeset.deadline - timeset.kickoff : tenMin
+  // Calculate 'total' (round 10 ms due to inaccuracies)
+  const total = timeset.deadline ? timeset.deadline - timeset.kickoff : tenMin
 
-	// Calculate time remaining
-	let remaining
-	if (!timeset.deadline) remaining = tenMin
-	else if (timeset.isRunning) remaining = timeset.deadline - now
-	else remaining = timeset.deadline - timeset.lastStop
+  // Calculate time remaining
+  let remaining
+  if (!timeset.deadline) remaining = tenMin
+  else if (timeset.isRunning) remaining = timeset.deadline - now
+  else remaining = timeset.deadline - timeset.lastStop
 
-	// Correct edge-case where left > total
-	if (remaining > total) remaining = total
+  // Correct edge-case where left > total
+  if (remaining > total) remaining = total
 
-	return {
-		...timeset,
-		total: floor50(total),
-		remaining: floor50(remaining),
-	}
+  return {
+    ...timeset,
+    total: floor50(total),
+    remaining: floor50(remaining),
+  }
 }
 
 /**
@@ -76,37 +76,37 @@ export function createTimeset(timeset, now = Date.now()) {
  * @returns {string} The formatted duration string.
  */
 export function formatDuration(
-	milliseconds = 0,
-	{ includeH = true, includeS = true, includeMs = false, includePrefix = true, customFormat = null } = {}
+  milliseconds = 0,
+  { includeH = true, includeS = true, includeMs = false, includePrefix = true, customFormat = null } = {}
 ) {
-	// Return an empty string if milliseconds is not a number or is NaN
-	if (typeof milliseconds !== 'number' || isNaN(milliseconds)) return ''
+  // Return an empty string if milliseconds is not a number or is NaN
+  if (typeof milliseconds !== 'number' || isNaN(milliseconds)) return ''
 
-	const withMs = includeMs
-	const withSec = includeS || Math.abs(milliseconds) < 3600000
-	const withHrs = includeH || Math.abs(milliseconds) >= 3600000
+  const withMs = includeMs
+  const withSec = includeS || Math.abs(milliseconds) < 3600000
+  const withHrs = includeH || Math.abs(milliseconds) >= 3600000
 
-	// Determine the prefix of the output string.
-	const prefix = isNegative(milliseconds) ? '-' : ''
+  // Determine the prefix of the output string.
+  const prefix = isNegative(milliseconds) ? '-' : ''
 
-	// Determine the format string based on the options.
-	let formatStr = 'm'
-	if (withMs) formatStr = 'm:ss.S'
-	else if (withSec) formatStr = 'm:ss'
-	if (withHrs) formatStr = 'm' + formatStr
+  // Determine the format string based on the options.
+  let formatStr = 'm'
+  if (withMs) formatStr = 'm:ss.S'
+  else if (withSec) formatStr = 'm:ss'
+  if (withHrs) formatStr = 'm' + formatStr
 
-	// Format the duration into the output string
-	let output = format(zero() + Math.abs(milliseconds), customFormat || formatStr)
+  // Format the duration into the output string
+  let output = format(zero() + Math.abs(milliseconds), customFormat || formatStr)
 
-	// Add hours to the output if necessary
-	if (withHrs) {
-		output = Math.floor(Math.abs(milliseconds) / 3600000) + ':' + output
-	}
+  // Add hours to the output if necessary
+  if (withHrs) {
+    output = Math.floor(Math.abs(milliseconds) / 3600000) + ':' + output
+  }
 
-	// Add optional prefix
-	if (includePrefix) {
-		output = prefix + output
-	}
+  // Add optional prefix
+  if (includePrefix) {
+    output = prefix + output
+  }
 
-	return output
+  return output
 }
