@@ -455,7 +455,7 @@ function generatePresets () {
 /**
  * @param {feedbackType} feedbackId
  * @param {CompanionPresetFeedback['style']} [styleOverrides]
- * @returns {CompanionPresetFeedback}
+ * @returns {CompanionPresetFeedback | undefined}
  */
 export function getFeedbackDefaults (feedbackId, styleOverrides) {
 

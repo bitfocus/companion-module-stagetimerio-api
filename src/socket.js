@@ -9,7 +9,7 @@ import {
 } from './state.js'
 import { actionIdType } from './actions.js'
 
-/** @type {import('socket.io-client').Socket} */
+/** @type {Socket | null} */
 let socket = null
 
 /**
@@ -41,6 +41,7 @@ export function socketStop () {
  *
  * @param {ModuleInstance} instance
  * @returns {void}
+ * @throws
  */
 export function socketStart (instance) {
 
@@ -77,12 +78,16 @@ export function socketStart (instance) {
     instance.log('info', 'Connected!')
     instance.updateStatus(InstanceStatus.Ok)
 
+    if (!instance.apiClient) {
+      throw Error('API client not ready')
+    }
+
     instance.apiClient.send(actionIdType.get_room, {})
       .then(({ data }) => {
 
-        const { _id, name, blackout, focus_message } = data
+        const { _id, name, blackout, focus_message } = /** @type {RoomData} */(data)
 
-        updateRoomState({
+        updateRoomState.call(instance, {
           roomId: _id,
           roomName: name,
           roomBlackout: blackout,
@@ -96,9 +101,9 @@ export function socketStart (instance) {
     instance.apiClient.send(actionIdType.get_status, {})
       .then(({ data }) => {
 
-        const { timer_id, running, start, finish, pause } = data
+        const { timer_id, running, start, finish, pause } = /** @type {StatusData} */(data)
 
-        updatePlaybackState({
+        updatePlaybackState.call(instance, {
           currentTimerId: timer_id,
           isRunning: running,
           kickoff: start,
@@ -109,8 +114,7 @@ export function socketStart (instance) {
         return timer_id
       })
       .then((timer_id) => {
-        if (!timer_id) { return false }
-        getTimerAndUpdateState(instance, timer_id)
+        getTimerAndUpdateState.call(instance, timer_id)
       })
       .catch((error) => {
         instance.log('error', error.toString())
@@ -165,7 +169,7 @@ export function socketStart (instance) {
 
     const { timer_id, running, start, finish, pause } = payload
 
-    updatePlaybackState({
+    updatePlaybackState.call(instance, {
       currentTimerId: timer_id,
       isRunning: running,
       kickoff: start,
@@ -173,7 +177,7 @@ export function socketStart (instance) {
       lastStop: pause,
     })
 
-    getTimerAndUpdateState(instance, timer_id)
+    getTimerAndUpdateState.call(instance, timer_id)
   })
 
   socket.on(stagetimerEvents.room, (payload) => {
@@ -181,7 +185,7 @@ export function socketStart (instance) {
 
     const { blackout, focus_message } = payload
 
-    updateRoomState({
+    updateRoomState.call(instance, {
       roomBlackout: blackout,
       roomFocus: focus_message,
     })
@@ -192,7 +196,7 @@ export function socketStart (instance) {
 
     const { showing, text, color, bold, uppercase } = payload
 
-    updateMessageState({
+    updateMessageState.call(instance, {
       showing,
       text,
       color,
@@ -206,7 +210,7 @@ export function socketStart (instance) {
 
     const { count } = payload
 
-    updateFlashingState(count)
+    updateFlashingState.call(instance, count)
   })
 
   // Start
@@ -215,17 +219,24 @@ export function socketStart (instance) {
 
 /**
  *
- * @param {ModuleInstance} instance
  * @param {string} timer_id
+ * @this {ModuleInstance}
+ * @throws
  */
-function getTimerAndUpdateState (instance, timer_id) {
+function getTimerAndUpdateState (timer_id) {
+
+  const instance = this
+
+  if (!instance.apiClient) {
+    throw Error('API client not ready')
+  }
 
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {
 
-      const { name, speaker, notes, duration, wrap_up_yellow, wrap_up_red } = data
+      const { name, speaker, notes, duration, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
 
-      updateTimerState({
+      updateTimerState.call(this, {
         name,
         speaker,
         notes,

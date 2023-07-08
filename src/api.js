@@ -81,6 +81,7 @@ export class ApiClient {
       return await response.json()
 
     } catch (error) {
+      if (!(error instanceof Error)) { throw new Error }
       switch (error.name) {
         // Handle the timeout with a friendly message
         case 'TimeoutError':

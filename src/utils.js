@@ -81,7 +81,6 @@ export function formatDuration (
     includeS = true,
     includeMs = false,
     includePrefix = true,
-    customFormat = null,
   } = {},
 ) {
   // Return an empty string if milliseconds is not a number or is NaN
@@ -101,7 +100,7 @@ export function formatDuration (
   if (withHrs) formatStr = 'm' + formatStr
 
   // Format the duration into the output string
-  let output = format(zero() + Math.abs(milliseconds), customFormat || formatStr)
+  let output = format(zero() + Math.abs(milliseconds), formatStr)
 
   // Add hours to the output if necessary
   if (withHrs) {

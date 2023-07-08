@@ -2,31 +2,32 @@ import { feedbackType } from './feedbacks.js'
 import { formatDuration, createTimeset } from './utils.js'
 import { variableType } from './variables.js'
 
-/** @type {ModuleInstance} */
-let instance = null
-
-/**
- * Start state module
- *
- * @param {ModuleInstance} theInstance
- * @returns {void}
- */
-export function startState (theInstance) {
-  instance = theInstance
-}
-
 //
 // Timekeeper service
 //
+/** @type {NodeJS.Timer | null} */
 let timerKeeperId = null
 
+/**
+ * Start time keeping service
+ *
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
 function startTimeKeeper () {
   if (timerKeeperId !== null) { return }
-  timerKeeperId = setInterval(updatePlaybackState, 500)
+  timerKeeperId = setInterval(updatePlaybackState.bind(this), 500)
 }
 
+/**
+ * Stop time keeping serviec
+ *
+ * @returns {void}
+ */
 function stopTimeKeeper () {
-  clearInterval(timerKeeperId)
+  if(timerKeeperId !== null ) {
+    clearInterval(timerKeeperId)
+  }
   timerKeeperId = null
 }
 
@@ -53,7 +54,7 @@ export const timerPhases = {
  * @param {number} [redTime]
  * @returns {timerPhases}
  */
-export function getTimerPhase (timeRemaining, yellowTime, redTime) {
+export function getTimerPhase (timeRemaining, yellowTime = 0, redTime = 0) {
   if (timeRemaining < 0) return timerPhases.negative
   if (timeRemaining <= 0) return timerPhases.zero
   if (timeRemaining <= redTime * 1000) return timerPhases.red
@@ -65,44 +66,47 @@ export function getTimerPhase (timeRemaining, yellowTime, redTime) {
 /** @type {State} */
 export const initialState = {
   room: {
-    roomId: null,
-    roomName: null,
-    roomBlackout: null,
-    roomFocus: null,
+    roomId: undefined,
+    roomName: undefined,
+    roomBlackout: false,
+    roomFocus: false,
   },
   viewer: {
     isFlashing: false,
   },
   playback_status: {
-    currentTimerId: null,
-    isRunning: null,
-    kickoff: null,
-    deadline: null,
-    lastStop: null,
-    phase: 'default',
+    currentTimerId: '',
+    isRunning: false,
+    kickoff: 0,
+    deadline: 0,
+    lastStop: 0,
+    phase: undefined,
   },
   timer: {
-    name: null,
-    speaker: null,
-    notes: null,
-    duration: null,
-    wrap_up_yellow: null,
-    wrap_up_red: null,
+    name: '',
+    speaker: '',
+    notes: '',
+    duration: '',
+    wrap_up_yellow: 0,
+    wrap_up_red: 0,
   },
   message: {
-    showing: null,
-    text: null,
-    color: null,
-    bold: null,
-    uppercase: null,
+    showing: false,
+    text: '',
+    color: '',
+    bold: false,
+    uppercase: false,
   },
 }
 
 /**
  * @param { RoomState } newState
+ * @this {ModuleInstance}
  * @returns {void}
  */
 export function updateRoomState (newState) {
+
+  const instance = this
 
   const updatedState = {
     ...instance.state.room,
@@ -125,14 +129,17 @@ export function updateRoomState (newState) {
 
 /**
  * @param { PlaybackState } [newState]
+ * @this {ModuleInstance}
  * @returns {void}
  */
-export function updatePlaybackState (newState = instance.state.playback_status) {
+export function updatePlaybackState (newState) {
 
-  const updatedState = createTimeset(newState)
+  const instance = this
+
+  const updatedState = createTimeset(newState || instance.state.playback_status)
 
   updatedState.phase = getTimerPhase(
-    updatedState.remaining,
+    updatedState.remaining ?? 0,
     instance.state.timer.wrap_up_yellow,
     instance.state.timer.wrap_up_red,
   )
@@ -141,13 +148,13 @@ export function updatePlaybackState (newState = instance.state.playback_status) 
 
   // Only enable timekeeper polling if timer is active
   if (updatedState.isRunning) {
-    startTimeKeeper()
+    startTimeKeeper.call(this)
   } else {
-    stopTimeKeeper()
+    stopTimeKeeper.call(this)
   }
 
   instance.setVariableValues({
-    [variableType.currentTimerId]: updatedState.currentTimerId,
+    [variableType.currentTimerId]: updatedState.currentTimerId ?? undefined,
 
     [variableType.currentTimerDuration]: formatDuration(updatedState.total),
     [variableType.currentTimerDurationAsMs]: updatedState.total,
@@ -169,9 +176,12 @@ export function updatePlaybackState (newState = instance.state.playback_status) 
 
 /**
  * @param { TimerState } newState
+ * @this {ModuleInstance}
  * @returns {void}
  */
 export function updateTimerState (newState) {
+
+  const instance = this
 
   const updatedState = {
     ...instance.state.timer,
@@ -182,7 +192,7 @@ export function updateTimerState (newState) {
 
   // Update `phase` using `playback_status` and `timer` state
   instance.state.playback_status.phase = getTimerPhase(
-    instance.state.playback_status.remaining,
+    instance.state.playback_status.remaining ?? 0,
     instance.state.timer.wrap_up_yellow,
     instance.state.timer.wrap_up_red,
   )
@@ -203,9 +213,12 @@ export function updateTimerState (newState) {
 
 /**
  * @param { MessageState } newState
+ * @this {ModuleInstance}
  * @returns {void}
  */
 export function updateMessageState (newState) {
+
+  const instance = this
 
   instance.state.message = {
     ...instance.state.message,
@@ -220,9 +233,12 @@ export function updateMessageState (newState) {
 
 /**
  * @param {number} count
+ * @this {ModuleInstance}
  * @returns {void}
  */
 export function updateFlashingState (count) {
+
+  const instance = this
 
   let shouldFlash = false
 
