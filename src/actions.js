@@ -42,10 +42,6 @@ export const actionIdType = {
   hide_message: 'hide_message',
 }
 
-// Reusable labels
-let idTip = 'Unique identifier for a '
-let indexTip = 'Index of a timer or message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second timer from the top, set `index=2`'
-
 /**
  * Dictionary of Action Input Fields ({@link SomeCompanionActionInputField})
  *
@@ -90,13 +86,13 @@ const actionOptions = {
       default: 1,
       min: 1,
       max: 99,
-      tooltip: indexTip,
+      tooltip: 'Index of a timer to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second timer from the top, set `index=2`',
     },
     {
       id: 'timer_id',
       type: 'textinput',
       label: 'Timer ID',
-      tooltip: idTip + 'timer',
+      tooltip: 'The ID of the timer you want to target',
     },
   ],
   message: [
@@ -104,16 +100,17 @@ const actionOptions = {
       id: 'index',
       type: 'number',
       label: 'Message index',
-      default: 1,
+      default: 0, // According to Companion docs, `default: ""` should work for optional, but is of course a type error. 0 seems to work the same but without errors.
+      required: false,
       min: 1,
       max: 99,
-      tooltip: indexTip,
+      tooltip: 'Index of a message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second message from the top, set `index=2`. To target the active/first message, clear the input field.',
     },
     {
       id: 'message_id',
       type: 'textinput',
       label: 'Message ID',
-      tooltip: idTip + 'message',
+      tooltip: 'The ID of the message you want to target',
     },
   ],
 }

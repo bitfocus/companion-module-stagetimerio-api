@@ -362,12 +362,10 @@ function generatePresets () {
       {
         name: 'Show/hide message',
         actionId: actionIdType.show_or_hide_message,
-        actionOptions: {
-          index: 1,
-        },
+        actionOptions: {},
         style: {
           size: '14',
-          text: 'Toggle #1',
+          text: 'Toggle',
           alignment: 'center:bottom',
           png64: icons.message,
           pngalignment: 'center:top',
@@ -383,12 +381,10 @@ function generatePresets () {
       {
         name: 'Show message',
         actionId: actionIdType.show_message,
-        actionOptions: {
-          index: 2,
-        },
+        actionOptions: {},
         style: {
           size: '14',
-          text: 'Show #2',
+          text: 'Show',
           alignment: 'center:bottom',
           png64: icons.message,
           pngalignment: 'center:top',
@@ -400,12 +396,10 @@ function generatePresets () {
       {
         name: 'Hide message',
         actionId: actionIdType.hide_message,
-        actionOptions: {
-          index: 2,
-        },
+        actionOptions: {},
         style: {
           size: '14',
-          text: 'Hide #2',
+          text: 'Hide',
           alignment: 'center:bottom',
           png64: icons.messageOff,
           pngalignment: 'center:top',
@@ -455,19 +449,17 @@ function generatePresets () {
 /**
  * @param {feedbackType} feedbackId
  * @param {CompanionPresetFeedback['style']} [styleOverrides]
- * @returns {CompanionPresetFeedback | undefined}
+ * @returns {CompanionPresetFeedback}
  */
 export function getFeedbackDefaults (feedbackId, styleOverrides) {
 
-  if (feedbacks[feedbackId]) {
-    return {
-      feedbackId: feedbackId,
-      options: {},
-      style: {
-        ...feedbacks[feedbackId]['defaultStyle'],
-        ...styleOverrides,
-      },
-    }
+  return {
+    feedbackId: feedbackId,
+    options: {},
+    style: {
+      ...feedbacks[feedbackId]['defaultStyle'],
+      ...styleOverrides,
+    },
   }
 
 }
