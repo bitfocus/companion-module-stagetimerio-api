@@ -408,6 +408,24 @@ function generatePresets () {
         },
         feedbacks: [],
       },
+      {
+        name: 'Create message',
+        actionId: actionIdType.create_message,
+        actionOptions: {
+          text: 'New message',
+          color: 'white',
+        },
+        style: {
+          size: '14',
+          text: 'Create',
+          alignment: 'center:bottom',
+          png64: icons.messageNew,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
     ],
   }
 

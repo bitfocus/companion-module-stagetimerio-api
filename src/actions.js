@@ -40,6 +40,7 @@ export const actionIdType = {
   show_or_hide_message: 'show_or_hide_message',
   show_message: 'show_message',
   hide_message: 'hide_message',
+  create_message: 'create_message',
 }
 
 /**
@@ -86,13 +87,13 @@ const actionOptions = {
       default: 1,
       min: 1,
       max: 99,
-      tooltip: 'Index of a timer to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second timer from the top, set `index=2`',
+      tooltip: 'Index of a timer to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second timer from the top, set `index=2`.',
     },
     {
       id: 'timer_id',
       type: 'textinput',
       label: 'Timer ID',
-      tooltip: 'The ID of the timer you want to target',
+      tooltip: 'The ID of the timer you want to target.',
     },
   ],
   message: [
@@ -110,7 +111,41 @@ const actionOptions = {
       id: 'message_id',
       type: 'textinput',
       label: 'Message ID',
-      tooltip: 'The ID of the message you want to target',
+      tooltip: 'The ID of the message you want to target.',
+    },
+  ],
+  messageCreate: [
+    {
+      id: 'text',
+      type: 'textinput',
+      label: 'Message text',
+      tooltip: 'Write the text content of the message.',
+    },
+    {
+      id: 'color',
+      type: 'dropdown',
+      label: 'Text color',
+      tooltip: 'Choose a text color for the message, default color is white.',
+      choices: [
+        { id: 'white', label: 'White' },
+        { id: 'green', label: 'Green' },
+        { id: 'red', label: 'Red' },
+      ],
+      default: 'white',
+    },
+    {
+      id: 'bold',
+      type: 'checkbox',
+      label: 'Bold text',
+      default: false,
+      tooltip: 'Check to make the message text bold.',
+    },
+    {
+      id: 'uppercase',
+      type: 'checkbox',
+      label: 'Uppercase text',
+      default: false,
+      tooltip: 'Check to make the message text uppercase.',
     },
   ],
 }
@@ -264,6 +299,12 @@ export function loadActions (instance) {
       name: 'Message: Toggle visibility',
       description: 'Show/hide a message in the room',
       options: actionOptions.message,
+      callback: actionCallback,
+    },
+    [actionIdType.create_message]: {
+      name: 'Message: Create new message',
+      description: 'Creates a new message in the room',
+      options: actionOptions.messageCreate,
       callback: actionCallback,
     },
 
