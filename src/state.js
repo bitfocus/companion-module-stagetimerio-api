@@ -5,7 +5,7 @@ import { variableType } from './variables.js'
 //
 // Timekeeper service
 //
-/** @type {NodeJS.Timer | null} */
+/** @type {NodeJS.Timeout | null} */
 let timerKeeperId = null
 
 /**
@@ -16,6 +16,7 @@ let timerKeeperId = null
  */
 function startTimeKeeper () {
   if (timerKeeperId !== null) { return }
+  // @ts-expect-error: NodeJS.Timeout/Timer don't play well with TS atm
   timerKeeperId = setInterval(updatePlaybackState.bind(this), 500)
 }
 
