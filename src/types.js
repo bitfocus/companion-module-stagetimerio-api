@@ -89,6 +89,7 @@
  * @property {string} speaker
  * @property {string} notes
  * @property {string} duration
+ * @property {string} appearance
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
  */
@@ -149,6 +150,7 @@
  * @property {string} notes
  * @property {string} speaker
  * @property {string} duration
+ * @property {string} appearance
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
  */

@@ -234,13 +234,14 @@ function getTimerAndUpdateState (timer_id) {
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {
 
-      const { name, speaker, notes, duration, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
+      const { name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
 
       updateTimerState.call(this, {
         name,
         speaker,
         notes,
         duration,
+        appearance,
         wrap_up_yellow,
         wrap_up_red,
       })

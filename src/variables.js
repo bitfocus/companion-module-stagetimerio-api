@@ -16,6 +16,8 @@ export const variableType = {
   currentTimerDuration: 'currentTimerDuration',
   currentTimerDurationAsMs: 'currentTimerDurationAsMs',
 
+  currentTimerAppearance: 'currentTimerAppearance',
+
   currentTimerRemaining: 'currentTimerRemaining',
   currentTimerRemainingAsMs: 'currentTimerRemainingAsMs',
   currentTimerRemainingHours: 'currentTimerRemainingHours',
@@ -35,6 +37,8 @@ const variables = [
 
   { variableId: variableType.currentTimerDuration, name: 'Timer duration' },
   { variableId: variableType.currentTimerDurationAsMs, name: 'Timer duration (ms)' },
+
+  { variableId: variableType.currentTimerAppearance, name: 'Timer appearance' },
 
   { variableId: variableType.currentTimerRemaining, name: 'Timer remaining time' },
   { variableId: variableType.currentTimerRemainingAsMs, name: 'Timer remaining time (ms)' },

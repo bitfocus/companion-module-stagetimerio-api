@@ -265,6 +265,16 @@ function generatePresets () {
         ],
       },
       {
+        name: 'Timer appearance',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.currentTimerAppearance})`,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+      },
+      {
         name: 'Timer name',
         actionId: '',
         style: {
