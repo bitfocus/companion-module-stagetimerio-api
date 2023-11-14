@@ -76,6 +76,7 @@
  * @property {boolean} blackout
  * @property {boolean} focus_message
  * @property {string} logo
+ * @property {string} timezone
  */
 
 /**
@@ -111,6 +112,7 @@
  * @property {string} [roomName]
  * @property {boolean} roomBlackout
  * @property {boolean} roomFocus
+ * @property {string} roomTimezone
  */
 
 /**

@@ -7,6 +7,7 @@
 export const variableType = {
   roomId: 'roomId',
   roomName: 'roomName',
+  roomTimezone: 'roomTimezone',
 
   currentTimerId: 'currentTimerId',
   currentTimerName: 'currentTimerName',
@@ -29,6 +30,7 @@ export const variableType = {
 const variables = [
   { variableId: variableType.roomId, name: 'Room ID' },
   { variableId: variableType.roomName, name: 'Room name' },
+  { variableId: variableType.roomTimezone, name: 'Room timezone' },
 
   { variableId: variableType.currentTimerId, name: 'Timer ID' },
   { variableId: variableType.currentTimerName, name: 'Timer name' },

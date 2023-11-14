@@ -295,6 +295,16 @@ function generatePresets () {
         },
       },
       {
+        name: 'Timezone',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.roomTimezone})`,
+          color: colors.lightGray,
+          bgcolor: colors.black,
+        },
+      },
+      {
         name: 'Start flashing',
         actionId: actionIdType.start_flashing,
         actionOptions: {

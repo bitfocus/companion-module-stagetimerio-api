@@ -95,6 +95,7 @@ export const initialState = {
     roomName: undefined,
     roomBlackout: false,
     roomFocus: false,
+    roomTimezone: '',
   },
   viewer: {
     isFlashing: false,
@@ -144,6 +145,7 @@ export function updateRoomState (newState) {
   instance.setVariableValues({
     [variableType.roomId]: updatedState.roomId,
     [variableType.roomName]: updatedState.roomName,
+    [variableType.roomTimezone]: updatedState.roomTimezone ?? 'Auto',
   })
 
   instance.checkFeedbacks(
