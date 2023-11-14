@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test": "node --test"
   },
   "license": "MIT",
   "repository": {

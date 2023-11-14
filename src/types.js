@@ -119,8 +119,13 @@
  * @property {number} kickoff
  * @property {number} deadline
  * @property {number} lastStop
- * @property {number} [total]
- * @property {number} [remaining]
+ * @property {number} [totalAsMs]
+ * @property {string} [totalAsHuman]
+ * @property {number} [remainingAsMs]
+ * @property {string} [remainingAsHuman]
+ * @property {string} [remainingHours]
+ * @property {string} [remainingMinutes]
+ * @property {string} [remainingSeconds]
  * @property {import('./state.js').timerPhases} [phase]
  */
 
@@ -146,6 +151,28 @@
  * @property {string} duration
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
+ */
+
+/**
+ * A DHMS object containing the components for calculating and formatting durations.
+ *
+ * @typedef {object} DhmsObj
+ * @property { 0 | 1 } negative
+ * @property {number} days
+ * @property {number} hours
+ * @property {number} minutes
+ * @property {number} seconds
+ * @property {number} hoursSum
+ */
+
+/**
+ * An object containing formatted duration components
+ *
+ * @typedef {object} FormattedDhmsObj
+ * @property {string} hhh   formatted hoursSum
+ * @property {string} mm    formatted minutes
+ * @property {string} ss    formatted seconds
+ * @property {string} human hhh:mm:ss
  */
 
 /**

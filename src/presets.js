@@ -200,6 +200,55 @@ function generatePresets () {
         ],
       },
       {
+        name: 'Timer remaining, hours',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `\n$(stagetimer:${variableType.currentTimerRemainingHours})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
+      {
+        name: 'Timer remaining, minutes',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `\n$(stagetimer:${variableType.currentTimerRemainingMinutes})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
+      {
+        name: 'Timer remaining, seconds',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `\n$(stagetimer:${variableType.currentTimerRemainingSeconds})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
+
+      {
         name: 'Timer status',
         actionId: '',
         style: {

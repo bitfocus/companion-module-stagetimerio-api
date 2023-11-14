@@ -18,6 +18,9 @@ export const variableType = {
 
   currentTimerRemaining: 'currentTimerRemaining',
   currentTimerRemainingAsMs: 'currentTimerRemainingAsMs',
+  currentTimerRemainingHours: 'currentTimerRemainingHours',
+  currentTimerRemainingMinutes: 'currentTimerRemainingMinutes',
+  currentTimerRemainingSeconds: 'currentTimerRemainingSeconds',
 }
 
 /** @type {CompanionVariableDefinition[]} */
@@ -35,6 +38,9 @@ const variables = [
 
   { variableId: variableType.currentTimerRemaining, name: 'Timer remaining time' },
   { variableId: variableType.currentTimerRemainingAsMs, name: 'Timer remaining time (ms)' },
+  { variableId: variableType.currentTimerRemainingHours, name: 'Timer remaining time (hours)' },
+  { variableId: variableType.currentTimerRemainingMinutes, name: 'Timer remaining time (minutes)' },
+  { variableId: variableType.currentTimerRemainingSeconds, name: 'Timer remaining time (seconds)' },
 ]
 
 /**

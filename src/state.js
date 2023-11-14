@@ -1,5 +1,5 @@
 import { feedbackType } from './feedbacks.js'
-import { formatDuration, createTimeset } from './utils.js'
+import { createTimeset } from './utils.js'
 import { variableType } from './variables.js'
 
 //
@@ -17,7 +17,7 @@ let timerKeeperId = null
 function startTimeKeeper () {
   if (timerKeeperId !== null) { return }
   // @ts-expect-error: NodeJS.Timeout/Timer don't play well with TS atm
-  timerKeeperId = setInterval(updatePlaybackState.bind(this), 500)
+  timerKeeperId = setInterval(updatePlaybackState.bind(this), 250)
 }
 
 /**
@@ -140,7 +140,7 @@ export function updatePlaybackState (newState) {
   const updatedState = createTimeset(newState || instance.state.playback_status)
 
   updatedState.phase = getTimerPhase(
-    updatedState.remaining ?? 0,
+    updatedState.remainingAsMs ?? 0,
     instance.state.timer.wrap_up_yellow,
     instance.state.timer.wrap_up_red,
   )
@@ -157,11 +157,14 @@ export function updatePlaybackState (newState) {
   instance.setVariableValues({
     [variableType.currentTimerId]: updatedState.currentTimerId ?? undefined,
 
-    [variableType.currentTimerDuration]: formatDuration(updatedState.total),
-    [variableType.currentTimerDurationAsMs]: updatedState.total,
+    [variableType.currentTimerDuration]: updatedState.totalAsHuman,
+    [variableType.currentTimerDurationAsMs]: updatedState.totalAsMs,
 
-    [variableType.currentTimerRemaining]: formatDuration(updatedState.remaining),
-    [variableType.currentTimerRemainingAsMs]: updatedState.remaining,
+    [variableType.currentTimerRemaining]: updatedState.remainingAsHuman,
+    [variableType.currentTimerRemainingAsMs]: updatedState.remainingAsMs,
+    [variableType.currentTimerRemainingHours]: updatedState.remainingHours,
+    [variableType.currentTimerRemainingMinutes]: updatedState.remainingMinutes,
+    [variableType.currentTimerRemainingSeconds]: updatedState.remainingSeconds,
   })
 
   instance.checkFeedbacks(
@@ -193,7 +196,7 @@ export function updateTimerState (newState) {
 
   // Update `phase` using `playback_status` and `timer` state
   instance.state.playback_status.phase = getTimerPhase(
-    instance.state.playback_status.remaining ?? 0,
+    instance.state.playback_status.remainingAsMs ?? 0,
     instance.state.timer.wrap_up_yellow,
     instance.state.timer.wrap_up_red,
   )
