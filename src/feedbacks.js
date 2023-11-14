@@ -81,7 +81,7 @@ function generateFeedbacks (instance) {
       options: [],
       callback: (_feedback) => {
         let { phase } = instance.state.playback_status
-        return phase == timerPhases.negative
+        return (phase == timerPhases.negative || phase == timerPhases.zero)
       },
     },
 
