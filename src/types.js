@@ -7,6 +7,7 @@
 
 /** @typedef {import('@companion-module/base').CompanionActionDefinitions} CompanionActionDefinitions */
 /** @typedef {import('@companion-module/base').CompanionActionEvent} CompanionActionEvent */
+/** @typedef {import('@companion-module/base').DropdownChoice[]} CompanionDropdownOptions */
 
 /** @typedef {import('@companion-module/base').CompanionButtonStepActions} CompanionButtonStepActions */
 /** @typedef {import('@companion-module/base').SomeCompanionActionInputField} SomeCompanionActionInputField */

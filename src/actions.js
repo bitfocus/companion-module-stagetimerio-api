@@ -1,3 +1,5 @@
+import { messageColorDropdownOptions, timerAppearanceDropdownOptions, timerAppearances, timerTriggers, timerTriggersDropdownOptions, timerTypes, timerTypesDropdownOptions } from './config.js'
+
 /**
  * Enum of Action IDs allowed by Stagetimer.io API (v1)
  *
@@ -35,6 +37,7 @@ export const actionIdType = {
   start_or_stop_timer: 'start_or_stop_timer',
   reset_timer: 'reset_timer',
   get_timer: 'get_timer',
+  create_timer: 'create_timer',
 
   // Message
   show_or_hide_message: 'show_or_hide_message',
@@ -96,16 +99,142 @@ const actionOptions = {
       tooltip: 'The ID of the timer you want to target.',
     },
   ],
+  timerCreate: [
+    {
+      id: 'name',
+      type: 'textinput',
+      label: 'Name',
+      tooltip: 'Name of the timer.',
+    },
+    {
+      id: 'speaker',
+      type: 'textinput',
+      label: 'Speaker',
+      tooltip: 'Used to identify speakers.',
+    },
+    {
+      id: 'notes',
+      type: 'textinput',
+      label: 'Notes',
+      tooltip: 'Notes related to the timer or speaker.',
+    },
+    {
+      id: 'hours',
+      type: 'number',
+      label: 'Hours',
+      default: 0,
+      required: false,
+      min: 0,
+      max: 999,
+      tooltip: 'Duration (hours).',
+    },
+    {
+      id: 'minutes',
+      type: 'number',
+      label: 'Minutes',
+      default: 10,
+      required: false,
+      min: 0,
+      max: 59,
+      tooltip: 'Duration (minutes).',
+    },
+    {
+      id: 'seconds',
+      type: 'number',
+      label: 'Seconds',
+      default: 0,
+      required: false,
+      min: 0,
+      max: 59,
+      tooltip: 'Duration (seconds).',
+    },
+    {
+      id: 'wrap_up_yellow',
+      type: 'number',
+      label: 'Wrap up, yellow',
+      default: 60,
+      required: false,
+      min: 0,
+      max: 9999,
+      tooltip: 'Yellow wrap-up time (in seconds from the end).',
+    },
+    {
+      id: 'wrap_up_red',
+      type: 'number',
+      label: 'Wrap up, red',
+      default: 15,
+      required: false,
+      min: 0,
+      max: 9999,
+      tooltip: 'Red wrap-up time (in seconds from the end).',
+    },
+    {
+      id: 'advanced',
+      type: 'static-text',
+      label: 'Advanced options:',
+      value: 'The settings below are for advanced timer configuration.',
+    },
+    {
+      id: 'appearance',
+      type: 'dropdown',
+      label: 'Timer appearance',
+      tooltip: `Defines how the timer is displayed. See the "Timer Appearances" page in the docs. Default: ${timerAppearances.COUNTDOWN}`,
+      choices: timerAppearanceDropdownOptions,
+      default: 0,
+    },
+    {
+      id: 'type',
+      type: 'dropdown',
+      label: 'Timer type',
+      tooltip: `Defines the type of timer, ie. how runtime length is handled. See the "Timer Types" page in the docs. Default: ${timerTypes.DURATION}`,
+      choices: timerTypesDropdownOptions,
+      default: 0,
+    },
+    {
+      id: 'trigger',
+      type: 'dropdown',
+      label: 'Timer trigger',
+      tooltip: `Defines how the timer is triggered (started). See the "Timer Triggers" page in the docs. Default: ${timerTriggers.MANUAL}`,
+      choices: timerTriggersDropdownOptions,
+      default: 0,
+    },
+    {
+      id: 'start_time',
+      type: 'textinput',
+      label: 'Start time',
+      tooltip: 'Set a hard start time for this cue. Required when `trigger=LINKED` and `trigger=SCHEDULED`, but optional for `trigger=MANUAL`',
+    },
+    {
+      id: 'start_time_uses_date',
+      type: 'checkbox',
+      label: 'Start time uses date',
+      default: false,
+      tooltip: 'Determines if the date-part of `start_time` is being used. If `true`, then the the full date is used (e.g. 11 am on Oct 6). But if `false`, the start date is interpreted as today and the date part ignored (e.g. 11 am today).',
+    },
+    {
+      id: 'finish_time',
+      type: 'textinput',
+      label: 'Finish time',
+      tooltip: 'Finish time for the cue. Required when `type=FINISH_TIME`, otherwise ignored.',
+    },
+    {
+      id: 'finish_time_uses_date',
+      type: 'checkbox',
+      label: 'Finish time uses date',
+      default: false,
+      tooltip: 'Determines if the date-part of `finish_time` is being used. If `true`, then the the full date is used (e.g. 11 am on Oct 6). But if `false`, the start date is interpreted as today and the date part ignored (e.g. 11 am today).',
+    },
+  ],
   message: [
     {
       id: 'index',
       type: 'number',
       label: 'Message index',
-      default: 0, // According to Companion docs, `default: ""` should work for optional, but is of course a type error. 0 seems to work the same but without errors.
-      required: false,
+      // @ts-expect-error: According to Companion docs, `default: ''` should work for optional, but is of course a type error.
+      default: '',
       min: 1,
       max: 99,
-      tooltip: 'Index of a message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second message from the top, set `index=2`. To target the active/first message, clear the input field.',
+      tooltip: 'Index of a message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second message from the top, set `index=2`. Leave blank to target active or first message.',
     },
     {
       id: 'message_id',
@@ -119,19 +248,15 @@ const actionOptions = {
       id: 'text',
       type: 'textinput',
       label: 'Message text',
-      tooltip: 'Write the text content of the message.',
+      tooltip: 'Text content of the message.',
     },
     {
       id: 'color',
       type: 'dropdown',
       label: 'Text color',
-      tooltip: 'Choose a text color for the message, default color is white.',
-      choices: [
-        { id: 'white', label: 'White' },
-        { id: 'green', label: 'Green' },
-        { id: 'red', label: 'Red' },
-      ],
-      default: 'white',
+      tooltip: 'Choose a text color for the message. Default: white',
+      choices: messageColorDropdownOptions,
+      default: 0,
     },
     {
       id: 'bold',
@@ -279,6 +404,12 @@ export function loadActions (instance) {
       name: 'Timer: Reset',
       description: 'Reset a specific timer to original duration',
       options: actionOptions.timer,
+      callback: actionCallback,
+    },
+    [actionIdType.create_timer]: {
+      name: 'Timer: Create new timer',
+      description: 'Creates a new timer in the room',
+      options: actionOptions.timerCreate,
       callback: actionCallback,
     },
 

@@ -425,13 +425,39 @@ function generatePresets () {
         },
         feedbacks: [],
       },
+      {
+        name: 'Create timer',
+        actionId: actionIdType.create_timer,
+        actionOptions: {
+          hours: 0,
+          minutes: 10,
+          seconds: 0,
+          wrap_up_yellow: 60,
+          wrap_up_red: 15,
+          appearance: 0,
+          type: 0,
+          trigger: 0,
+        },
+        style: {
+          size: '14',
+          text: 'Create',
+          alignment: 'center:bottom',
+          png64: icons.timerCreate,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
     ],
 
     'Message': [
       {
         name: 'Show/hide message',
         actionId: actionIdType.show_or_hide_message,
-        actionOptions: {},
+        actionOptions: {
+          index: '',
+        },
         style: {
           size: '14',
           text: 'Toggle',
@@ -450,7 +476,9 @@ function generatePresets () {
       {
         name: 'Show message',
         actionId: actionIdType.show_message,
-        actionOptions: {},
+        actionOptions: {
+          index: '',
+        },
         style: {
           size: '14',
           text: 'Show',
@@ -465,7 +493,9 @@ function generatePresets () {
       {
         name: 'Hide message',
         actionId: actionIdType.hide_message,
-        actionOptions: {},
+        actionOptions: {
+          index: '',
+        },
         style: {
           size: '14',
           text: 'Hide',
@@ -481,14 +511,13 @@ function generatePresets () {
         name: 'Create message',
         actionId: actionIdType.create_message,
         actionOptions: {
-          text: 'New message',
-          color: 'white',
+          color: 0,
         },
         style: {
           size: '14',
           text: 'Create',
           alignment: 'center:bottom',
-          png64: icons.messageNew,
+          png64: icons.messageCreate,
           pngalignment: 'center:top',
           color: colors.white,
           bgcolor: colors.black,

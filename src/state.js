@@ -1,6 +1,7 @@
 import { feedbackType } from './feedbacks.js'
 import { createTimeset } from './utils.js'
 import { variableType } from './variables.js'
+import { timerAppearancesLabels } from './config.js'
 
 //
 // Timekeeper service
@@ -61,31 +62,6 @@ export function getTimerPhase (timeRemaining, yellowTime = 0, redTime = 0) {
   if (timeRemaining <= redTime * 1000) return timerPhases.red
   if (timeRemaining <= yellowTime * 1000) return timerPhases.yellow
   return timerPhases.default
-}
-
-/**
- * Enum of the appearances a timer can have
- *
- * @readonly
- * @enum {string}
- */
-const timerAppearances = {
-  COUNTDOWN    : 'COUNTDOWN',
-  COUNTUP      : 'COUNTUP',
-  TOD          : 'TOD',
-  COUNTDOWN_TOD: 'COUNTDOWN_TOD',
-  COUNTUP_TOD  : 'COUNTUP_TOD',
-  HIDDEN       : 'HIDDEN',
-}
-
-// Map timer appearances to a human-friendly label
-const timerAppearanceLabels = {
-  [timerAppearances.COUNTDOWN]    : 'Countdown',
-  [timerAppearances.COUNTUP]      : 'Count Up',
-  [timerAppearances.TOD]          : 'Time of Day',
-  [timerAppearances.COUNTDOWN_TOD]: 'C/D + ToD',
-  [timerAppearances.COUNTUP_TOD]  : 'C/U + ToD',
-  [timerAppearances.HIDDEN]       : 'Hidden',
 }
 
 /** @type {State} */
@@ -233,7 +209,7 @@ export function updateTimerState (newState) {
     [variableType.currentTimerNotes]: updatedState.notes,
     [variableType.currentTimerSpeaker]: updatedState.speaker,
     [variableType.currentTimerDuration]: updatedState.duration,
-    [variableType.currentTimerAppearance]: timerAppearanceLabels[updatedState.appearance],
+    [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
   })
 
   instance.checkFeedbacks(
