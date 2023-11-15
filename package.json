@@ -13,8 +13,7 @@
     "url": "git+https://github.com/bitfocus/companion-module-stagetimerio-api.git"
   },
   "dependencies": {
-    "@companion-module/base": "~1.4.1",
-    "date-fns": "^2.30.0",
+    "@companion-module/base": "~1.6.0",
     "socket.io-client": "^4.7.1"
   },
   "devDependencies": {
