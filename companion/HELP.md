@@ -6,6 +6,8 @@ This module lets you remotely control [Stagetimer](https://stagetimer.io/) using
 
 It connects using the [Stagetimer HTTP RPC API](https://stagetimer.io/docs/api-v1) and [Stagetimer Socket.io endpoint](https://stagetimer.io/docs/api-v1/#socket-io-endpoint).
 
+---
+
 ## Requirements
 
 To use this module you need:
@@ -14,26 +16,37 @@ To use this module you need:
 - **Room ID**: The ID of the Stagetimer room you want to control.
 - **API Key**: A key that authorizes you to use the Stagetimer API. You can generate an API key on the controller page.
 
+---
+
 ## Configuration
 
 1. Click on the module in the Connections list to reveal the configuration pane.
 2. Enter your **Room ID** and **API Key** in the form and click *Save*.
 3. If the details you entered are correct, the module will connect. If the module fails to connect, please review the output in the Companion Logs tab.
 
+---
+
 ## Presets
 
 There are multiple presets available for the most common actions, ready to drop into  your button layout.
+
+---
 
 ## Actions
 
 The following Actions are available:
 
+**Message actions:**
+
 - **Message: Hide**  
-    Hide a message in the room
+  Hide a message in the room
 - **Message: Show**  
-    Show a message in the room
+  Show a message in the room
 - **Message: Toggle visibility**  
-    Show/hide a message in the room
+  Show/hide a message in the room
+
+**Timer actions:**
+
 - **Timer: Reset**  
     Reset a specific timer to original duration
 - **Timer: Start**  
@@ -42,6 +55,9 @@ The following Actions are available:
     Stop a specific timer in the room
 - **Timer: Toggle playback**  
     Toggle (start/stop) a specific timer in the room
+
+**Transport actions:**
+
 - **Transport: Add time**  
     Add an amount of time to the highlighted timer in the room.
 - **Transport: Next**  
@@ -56,12 +72,9 @@ The following Actions are available:
     Stop the highlighted timer in the room
 - **Transport: Subtract time**  
     Subtract an amount of time from the highlighted timer in the room.
-- **Utility: Get room**  
-    Get status of the room
-- **Utility: Get status**  
-    Get playback status of the room
-- **Utility: Test auth**  
-    Test connection and authentication
+
+**Viewer actions:**
+
 - **Viewer: Disable blackout mode**  
     Disable blackout mode in the room
 - **Viewer: Disable focus mode**  
@@ -79,6 +92,17 @@ The following Actions are available:
 - **Viewer: Toggle focus mode**  
     Toggle (enable/disable) focus mode in the room
 
+**Utility actions:**
+
+- **Utility: Get room**  
+    Get status of the room
+- **Utility: Get status**  
+    Get playback status of the room
+- **Utility: Test auth**  
+    Test connection and authentication
+
+---
+
 ## Variables
 
 - `$(stagetimer:currentTimerDuration)` - Timer duration
@@ -91,6 +115,8 @@ The following Actions are available:
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
 - `$(stagetimer:roomId)` - Room ID
 - `$(stagetimer:roomName)` - Room name
+
+---
 
 ## Feedbacks
 
