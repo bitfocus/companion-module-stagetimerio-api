@@ -30,6 +30,9 @@ To use this module you need:
 
 There are multiple presets available for the most common actions, ready to drop into  your button layout.
 
+Find a complete list in the **Presets** section of this guide in the Stagetimer docs:  
+  **[Controlling Stagetimer via Companion for Stream Deck (Comprehensive Guide)](https://stagetimer.io/docs/integration-with-streamdeck-companion/#presets)**
+
 ---
 
 ## Actions
@@ -44,6 +47,8 @@ The following Actions are available:
   Show a message in the room
 - **Message: Toggle visibility**  
   Show/hide a message in the room
+- **Message: Create new message**  
+  Create a new message in the room
 
 **Timer actions:**
 
@@ -55,6 +60,8 @@ The following Actions are available:
     Stop a specific timer in the room
 - **Timer: Toggle playback**  
     Toggle (start/stop) a specific timer in the room
+- **Timer: Create new timer**  
+  Create a new timer in the room
 
 **Transport actions:**
 
@@ -105,6 +112,7 @@ The following Actions are available:
 
 ## Variables
 
+- `$(stagetimer:currentTimerAppearance)` -  Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
 - `$(stagetimer:currentTimerDuration)` - Timer duration
 - `$(stagetimer:currentTimerDurationAsMs)` - Timer duration (ms)
 - `$(stagetimer:currentTimerId)` - Timer ID
@@ -112,9 +120,13 @@ The following Actions are available:
 - `$(stagetimer:currentTimerNotes)` - Timer notes
 - `$(stagetimer:currentTimerRemaining)` - Timer remaining time
 - `$(stagetimer:currentTimerRemainingAsMs)` - Timer remaining time (ms)
+- `$(stagetimer:currentTimerRemainingHours)` - Timer remaining time (hours)
+- `$(stagetimer:currentTimerRemainingMinutes)` - Timer remaining time (minutes)
+- `$(stagetimer:currentTimerRemainingSeconds)` - Timer remaining time (seconds)
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
 - `$(stagetimer:roomId)` - Room ID
 - `$(stagetimer:roomName)` - Room name
+- `$(stagetimer:roomTimezone)` - Room timezone ([Docs](https://stagetimer.io/docs/using-timers/#timezones))
 
 ---
 
