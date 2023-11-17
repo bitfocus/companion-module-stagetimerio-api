@@ -408,7 +408,7 @@ export function loadActions (instance) {
     },
     [actionIdType.create_timer]: {
       name: 'Timer: Create new timer',
-      description: 'Creates a new timer in the room',
+      description: 'Create a new timer in the room',
       options: actionOptions.timerCreate,
       callback: actionCallback,
     },
@@ -434,7 +434,7 @@ export function loadActions (instance) {
     },
     [actionIdType.create_message]: {
       name: 'Message: Create new message',
-      description: 'Creates a new message in the room',
+      description: 'Create a new message in the room',
       options: actionOptions.messageCreate,
       callback: actionCallback,
     },

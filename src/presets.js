@@ -200,7 +200,7 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Timer remaining, hours',
+        name: 'Time remaining (hours)',
         actionId: '',
         style: {
           size: 'auto',
@@ -216,7 +216,7 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Timer remaining, minutes',
+        name: 'Time remaining (minutes)',
         actionId: '',
         style: {
           size: 'auto',
@@ -232,7 +232,7 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Timer remaining, seconds',
+        name: 'Time remaining (seconds)',
         actionId: '',
         style: {
           size: 'auto',
@@ -249,7 +249,7 @@ function generatePresets () {
       },
 
       {
-        name: 'Timer status',
+        name: 'Wrap-up indicator',
         actionId: '',
         style: {
           size: '18',
