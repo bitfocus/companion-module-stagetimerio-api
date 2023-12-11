@@ -1,33 +1,36 @@
 import { feedbackType } from './feedbacks.js'
-import { formatDuration, createTimeset } from './utils.js'
+import { createTimeset } from './utils.js'
 import { variableType } from './variables.js'
-
-/** @type {ModuleInstance} */
-let instance = null
-
-/**
- * Start state module
- *
- * @param {ModuleInstance} theInstance
- * @returns {void}
- */
-export function startState(theInstance) {
-	instance = theInstance
-}
+import { timerAppearancesLabels } from './config.js'
 
 //
 // Timekeeper service
 //
+/** @type {NodeJS.Timeout | null} */
 let timerKeeperId = null
 
-function startTimeKeeper() {
-	if (timerKeeperId !== null) { return }
-	timerKeeperId = setInterval(updatePlaybackState, 500)
+/**
+ * Start time keeping service
+ *
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+function startTimeKeeper () {
+  if (timerKeeperId !== null) { return }
+  // @ts-expect-error: NodeJS.Timeout/Timer don't play well with TS atm
+  timerKeeperId = setInterval(updatePlaybackState.bind(this), 250)
 }
 
-function stopTimeKeeper() {
-	clearInterval(timerKeeperId)
-	timerKeeperId = null
+/**
+ * Stop time keeping serviec
+ *
+ * @returns {void}
+ */
+function stopTimeKeeper () {
+  if(timerKeeperId !== null ) {
+    clearInterval(timerKeeperId)
+  }
+  timerKeeperId = null
 }
 
 
@@ -38,11 +41,11 @@ function stopTimeKeeper() {
  * @enum {string}
  */
 export const timerPhases = {
-	default: 'default',
-	yellow: 'yellow',
-	red: 'red',
-	zero: 'zero',
-	negative: 'negative',
+  default: 'default',
+  yellow: 'yellow',
+  red: 'red',
+  zero: 'zero',
+  negative: 'negative',
 }
 
 /**
@@ -53,193 +56,214 @@ export const timerPhases = {
  * @param {number} [redTime]
  * @returns {timerPhases}
  */
-export function getTimerPhase(timeRemaining, yellowTime, redTime) {
-	if (timeRemaining < 0) return timerPhases.negative
-	if (timeRemaining <= 0) return timerPhases.zero
-	if (timeRemaining <= redTime * 1000) return timerPhases.red
-	if (timeRemaining <= yellowTime * 1000) return timerPhases.yellow
-	return timerPhases.default
+export function getTimerPhase (timeRemaining, yellowTime = 0, redTime = 0) {
+  if (timeRemaining < 0) return timerPhases.negative
+  if (timeRemaining <= 0) return timerPhases.zero
+  if (timeRemaining <= redTime * 1000) return timerPhases.red
+  if (timeRemaining <= yellowTime * 1000) return timerPhases.yellow
+  return timerPhases.default
 }
-
 
 /** @type {State} */
 export const initialState = {
-	room: {
-		roomId: null,
-		roomName: null,
-		roomBlackout: null,
-		roomFocus: null,
-	},
-	viewer: {
-		isFlashing: false,
-	},
-	playback_status: {
-		currentTimerId: null,
-		isRunning: null,
-		kickoff: null,
-		deadline: null,
-		lastStop: null,
-		phase: 'default',
-	},
-	timer: {
-		name: null,
-		speaker: null,
-		notes: null,
-		duration: null,
-		wrap_up_yellow: null,
-		wrap_up_red: null,
-	},
-	message: {
-		showing: null,
-		text: null,
-		color: null,
-		bold: null,
-		uppercase: null,
-	},
+  room: {
+    roomId: undefined,
+    roomName: undefined,
+    roomBlackout: false,
+    roomFocus: false,
+    roomTimezone: '',
+  },
+  viewer: {
+    isFlashing: false,
+  },
+  playback_status: {
+    currentTimerId: '',
+    isRunning: false,
+    kickoff: 0,
+    deadline: 0,
+    lastStop: 0,
+    phase: undefined,
+  },
+  timer: {
+    name: '',
+    speaker: '',
+    notes: '',
+    duration: '',
+    appearance: '',
+    wrap_up_yellow: 0,
+    wrap_up_red: 0,
+  },
+  message: {
+    showing: false,
+    text: '',
+    color: '',
+    bold: false,
+    uppercase: false,
+  },
 }
 
 /**
  * @param { RoomState } newState
+ * @this {ModuleInstance}
  * @returns {void}
  */
-export function updateRoomState(newState) {
+export function updateRoomState (newState) {
 
-	const updatedState = {
-		...instance.state.room,
-		...newState,
-	}
+  const instance = this
 
-	instance.state.room = updatedState
+  const updatedState = {
+    ...instance.state.room,
+    ...newState,
+  }
 
-	instance.setVariableValues({
-		[variableType.roomId]: updatedState.roomId,
-		[variableType.roomName]: updatedState.roomName,
-	})
+  instance.state.room = updatedState
 
-	instance.checkFeedbacks(
-		feedbackType.blackoutEnabled,
-		feedbackType.focusEnabled,
-	)
+  instance.setVariableValues({
+    [variableType.roomId]: updatedState.roomId,
+    [variableType.roomName]: updatedState.roomName,
+    [variableType.roomTimezone]: updatedState.roomTimezone ?? 'Auto',
+  })
+
+  instance.checkFeedbacks(
+    feedbackType.blackoutEnabled,
+    feedbackType.focusEnabled,
+  )
 
 }
 
 /**
  * @param { PlaybackState } [newState]
+ * @this {ModuleInstance}
  * @returns {void}
  */
-export function updatePlaybackState(newState = instance.state.playback_status) {
+export function updatePlaybackState (newState) {
 
-	const updatedState = createTimeset(newState)
+  const instance = this
 
-	updatedState.phase = getTimerPhase(
-		updatedState.remaining,
-		instance.state.timer.wrap_up_yellow,
-		instance.state.timer.wrap_up_red
-	)
+  const updatedState = createTimeset(newState || instance.state.playback_status)
 
-	instance.state.playback_status = updatedState
+  updatedState.phase = getTimerPhase(
+    updatedState.remainingAsMs ?? 0,
+    instance.state.timer.wrap_up_yellow,
+    instance.state.timer.wrap_up_red,
+  )
 
-	// Only enable timekeeper polling if timer is active
-	if (updatedState.isRunning) {
-		startTimeKeeper()
-	} else {
-		stopTimeKeeper()
-	}
+  instance.state.playback_status = updatedState
 
-	instance.setVariableValues({
-		[variableType.currentTimerId]: updatedState.currentTimerId,
+  // Only enable timekeeper polling if timer is active
+  if (updatedState.isRunning) {
+    startTimeKeeper.call(this)
+  } else {
+    stopTimeKeeper.call(this)
+  }
 
-		[variableType.currentTimerDuration]: formatDuration(updatedState.total),
-		[variableType.currentTimerDurationAsMs]: updatedState.total,
+  instance.setVariableValues({
+    [variableType.currentTimerId]: updatedState.currentTimerId ?? undefined,
 
-		[variableType.currentTimerRemaining]: formatDuration(updatedState.remaining),
-		[variableType.currentTimerRemainingAsMs]: updatedState.remaining,
-	})
+    [variableType.currentTimerDuration]: updatedState.totalAsHuman,
+    [variableType.currentTimerDurationAsMs]: updatedState.totalAsMs,
 
-	instance.checkFeedbacks(
-		feedbackType.isRunning,
-		feedbackType.isStopped,
-		feedbackType.isOnTime,
-		feedbackType.isOverTime,
-		feedbackType.isWarningYellow,
-		feedbackType.isWarningRed
-	)
+    [variableType.currentTimerRemaining]: updatedState.remainingAsHuman,
+    [variableType.currentTimerRemainingAsMs]: updatedState.remainingAsMs,
+    [variableType.currentTimerRemainingHours]: updatedState.remainingHours,
+    [variableType.currentTimerRemainingMinutes]: updatedState.remainingMinutes,
+    [variableType.currentTimerRemainingSeconds]: updatedState.remainingSeconds,
+  })
+
+  instance.checkFeedbacks(
+    feedbackType.isRunning,
+    feedbackType.isStopped,
+    feedbackType.isOnTime,
+    feedbackType.isOverTime,
+    feedbackType.isWarningYellow,
+    feedbackType.isWarningRed,
+  )
 
 }
 
 /**
  * @param { TimerState } newState
+ * @this {ModuleInstance}
  * @returns {void}
  */
-export function updateTimerState(newState) {
+export function updateTimerState (newState) {
 
-	const updatedState = {
-		...instance.state.timer,
-		...newState,
-	}
+  const instance = this
 
-	instance.state.timer = updatedState
+  const updatedState = {
+    ...instance.state.timer,
+    ...newState,
+  }
 
-	// Update `phase` using `playback_status` and `timer` state
-	instance.state.playback_status.phase = getTimerPhase(
-		instance.state.playback_status.remaining,
-		instance.state.timer.wrap_up_yellow,
-		instance.state.timer.wrap_up_red
-	)
+  instance.state.timer = updatedState
 
-	instance.setVariableValues({
-		[variableType.currentTimerName]: updatedState.name,
-		[variableType.currentTimerNotes]: updatedState.notes,
-		[variableType.currentTimerSpeaker]: updatedState.speaker,
-		[variableType.currentTimerDuration]: updatedState.duration,
-	})
+  // Update `phase` using `playback_status` and `timer` state
+  instance.state.playback_status.phase = getTimerPhase(
+    instance.state.playback_status.remainingAsMs ?? 0,
+    instance.state.timer.wrap_up_yellow,
+    instance.state.timer.wrap_up_red,
+  )
 
-	instance.checkFeedbacks(
-		feedbackType.isWarningYellow,
-		feedbackType.isWarningRed
-	)
+  instance.setVariableValues({
+    [variableType.currentTimerName]: updatedState.name,
+    [variableType.currentTimerNotes]: updatedState.notes,
+    [variableType.currentTimerSpeaker]: updatedState.speaker,
+    [variableType.currentTimerDuration]: updatedState.duration,
+    [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
+  })
+
+  instance.checkFeedbacks(
+    feedbackType.isWarningYellow,
+    feedbackType.isWarningRed,
+  )
 
 }
 
 /**
  * @param { MessageState } newState
+ * @this {ModuleInstance}
  * @returns {void}
  */
-export function updateMessageState(newState) {
+export function updateMessageState (newState) {
 
-	instance.state.message = {
-		...instance.state.message,
-		...newState,
-	}
+  const instance = this
 
-	instance.checkFeedbacks(
-		feedbackType.messageIsShowing,
-	)
+  instance.state.message = {
+    ...instance.state.message,
+    ...newState,
+  }
+
+  instance.checkFeedbacks(
+    feedbackType.messageIsShowing,
+  )
 
 }
 
 /**
  * @param {number} count
+ * @this {ModuleInstance}
  * @returns {void}
  */
-export function updateFlashingState(count) {
+export function updateFlashingState (count) {
 
-	let shouldFlash = false
+  const instance = this
 
-	if (count > 0) {
+  let shouldFlash = false
 
-		shouldFlash = true
+  if (count > 0) {
 
-		setTimeout(() => {
-			instance.state.viewer.isFlashing = false
-			instance.checkFeedbacks(feedbackType.isFlashing)
-		}, count * 1000)
-	}
+    shouldFlash = true
 
-	instance.state.viewer.isFlashing = shouldFlash
+    setTimeout(() => {
+      instance.state.viewer.isFlashing = false
+      instance.checkFeedbacks(feedbackType.isFlashing)
+    }, count * 1000)
+  }
 
-	instance.checkFeedbacks(
-		feedbackType.isFlashing
-	)
+  instance.state.viewer.isFlashing = shouldFlash
+
+  instance.checkFeedbacks(
+    feedbackType.isFlashing,
+  )
 
 }

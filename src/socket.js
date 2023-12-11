@@ -1,15 +1,15 @@
 import { InstanceStatus } from '@companion-module/base'
 import { io } from 'socket.io-client'
 import {
-	updatePlaybackState,
-	updateRoomState,
-	updateTimerState,
-	updateFlashingState,
-	updateMessageState,
+  updatePlaybackState,
+  updateRoomState,
+  updateTimerState,
+  updateFlashingState,
+  updateMessageState,
 } from './state.js'
 import { actionIdType } from './actions.js'
 
-/** @type {import('socket.io-client').Socket} */
+/** @type {Socket | null} */
 let socket = null
 
 /**
@@ -19,10 +19,10 @@ let socket = null
  * @enum {string}
  */
 export const stagetimerEvents = {
-	playback_status: 'playback_status',
-	room: 'room',
-	flash: 'flash',
-	message: 'message',
+  playback_status: 'playback_status',
+  room: 'room',
+  flash: 'flash',
+  message: 'message',
 }
 
 /**
@@ -30,10 +30,10 @@ export const stagetimerEvents = {
  *
  * @returns {void}
  */
-export function socketStop() {
-	if (socket) {
-		socket.disconnect()
-	}
+export function socketStop () {
+  if (socket) {
+    socket.disconnect()
+  }
 }
 
 /**
@@ -41,200 +41,214 @@ export function socketStop() {
  *
  * @param {ModuleInstance} instance
  * @returns {void}
+ * @throws
  */
-export function socketStart(instance) {
+export function socketStart (instance) {
 
-	if (!instance || !instance.config) {
-		throw Error('Module instance required')
-	}
+  if (!instance || !instance.config) {
+    throw Error('Module instance required')
+  }
 
-	const { apiUrl, roomId, apiKey } = instance.config
-	const url = new URL(apiUrl)
+  const { apiUrl, roomId, apiKey } = instance.config
+  const url = new URL(apiUrl)
 
-	socketStop()
+  socketStop()
 
-	instance.log('info', 'Connecting to Stagetimer.io...')
-	instance.updateStatus(InstanceStatus.Connecting)
+  instance.log('info', 'Connecting to Stagetimer.io...')
+  instance.updateStatus(InstanceStatus.Connecting)
 
-	// Configure socket
-	socket = io(url.origin, {
-		path: url.pathname + 'socket.io',
-		auth: {
-			room_id: roomId,
-			api_key: apiKey,
-		},
-		// Prevent infinite retries
-		reconnectionAttempts: 5,
-		// Prevent infinite exponential backoff
-		reconnectionDelayMax: 10000,
-	})
+  // Configure socket
+  socket = io(url.origin, {
+    path: url.pathname + 'socket.io',
+    auth: {
+      room_id: roomId,
+      api_key: apiKey,
+    },
+    // Prevent infinite retries
+    reconnectionAttempts: 5,
+    // Prevent infinite exponential backoff
+    reconnectionDelayMax: 10000,
+  })
 
-	//
-	// Socket events
-	//
+  //
+  // Socket events
+  //
 
-	socket.on('connect', () => {
-		instance.log('info', 'Connected!')
-		instance.updateStatus(InstanceStatus.Ok)
+  socket.on('connect', () => {
+    instance.log('info', 'Connected!')
+    instance.updateStatus(InstanceStatus.Ok)
 
-		instance.apiClient.send(actionIdType.get_room, {})
-			.then(({ data }) => {
+    if (!instance.apiClient) {
+      throw Error('API client not ready')
+    }
 
-				const { _id, name, blackout, focus_message } = data
+    instance.apiClient.send(actionIdType.get_room, {})
+      .then(({ data }) => {
 
-				updateRoomState({
-					roomId: _id,
-					roomName: name,
-					roomBlackout: blackout,
-					roomFocus: focus_message,
-				})
-			})
-			.catch((error) => {
-				instance.log('error', error.toString())
-			})
+        const { _id, name, blackout, focus_message, timezone } = /** @type {RoomData} */(data)
 
-		instance.apiClient.send(actionIdType.get_status, {})
-			.then(({ data }) => {
+        updateRoomState.call(instance, {
+          roomId: _id,
+          roomName: name,
+          roomBlackout: blackout,
+          roomFocus: focus_message,
+          roomTimezone: timezone,
+        })
+      })
+      .catch((error) => {
+        instance.log('error', error.toString())
+      })
 
-				const { timer_id, running, start, finish, pause } = data
+    instance.apiClient.send(actionIdType.get_status, {})
+      .then(({ data }) => {
 
-				updatePlaybackState({
-					currentTimerId: timer_id,
-					isRunning: running,
-					kickoff: start,
-					deadline: finish,
-					lastStop: pause,
-				})
+        const { timer_id, running, start, finish, pause } = /** @type {StatusData} */(data)
 
-				return timer_id
-			})
-			.then((timer_id) => {
-				if (!timer_id) { return false }
-				getTimerAndUpdateState(instance, timer_id)
-			})
-			.catch((error) => {
-				instance.log('error', error.toString())
-			})
-	})
+        updatePlaybackState.call(instance, {
+          currentTimerId: timer_id,
+          isRunning: running,
+          kickoff: start,
+          deadline: finish,
+          lastStop: pause,
+        })
 
-	socket.on('connect_error', (error) => {
-		instance.log('warn', `Failed to connect! (${error.message})`)
-		instance.updateStatus(InstanceStatus.ConnectionFailure)
-	})
+        return timer_id
+      })
+      .then((timer_id) => {
+        getTimerAndUpdateState.call(instance, timer_id)
+      })
+      .catch((error) => {
+        instance.log('error', error.toString())
+      })
+  })
 
-	socket.on('disconnect', (reason) => {
-		if (reason === 'io client disconnect') { return }
-		instance.log('warn', `Disconnected! Reason: ${reason}`)
-		instance.updateStatus(InstanceStatus.Disconnected)
-	})
+  socket.on('connect_error', (error) => {
+    instance.log('warn', `Failed to connect! (${error.message})`)
+    instance.updateStatus(InstanceStatus.ConnectionFailure)
+  })
 
-	socket.on('error', (error) => {
-		instance.log('error', `Unexpected error: ${error.message}`)
-		instance.updateStatus(InstanceStatus.UnknownError)
-	})
+  socket.on('disconnect', (reason) => {
+    if (reason === 'io client disconnect') { return }
+    instance.log('warn', `Disconnected! Reason: ${reason}`)
+    instance.updateStatus(InstanceStatus.Disconnected)
+  })
 
-	//
-	// Socket IO Manager events
-	//
+  socket.on('error', (error) => {
+    instance.log('error', `Unexpected error: ${error.message}`)
+    instance.updateStatus(InstanceStatus.UnknownError)
+  })
 
-	socket.io.on('reconnect_attempt', (attempt) => {
-		instance.log('warn', `Reconnecting... (Attempt #${attempt})`)
-		instance.updateStatus(InstanceStatus.Connecting)
-	})
+  //
+  // Socket IO Manager events
+  //
 
-	socket.io.on('reconnect', (attempt) => {
-		instance.log('info', `Reconnected on attempt #${attempt}!`)
-		instance.updateStatus(InstanceStatus.Ok)
-	})
+  socket.io.on('reconnect_attempt', (attempt) => {
+    instance.log('warn', `Reconnecting... (Attempt #${attempt})`)
+    instance.updateStatus(InstanceStatus.Connecting)
+  })
 
-	socket.io.on('reconnect_failed', () => {
-		instance.log('error', `Unable to connect to Stagetimer.io!`)
-		instance.updateStatus(InstanceStatus.ConnectionFailure)
-	})
+  socket.io.on('reconnect', (attempt) => {
+    instance.log('info', `Reconnected on attempt #${attempt}!`)
+    instance.updateStatus(InstanceStatus.Ok)
+  })
 
-	socket.io.on('error', (error) => {
-		instance.log('debug', `[Socket manager] Unexpected error: ${error}`)
-	})
+  socket.io.on('reconnect_failed', () => {
+    instance.log('error', 'Unable to connect to Stagetimer.io!')
+    instance.updateStatus(InstanceStatus.ConnectionFailure)
+  })
 
-	//
-	// Stagetimer events
-	//
+  socket.io.on('error', (error) => {
+    instance.log('debug', `[Socket manager] Unexpected error: ${error}`)
+  })
 
-	socket.on(stagetimerEvents.playback_status, (payload) => {
-		instance.log('debug', 'Event: playback_status')
+  //
+  // Stagetimer events
+  //
 
-		const { timer_id, running, start, finish, pause } = payload
+  socket.on(stagetimerEvents.playback_status, (payload) => {
+    instance.log('debug', 'Event: playback_status')
 
-		updatePlaybackState({
-			currentTimerId: timer_id,
-			isRunning: running,
-			kickoff: start,
-			deadline: finish,
-			lastStop: pause,
-		})
+    const { timer_id, running, start, finish, pause } = payload
 
-		getTimerAndUpdateState(instance, timer_id)
-	})
+    updatePlaybackState.call(instance, {
+      currentTimerId: timer_id,
+      isRunning: running,
+      kickoff: start,
+      deadline: finish,
+      lastStop: pause,
+    })
 
-	socket.on(stagetimerEvents.room, (payload) => {
-		instance.log('debug', 'Event: room')
+    getTimerAndUpdateState.call(instance, timer_id)
+  })
 
-		const { blackout, focus_message } = payload
+  socket.on(stagetimerEvents.room, (payload) => {
+    instance.log('debug', 'Event: room')
 
-		updateRoomState({
-			roomBlackout: blackout,
-			roomFocus: focus_message,
-		})
-	})
+    const { blackout, focus_message, timezone } = payload
 
-	socket.on(stagetimerEvents.message, (payload) => {
-		instance.log('debug', 'Event: message')
+    updateRoomState.call(instance, {
+      roomBlackout: blackout,
+      roomFocus: focus_message,
+      roomTimezone: timezone,
+    })
+  })
 
-		const { showing, text, color, bold, uppercase } = payload
+  socket.on(stagetimerEvents.message, (payload) => {
+    instance.log('debug', 'Event: message')
 
-		updateMessageState({
-			showing,
-			text,
-			color,
-			bold,
-			uppercase,
-		})
-	})
+    const { showing, text, color, bold, uppercase } = payload
 
-	socket.on(stagetimerEvents.flash, (payload) => {
-		instance.log('debug', 'Event: flash')
+    updateMessageState.call(instance, {
+      showing,
+      text,
+      color,
+      bold,
+      uppercase,
+    })
+  })
 
-		const { count } = payload
+  socket.on(stagetimerEvents.flash, (payload) => {
+    instance.log('debug', 'Event: flash')
 
-		updateFlashingState(count)
-	})
+    const { count } = payload
 
-	// Start
-	socket.connect()
+    updateFlashingState.call(instance, count)
+  })
+
+  // Start
+  socket.connect()
 }
 
 /**
  *
- * @param {ModuleInstance} instance
  * @param {string} timer_id
+ * @this {ModuleInstance}
+ * @throws
  */
-function getTimerAndUpdateState(instance, timer_id) {
+function getTimerAndUpdateState (timer_id) {
 
-	instance.apiClient.send(actionIdType.get_timer, { timer_id })
-		.then(({ data }) => {
+  const instance = this
 
-			const { name, speaker, notes, duration, wrap_up_yellow, wrap_up_red } = data
+  if (!instance.apiClient) {
+    throw Error('API client not ready')
+  }
 
-			updateTimerState({
-				name,
-				speaker,
-				notes,
-				duration,
-				wrap_up_yellow,
-				wrap_up_red,
-			})
-		})
-		.catch((error) => {
-			instance.log('error', error.toString())
-		})
+  instance.apiClient.send(actionIdType.get_timer, { timer_id })
+    .then(({ data }) => {
+
+      const { name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
+
+      updateTimerState.call(this, {
+        name,
+        speaker,
+        notes,
+        duration,
+        appearance,
+        wrap_up_yellow,
+        wrap_up_red,
+      })
+    })
+    .catch((error) => {
+      instance.log('error', error.toString())
+    })
 }

@@ -1,34 +1,68 @@
-import { format } from 'date-fns'
+/**
+ * Converts an enum object to an array of objects for creating Companion action dropdowns.
+ *
+ * @param {Object.<string, string>} enumObj
+ * @returns {CompanionDropdownOptions}
+ */
+export function createDropdownOptions (enumObj) {
+  const optionsList = Object.entries(enumObj).map(([key, val]) => ({ id: key, label: val }))
+
+  return [
+    { id: 0, label: '(Default)' },
+    ...optionsList,
+  ]
+}
 
 /**
+ * Pad with zeroes
+ *
  * @param {number} number
- * @returns {boolean}
+ * @returns {string}
  */
-export function isNegative(number) {
-	return Math.sign(number) == -1 ? true : false
-}
-
-//
-// Utility functions from Stagetimer.io
-//
-
-/**
- * Correction for millisecond rounding
- *
- * @param {number} ms Duration of time as milliseconds.
- * @returns {number}
- */
-function floor50(ms) {
-	return Math.floor(ms / 50) * 50
+function zeroPad (number) {
+  return String(number).padStart(2, '0')
 }
 
 /**
- * Creates new zeroed timestamp
+ * Converts a duration of time (in milliseconds) into a Dhms object.
+ * Adapted from `millisecondsToDhms()` in Stagetimer codebase.
  *
- * @returns {number}
+ * @param {number} ms A duration as milliseconds
+ * @returns {DhmsObj}
  */
-function zero() {
-	return new Date().setHours(0, 0, 0, 0)
+export function millisecondsToDhms (ms = 0) {
+  const negative = ms < 0 ? 1 : 0
+  const absMs = Math.abs(ms)
+
+  return {
+    negative: negative,
+    days    : Math.floor(absMs / 86400000) || 0,
+    hours   : Math.floor((absMs % 86400000) / 3600000) || 0,
+    minutes : Math.floor((absMs % 3600000) / 60000) || 0,
+    seconds : Math.floor((absMs % 60000) / 1000) || 0,
+    hoursSum: Math.floor(absMs / 3600000) || 0,
+  }
+}
+
+/**
+ * Formats a Dhms object into formatted segments.
+ *
+ * @param {DhmsObj} dhms
+ * @returns {FormattedDhmsObj}
+ */
+export function dhmsToFormatted (dhms) {
+  const prefix = dhms.negative ? '-' : ''
+
+  const hhh = `${prefix}${dhms.hoursSum}`
+  const mm  = zeroPad(dhms.minutes)
+  const ss  = zeroPad(dhms.seconds)
+
+  return {
+    human: `${hhh}:${mm}:${ss}`,
+    hhh,
+    mm,
+    ss,
+  }
 }
 
 /**
@@ -38,75 +72,42 @@ function zero() {
  * @param {number} now Date in ms
  * @returns {PlaybackState}
  */
-export function createTimeset(timeset, now = Date.now()) {
-	const tenMin = 60000
-	if (now <= 0) now = Date.now()
+export function createTimeset (timeset, now = Date.now()) {
+  const tenMin = 60000
+  if (now <= 0) now = Date.now()
 
-	// Calculate 'total' (round 10 ms due to inaccuracies)
-	const total = timeset.deadline ? timeset.deadline - timeset.kickoff : tenMin
+  // Calculate 'total' (round 10 ms due to inaccuracies)
+  const total = timeset.deadline ? timeset.deadline - timeset.kickoff : tenMin
 
-	// Calculate time remaining
-	let remaining
-	if (!timeset.deadline) remaining = tenMin
-	else if (timeset.isRunning) remaining = timeset.deadline - now
-	else remaining = timeset.deadline - timeset.lastStop
+  // Calculate time remaining
+  let remaining
+  if (!timeset.deadline) remaining = tenMin
+  else if (timeset.isRunning) remaining = timeset.deadline - now
+  else remaining = timeset.deadline - timeset.lastStop
 
-	// Correct edge-case where left > total
-	if (remaining > total) remaining = total
+  // Correct edge-case where left > total
+  if (remaining > total) remaining = total
 
-	return {
-		...timeset,
-		total: floor50(total),
-		remaining: floor50(remaining),
-	}
-}
+  // Prepare total
+  const totalAsMsRounded = Math.ceil(total/1000) * 1000
+  const totalAsDhms = millisecondsToDhms(totalAsMsRounded)
+  const totalFormatted = dhmsToFormatted(totalAsDhms)
 
-/**
- * Formats a duration of time (in milliseconds) into a human-readable string.
- * Adapted from `formatDuration()` in Stagetimer codebase.
- *
- * @param {number} milliseconds - The duration in milliseconds to format.
- * @param {object} [options] - Formatting options.
- * @param {boolean} [options.includeH] - Whether to include hours in the output.
- * @param {boolean} [options.includeS] - Whether to include seconds in the output.
- * @param {boolean} [options.includeMs] - Whether to include milliseconds in the output.
- * @param {boolean} [options.includePrefix] - Whether to include a '-' prefix for negative durations.
- * @param {string} [options.customFormat] - A custom format string to use instead of the default format.
- *
- * @returns {string} The formatted duration string.
- */
-export function formatDuration(
-	milliseconds = 0,
-	{ includeH = true, includeS = true, includeMs = false, includePrefix = true, customFormat = null } = {}
-) {
-	// Return an empty string if milliseconds is not a number or is NaN
-	if (typeof milliseconds !== 'number' || isNaN(milliseconds)) return ''
+  // Prepare remaining
+  const remainingAsMsRounded = Math.ceil(remaining/1000) * 1000
+  const remainingAsDhms = millisecondsToDhms(remainingAsMsRounded)
+  const remainingFormatted = dhmsToFormatted(remainingAsDhms)
 
-	const withMs = includeMs
-	const withSec = includeS || Math.abs(milliseconds) < 3600000
-	const withHrs = includeH || Math.abs(milliseconds) >= 3600000
-
-	// Determine the prefix of the output string.
-	const prefix = isNegative(milliseconds) ? '-' : ''
-
-	// Determine the format string based on the options.
-	let formatStr = 'm'
-	if (withMs) formatStr = 'm:ss.S'
-	else if (withSec) formatStr = 'm:ss'
-	if (withHrs) formatStr = 'm' + formatStr
-
-	// Format the duration into the output string
-	let output = format(zero() + Math.abs(milliseconds), customFormat || formatStr)
-
-	// Add hours to the output if necessary
-	if (withHrs) {
-		output = Math.floor(Math.abs(milliseconds) / 3600000) + ':' + output
-	}
-
-	// Add optional prefix
-	if (includePrefix) {
-		output = prefix + output
-	}
-
-	return output
+  return {
+    ...timeset,
+    // Total
+    totalAsMs       : totalAsMsRounded,
+    totalAsHuman    : totalFormatted.human,
+    // Remaining
+    remainingAsMs   : remainingAsMsRounded,
+    remainingAsHuman: remainingFormatted.human,
+    remainingHours  : remainingFormatted.hhh,
+    remainingMinutes: remainingFormatted.mm,
+    remainingSeconds: remainingFormatted.ss,
+  }
 }

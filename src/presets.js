@@ -12,444 +12,554 @@ let presets = {}
  *
  * @returns {CompanionPresetDefinitions}
  */
-function generatePresets() {
+function generatePresets () {
 
-	/** @type {PresetDefinitions} */
-	const presets_template = {
-		'Transport': [
-			// Standard transport buttons
-			{
-				name: 'Start/stop toggle',
-				actionId: actionIdType.start_or_stop,
-				style: {
-					size: '14',
-					text: 'Start/stop',
-					alignment: 'center:bottom',
-					png64: icons.play,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.isRunning, {
-						png64: icons.pause,
-					}),
-				],
-			},
-			{
-				name: 'Start',
-				actionId: actionIdType.start,
-				style: {
-					size: '14',
-					text: 'Start',
-					alignment: 'center:bottom',
-					png64: icons.play,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.isRunning)
-				]
-			},
-			{
-				name: 'Stop',
-				actionId: actionIdType.stop,
-				style: {
-					size: '14',
-					text: 'Stop',
-					alignment: 'center:bottom',
-					png64: icons.pause,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.isStopped)
-				]
-			},
-			{
-				name: 'Previous',
-				actionId: actionIdType.previous,
-				style: {
-					size: '14',
-					text: 'Previous',
-					alignment: 'center:bottom',
-					png64: icons.previous,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: 'Next',
-				actionId: actionIdType.next,
-				style: {
-					size: '14',
-					text: 'Next',
-					alignment: 'center:bottom',
-					png64: icons.next,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-			},
+  /** @type {PresetDefinitions} */
+  const presets_template = {
+    'Transport': [
+      // Standard transport buttons
+      {
+        name: 'Start/stop toggle',
+        actionId: actionIdType.start_or_stop,
+        style: {
+          size: '14',
+          text: 'Start/stop',
+          alignment: 'center:bottom',
+          png64: icons.play,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isRunning, {
+            png64: icons.pause,
+          }),
+        ],
+      },
+      {
+        name: 'Start',
+        actionId: actionIdType.start,
+        style: {
+          size: '14',
+          text: 'Start',
+          alignment: 'center:bottom',
+          png64: icons.play,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isRunning),
+        ],
+      },
+      {
+        name: 'Stop',
+        actionId: actionIdType.stop,
+        style: {
+          size: '14',
+          text: 'Stop',
+          alignment: 'center:bottom',
+          png64: icons.pause,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isStopped),
+        ],
+      },
+      {
+        name: 'Previous',
+        actionId: actionIdType.previous,
+        style: {
+          size: '14',
+          text: 'Previous',
+          alignment: 'center:bottom',
+          png64: icons.previous,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Next',
+        actionId: actionIdType.next,
+        style: {
+          size: '14',
+          text: 'Next',
+          alignment: 'center:bottom',
+          png64: icons.next,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+      },
 
-			// Variations of add/subtract time
-			{
-				name: '+1min',
-				actionId: actionIdType.add_time,
-				actionOptions: {
-					amount: '1m',
-				},
-				style: {
-					size: '24',
-					text: '+1min',
-					alignment: 'center:center',
-					color: colors.lightGreen,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: '-1m',
-				actionId: actionIdType.subtract_time,
-				actionOptions: {
-					amount: '1m',
-				},
-				style: {
-					size: '24',
-					text: '-1m',
-					alignment: 'center:center',
-					color: colors.lightRed,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: '+30s',
-				actionId: actionIdType.add_time,
-				actionOptions: {
-					amount: '30s',
-				},
-				style: {
-					size: '24',
-					text: '+30s',
-					alignment: 'center:center',
-					color: colors.lightGreen,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: '-30s',
-				actionId: actionIdType.subtract_time,
-				actionOptions: {
-					amount: '30s',
-				},
-				style: {
-					size: '24',
-					text: '-30s',
-					alignment: 'center:center',
-					color: colors.lightRed,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: '+5min',
-				actionId: actionIdType.add_time,
-				actionOptions: {
-					amount: '5m',
-				},
-				style: {
-					size: '24',
-					text: '+5min',
-					alignment: 'center:center',
-					color: colors.lightGreen,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: '-5m',
-				actionId: actionIdType.subtract_time,
-				actionOptions: {
-					amount: '5m',
-				},
-				style: {
-					size: '24',
-					text: '-5m',
-					alignment: 'center:center',
-					color: colors.lightRed,
-					bgcolor: colors.black,
-				},
-			},
-		],
+      // Variations of add/subtract time
+      {
+        name: '+1min',
+        actionId: actionIdType.add_time,
+        actionOptions: {
+          amount: '1m',
+        },
+        style: {
+          size: '24',
+          text: '+1min',
+          alignment: 'center:center',
+          color: colors.lightGreen,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: '-1m',
+        actionId: actionIdType.subtract_time,
+        actionOptions: {
+          amount: '1m',
+        },
+        style: {
+          size: '24',
+          text: '-1m',
+          alignment: 'center:center',
+          color: colors.lightRed,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: '+30s',
+        actionId: actionIdType.add_time,
+        actionOptions: {
+          amount: '30s',
+        },
+        style: {
+          size: '24',
+          text: '+30s',
+          alignment: 'center:center',
+          color: colors.lightGreen,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: '-30s',
+        actionId: actionIdType.subtract_time,
+        actionOptions: {
+          amount: '30s',
+        },
+        style: {
+          size: '24',
+          text: '-30s',
+          alignment: 'center:center',
+          color: colors.lightRed,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: '+5min',
+        actionId: actionIdType.add_time,
+        actionOptions: {
+          amount: '5m',
+        },
+        style: {
+          size: '24',
+          text: '+5min',
+          alignment: 'center:center',
+          color: colors.lightGreen,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: '-5m',
+        actionId: actionIdType.subtract_time,
+        actionOptions: {
+          amount: '5m',
+        },
+        style: {
+          size: '24',
+          text: '-5m',
+          alignment: 'center:center',
+          color: colors.lightRed,
+          bgcolor: colors.black,
+        },
+      },
+    ],
 
-		Viewer: [
-			{
-				name: 'Time remaining',
-				actionId: '',
-				style: {
-					size: '18',
-					text: `$(stagetimer:${variableType.currentTimerRemaining})`,
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.isOnTime),
-					getFeedbackDefaults(feedbackType.isOverTime),
-					getFeedbackDefaults(feedbackType.isWarningYellow),
-					getFeedbackDefaults(feedbackType.isWarningRed),
-				],
-			},
-			{
-				name: 'Timer status',
-				actionId: '',
-				style: {
-					size: '18',
-					text: `Ready`,
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.isOnTime, { text: 'On time' }),
-					getFeedbackDefaults(feedbackType.isOverTime, { text: 'Over time!' }),
-					getFeedbackDefaults(feedbackType.isWarningYellow, { text: 'Wrap up..' }),
-					getFeedbackDefaults(feedbackType.isWarningRed, { text: 'Wrap up!' }),
-				],
-			},
-			{
-				name: 'Timer name',
-				actionId: '',
-				style: {
-					size: 'auto',
-					text: `$(stagetimer:${variableType.currentTimerName})`,
-					color: colors.lightBlue,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: 'Speaker',
-				actionId: '',
-				style: {
-					size: 'auto',
-					text: `Speaker: $(stagetimer:${variableType.currentTimerSpeaker})`,
-					color: colors.lightBlue,
-					bgcolor: colors.black,
-				},
-			},
-			{
-				name: 'Start flashing',
-				actionId: actionIdType.start_flashing,
-				actionOptions: {
-					count: 3,
-				},
-				style: {
-					size: '14',
-					text: 'Flash x3',
-					alignment: 'center:bottom',
-					png64: icons.flash,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [getFeedbackDefaults(feedbackType.isFlashing)],
-			},
-			{
-				name: 'Stop flashing',
-				actionId: actionIdType.stop_flashing,
-				style: {
-					size: '14',
-					text: 'Flash off',
-					alignment: 'center:bottom',
-					png64: icons.flashOff,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [getFeedbackDefaults(feedbackType.isFlashing)],
-			},
-			{
-				name: 'Toggle blackout mode',
-				actionId: actionIdType.toggle_blackout,
-				style: {
-					size: '14',
-					text: 'Blackout',
-					alignment: 'center:bottom',
-					png64: icons.blackout,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.blackoutEnabled, {
-						png64: icons.blackoutOff,
-					}),
-				],
-			},
-			{
-				name: 'Toggle focus mode',
-				actionId: actionIdType.toggle_focus,
-				style: {
-					size: '14',
-					text: 'Focus',
-					alignment: 'center:bottom',
-					png64: icons.focus,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.focusEnabled, {
-						png64: icons.focusOff,
-					}),
-				],
-			},
-		],
+    Viewer: [
+      {
+        name: 'Time remaining',
+        actionId: '',
+        style: {
+          size: '18',
+          text: `$(stagetimer:${variableType.currentTimerRemaining})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
+      {
+        name: 'Time remaining (hours)',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `\n$(stagetimer:${variableType.currentTimerRemainingHours})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
+      {
+        name: 'Time remaining (minutes)',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `\n$(stagetimer:${variableType.currentTimerRemainingMinutes})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
+      {
+        name: 'Time remaining (seconds)',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `\n$(stagetimer:${variableType.currentTimerRemainingSeconds})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime),
+          getFeedbackDefaults(feedbackType.isOverTime),
+          getFeedbackDefaults(feedbackType.isWarningYellow),
+          getFeedbackDefaults(feedbackType.isWarningRed),
+        ],
+      },
 
-		Timer: [
-			{
-				name: 'Reset a timer',
-				actionId: actionIdType.reset_timer,
-				actionOptions: {
-					index: 1,
-				},
-				style: {
-					size: '14',
-					text: 'Reset',
-					alignment: 'center:bottom',
-					png64: icons.timerReset,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [],
-			},
-			{
-				name: 'Start a timer',
-				actionId: actionIdType.start_timer,
-				actionOptions: {
-					index: 2,
-				},
-				style: {
-					size: '14',
-					text: 'Start #2',
-					alignment: 'center:bottom',
-					png64: icons.timer,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [],
-			},
-			{
-				name: 'Stop a timer',
-				actionId: actionIdType.stop_timer,
-				actionOptions: {
-					index: 2,
-				},
-				style: {
-					size: '14',
-					text: 'Stop #2',
-					alignment: 'center:bottom',
-					png64: icons.timer,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [],
-			},
-		],
+      {
+        name: 'Wrap-up indicator',
+        actionId: '',
+        style: {
+          size: '18',
+          text: 'Ready',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.isOnTime, { text: 'On time' }),
+          getFeedbackDefaults(feedbackType.isOverTime, { text: 'Over time!' }),
+          getFeedbackDefaults(feedbackType.isWarningYellow, { text: 'Wrap up..' }),
+          getFeedbackDefaults(feedbackType.isWarningRed, { text: 'Wrap up!' }),
+        ],
+      },
+      {
+        name: 'Timer appearance',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.currentTimerAppearance})`,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Timer name',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.currentTimerName})`,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Speaker',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `Speaker: $(stagetimer:${variableType.currentTimerSpeaker})`,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Timezone',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.roomTimezone})`,
+          color: colors.lightGray,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Start flashing',
+        actionId: actionIdType.start_flashing,
+        actionOptions: {
+          count: 3,
+        },
+        style: {
+          size: '14',
+          text: 'Flash x3',
+          alignment: 'center:bottom',
+          png64: icons.flash,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [getFeedbackDefaults(feedbackType.isFlashing)],
+      },
+      {
+        name: 'Stop flashing',
+        actionId: actionIdType.stop_flashing,
+        style: {
+          size: '14',
+          text: 'Flash off',
+          alignment: 'center:bottom',
+          png64: icons.flashOff,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [getFeedbackDefaults(feedbackType.isFlashing)],
+      },
+      {
+        name: 'Toggle blackout mode',
+        actionId: actionIdType.toggle_blackout,
+        style: {
+          size: '14',
+          text: 'Blackout',
+          alignment: 'center:bottom',
+          png64: icons.blackout,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.blackoutEnabled, {
+            png64: icons.blackoutOff,
+          }),
+        ],
+      },
+      {
+        name: 'Toggle focus mode',
+        actionId: actionIdType.toggle_focus,
+        style: {
+          size: '14',
+          text: 'Focus',
+          alignment: 'center:bottom',
+          png64: icons.focus,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.focusEnabled, {
+            png64: icons.focusOff,
+          }),
+        ],
+      },
+    ],
 
-		'Message': [
-			{
-				name: 'Show/hide message',
-				actionId: actionIdType.show_or_hide_message,
-				actionOptions: {
-					index: 1,
-				},
-				style: {
-					size: '14',
-					text: 'Toggle #1',
-					alignment: 'center:bottom',
-					png64: icons.message,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [
-					getFeedbackDefaults(feedbackType.messageIsShowing, {
-						png64: icons.messageOff,
-					}),
-				],
-			},
-			{
-				name: 'Show message',
-				actionId: actionIdType.show_message,
-				actionOptions: {
-					index: 2,
-				},
-				style: {
-					size: '14',
-					text: 'Show #2',
-					alignment: 'center:bottom',
-					png64: icons.message,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [],
-			},
-			{
-				name: 'Hide message',
-				actionId: actionIdType.hide_message,
-				actionOptions: {
-					index: 2,
-				},
-				style: {
-					size: '14',
-					text: 'Hide #2',
-					alignment: 'center:bottom',
-					png64: icons.messageOff,
-					pngalignment: 'center:top',
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: [],
-			},
-		],
-	}
+    Timer: [
+      {
+        name: 'Reset a timer',
+        actionId: actionIdType.reset_timer,
+        actionOptions: {
+          index: 1,
+        },
+        style: {
+          size: '14',
+          text: 'Reset',
+          alignment: 'center:bottom',
+          png64: icons.timerReset,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+      {
+        name: 'Start a timer',
+        actionId: actionIdType.start_timer,
+        actionOptions: {
+          index: 2,
+        },
+        style: {
+          size: '14',
+          text: 'Start #2',
+          alignment: 'center:bottom',
+          png64: icons.timer,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+      {
+        name: 'Stop a timer',
+        actionId: actionIdType.stop_timer,
+        actionOptions: {
+          index: 2,
+        },
+        style: {
+          size: '14',
+          text: 'Stop #2',
+          alignment: 'center:bottom',
+          png64: icons.timer,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+      {
+        name: 'Create timer',
+        actionId: actionIdType.create_timer,
+        actionOptions: {
+          hours: 0,
+          minutes: 10,
+          seconds: 0,
+          wrap_up_yellow: 60,
+          wrap_up_red: 15,
+          appearance: 0,
+          type: 0,
+          trigger: 0,
+        },
+        style: {
+          size: '14',
+          text: 'Create',
+          alignment: 'center:bottom',
+          png64: icons.timerCreate,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+    ],
 
-	for (const [buttonCategory, buttons] of Object.entries(presets_template)) {
+    'Message': [
+      {
+        name: 'Show/hide message',
+        actionId: actionIdType.show_or_hide_message,
+        actionOptions: {
+          index: '',
+        },
+        style: {
+          size: '14',
+          text: 'Toggle',
+          alignment: 'center:bottom',
+          png64: icons.message,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.messageIsShowing, {
+            png64: icons.messageOff,
+          }),
+        ],
+      },
+      {
+        name: 'Show message',
+        actionId: actionIdType.show_message,
+        actionOptions: {
+          index: '',
+        },
+        style: {
+          size: '14',
+          text: 'Show',
+          alignment: 'center:bottom',
+          png64: icons.message,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+      {
+        name: 'Hide message',
+        actionId: actionIdType.hide_message,
+        actionOptions: {
+          index: '',
+        },
+        style: {
+          size: '14',
+          text: 'Hide',
+          alignment: 'center:bottom',
+          png64: icons.messageOff,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+      {
+        name: 'Create message',
+        actionId: actionIdType.create_message,
+        actionOptions: {
+          color: 0,
+        },
+        style: {
+          size: '14',
+          text: 'Create',
+          alignment: 'center:bottom',
+          png64: icons.messageCreate,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [],
+      },
+    ],
+  }
 
-		for (const button of buttons) {
+  for (const [buttonCategory, buttons] of Object.entries(presets_template)) {
 
-			presets[button.name] = {
-				type: 'button',
-				category: buttonCategory,
-				name: button.name,
-				steps: button.steps || [
-					{
-						down: button.actionId
-							? [
-								{
-									actionId: button.actionId,
-									options: button.actionOptions || {},
-								},
-							]
-							: [],
-						up: [],
-					},
-				],
-				style: button.style || {
-					size: 'auto',
-					text: button.name,
-					color: colors.white,
-					bgcolor: colors.black,
-				},
-				feedbacks: button.feedbacks || [],
-			}
-		}
-	}
+    for (const button of buttons) {
 
-	return presets
+      presets[button.name] = {
+        type: 'button',
+        category: buttonCategory,
+        name: button.name,
+        steps: button.steps || [
+          {
+            down: button.actionId
+              ? [
+                {
+                  actionId: button.actionId,
+                  options: button.actionOptions || {},
+                },
+              ]
+              : [],
+            up: [],
+          },
+        ],
+        style: button.style || {
+          size: 'auto',
+          text: button.name,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: button.feedbacks || [],
+      }
+    }
+  }
+
+  return presets
 }
 
 /**
@@ -457,18 +567,16 @@ function generatePresets() {
  * @param {CompanionPresetFeedback['style']} [styleOverrides]
  * @returns {CompanionPresetFeedback}
  */
-export function getFeedbackDefaults(feedbackId, styleOverrides) {
+export function getFeedbackDefaults (feedbackId, styleOverrides) {
 
-	if (feedbacks[feedbackId]) {
-		return {
-			feedbackId: feedbackId,
-			options: {},
-			style: {
-				...feedbacks[feedbackId]['defaultStyle'],
-				...styleOverrides,
-			},
-		}
-	}
+  return {
+    feedbackId: feedbackId,
+    options: {},
+    style: {
+      ...feedbacks[feedbackId]['defaultStyle'],
+      ...styleOverrides,
+    },
+  }
 
 }
 
@@ -477,10 +585,10 @@ export function getFeedbackDefaults(feedbackId, styleOverrides) {
  * @param { ModuleInstance } instance
  * @returns {void}
  */
-export function loadPresets(instance) {
+export function loadPresets (instance) {
 
-	instance.setPresetDefinitions(
-		generatePresets()
-	)
+  instance.setPresetDefinitions(
+    generatePresets(),
+  )
 
 }
