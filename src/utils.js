@@ -72,9 +72,9 @@ export function dhmsToFormatted (dhms) {
  * @param {number} now Date in ms
  * @returns {PlaybackState}
  */
-export function createTimeset (timeset, now = Date.now()) {
+export function createTimeset (timeset) {
   const tenMin = 60000
-  if (now <= 0) now = Date.now()
+  const now = Date.now() - timeset.serverTimeDiff
 
   // Calculate 'total' (round 10 ms due to inaccuracies)
   const total = timeset.deadline ? timeset.deadline - timeset.kickoff : tenMin

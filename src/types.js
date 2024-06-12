@@ -64,6 +64,7 @@
  * @property {number} start
  * @property {number} finish
  * @property {number} pause
+ * @property {number} server_time
  */
 
 /**
@@ -123,6 +124,7 @@
  * @property {number} kickoff
  * @property {number} deadline
  * @property {number} lastStop
+ * @property {number} serverTimeDiff
  * @property {number} [totalAsMs]
  * @property {string} [totalAsHuman]
  * @property {number} [remainingAsMs]

@@ -102,7 +102,10 @@ export function socketStart (instance) {
     instance.apiClient.send(actionIdType.get_status, {})
       .then(({ data }) => {
 
-        const { timer_id, running, start, finish, pause } = /** @type {StatusData} */(data)
+        const { timer_id, running, start, finish, pause, server_time } = /** @type {StatusData} */(data)
+
+        const serverTimeDiff = Date.now() - server_time
+        instance.log('debug', `Difference between system and server time: ${serverTimeDiff}ms`)
 
         updatePlaybackState.call(instance, {
           currentTimerId: timer_id,
@@ -110,6 +113,7 @@ export function socketStart (instance) {
           kickoff: start,
           deadline: finish,
           lastStop: pause,
+          serverTimeDiff,
         })
 
         return timer_id
@@ -168,7 +172,10 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.playback_status, (payload) => {
     instance.log('debug', 'Event: playback_status')
 
-    const { timer_id, running, start, finish, pause } = payload
+    const { timer_id, running, start, finish, pause, server_time } = payload
+
+    const serverTimeDiff = Date.now() - server_time
+    instance.log('debug', `Difference between system and server time: ${serverTimeDiff}ms`)
 
     updatePlaybackState.call(instance, {
       currentTimerId: timer_id,
@@ -176,6 +183,7 @@ export function socketStart (instance) {
       kickoff: start,
       deadline: finish,
       lastStop: pause,
+      serverTimeDiff,
     })
 
     getTimerAndUpdateState.call(instance, timer_id)
