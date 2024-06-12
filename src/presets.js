@@ -69,6 +69,19 @@ function generatePresets () {
         ],
       },
       {
+        name: 'Reset',
+        actionId: actionIdType.reset,
+        style: {
+          size: '14',
+          text: 'Reset',
+          alignment: 'center:bottom',
+          png64: icons.reset,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+      },
+      {
         name: 'Previous',
         actionId: actionIdType.previous,
         style: {
