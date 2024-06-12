@@ -77,6 +77,8 @@ The following Actions are available:
     Start/stop the highlighted timer in the room
 - **Transport: Stop**  
     Stop the highlighted timer in the room
+- **Transport: Reset**  
+    Reset or restart the currently highlighted timer.
 - **Transport: Subtract time**  
     Subtract an amount of time from the highlighted timer in the room.
 
