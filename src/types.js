@@ -95,6 +95,8 @@
  * @property {string} appearance
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
+ * @property {number} start_time
+ * @property {number} start_time_uses_date
  */
 
 /**

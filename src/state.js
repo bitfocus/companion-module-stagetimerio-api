@@ -2,6 +2,7 @@ import { feedbackType } from './feedbacks.js'
 import { createTimeset } from './utils.js'
 import { variableType } from './variables.js'
 import { timerAppearancesLabels } from './config.js'
+import { parseDateAsToday, parseDate, formatTimezone, formatTimeOfDay } from '@stagetimerio/timeutils'
 
 //
 // Timekeeper service
@@ -84,6 +85,29 @@ export const initialState = {
     lastStop: 0,
     phase: undefined,
   },
+  current_timer: {
+    name: '',
+    speaker: '',
+    notes: '',
+    duration: '',
+    appearance: '',
+    wrap_up_yellow: 0,
+    wrap_up_red: 0,
+    start_time: '',
+    start_time_uses_date: '',
+  },
+  next_timer: {
+    name: '',
+    speaker: '',
+    notes: '',
+    duration: '',
+    appearance: '',
+    wrap_up_yellow: 0,
+    wrap_up_red: 0,
+    start_time: '',
+    start_time_uses_date: '',
+  },
+  // OBSOLETE
   timer: {
     name: '',
     speaker: '',
@@ -121,7 +145,7 @@ export function updateRoomState (newState) {
   instance.setVariableValues({
     [variableType.roomId]: updatedState.roomId,
     [variableType.roomName]: updatedState.roomName,
-    [variableType.roomTimezone]: updatedState.roomTimezone ?? 'Auto',
+    [variableType.roomTimezone]: formatTimezone(updatedState.roomTimezone, 'abbr') || 'Auto',
   })
 
   instance.checkFeedbacks(
@@ -179,6 +203,86 @@ export function updatePlaybackState (newState) {
     feedbackType.isWarningRed,
   )
 
+}
+
+/**
+ * @param { TimerState } newState
+ * @param {TimerState} newState
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+export function updateCurrentTimerState (newState) {
+
+  const instance = this
+
+  const updatedState = {
+    ...instance.state.current_timer,
+    ...newState,
+  }
+
+  instance.state.timer = updatedState
+  instance.state.current_timer = updatedState
+
+  // Update `phase` using `playback_status` and `timer` state
+  instance.state.playback_status.phase = getTimerPhase(
+    instance.state.playback_status.remainingAsMs ?? 0,
+    instance.state.timer.wrap_up_yellow,
+    instance.state.timer.wrap_up_red,
+    instance.state.current_timer.wrap_up_yellow,
+    instance.state.current_timer.wrap_up_red,
+  )
+
+  const timezone = instance.state.room?.roomTimezone || 'UTC'
+  let start
+  if (updatedState.start_time) start = parseDateAsToday(updatedState.start_time, { timezone })
+  if (updatedState.start_time_uses_date) start = parseDate(updatedState.start_time, timezone)
+
+  instance.setVariableValues({
+    [variableType.currentTimerName]: updatedState.name,
+    [variableType.currentTimerNotes]: updatedState.notes,
+    [variableType.currentTimerSpeaker]: updatedState.speaker,
+    [variableType.currentTimerDuration]: updatedState.duration,
+    [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
+    [variableType.currentTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
+    [variableType.currentTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
+  })
+
+  instance.checkFeedbacks(
+    feedbackType.isWarningYellow,
+    feedbackType.isWarningRed,
+  )
+}
+
+/**
+ * @param {TimerState} newState
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+export function updateNextTimerState (newState) {
+
+  const instance = this
+
+  const updatedState = {
+    ...instance.state.next_timer,
+    ...newState,
+  }
+
+  instance.state.next_timer = updatedState
+
+  const timezone = instance.state.room?.roomTimezone || 'UTC'
+  let start
+  if (updatedState.start_time) start = parseDateAsToday(updatedState.start_time, { timezone })
+  if (updatedState.start_time_uses_date) start = parseDate(updatedState.start_time, timezone)
+
+  instance.setVariableValues({
+    [variableType.nextTimerName]: updatedState.name,
+    [variableType.nextTimerNotes]: updatedState.notes,
+    [variableType.nextTimerSpeaker]: updatedState.speaker,
+    [variableType.nextTimerDuration]: updatedState.duration,
+    [variableType.nextTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
+    [variableType.nextTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
+    [variableType.nextTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
+  })
 }
 
 /**

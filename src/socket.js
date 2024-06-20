@@ -3,6 +3,8 @@ import { io } from 'socket.io-client'
 import {
   updatePlaybackState,
   updateRoomState,
+  updateCurrentTimerState,
+  updateNextTimerState,
   updateTimerState,
   updateFlashingState,
   updateMessageState,
@@ -21,6 +23,8 @@ let socket = null
 export const stagetimerEvents = {
   playback_status: 'playback_status',
   room: 'room',
+  current_timer: 'current_timer',
+  next_timer: 'next_timer',
   flash: 'flash',
   message: 'message',
 }
@@ -82,6 +86,11 @@ export function socketStart (instance) {
       throw Error('API client not ready')
     }
 
+    /**
+     * @DEPRECATED
+     * The API socket now emits room, playback_status, current_timer and next_timer on connect.
+     * Temporarily retained for backwards compatibility.
+     */
     instance.apiClient.send(actionIdType.get_room, {})
       .then(({ data }) => {
 
@@ -99,6 +108,11 @@ export function socketStart (instance) {
         instance.log('error', error.toString())
       })
 
+    /**
+     * @DEPRECATED
+     * The API socket now emits room, playback_status, current_timer and next_timer on connect.
+     * Temporarily retained for backwards compatibility.
+     */
     instance.apiClient.send(actionIdType.get_status, {})
       .then(({ data }) => {
 
@@ -198,6 +212,62 @@ export function socketStart (instance) {
       roomBlackout: blackout,
       roomFocus: focus_message,
       roomTimezone: timezone,
+    })
+  })
+
+  socket.on(stagetimerEvents.current_timer, (payload) => {
+    instance.log('debug', 'Event: current_timer')
+
+    const {
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
+    } = payload
+
+    updateCurrentTimerState.call(instance, {
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
+    })
+  })
+
+  socket.on(stagetimerEvents.next_timer, (payload) => {
+    instance.log('debug', 'Event: next_timer')
+
+    const {
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
+    } = payload
+
+    updateNextTimerState.call(instance, {
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
     })
   })
 
