@@ -1,8 +1,8 @@
 import { feedbackType } from './feedbacks.js'
-import { createTimeset, timerToStartDate, durationToMs } from './utils.js'
+import { createTimeset, timerToStartDate, durationToMs, formatTimeDisplay } from './utils.js'
 import { variableType } from './variables.js'
 import { timerAppearancesLabels } from './config.js'
-import { hmsToMilliseconds, formatTimezone, formatTimeOfDay } from '@stagetimerio/timeutils'
+import { formatTimezone, formatTimeOfDay } from '@stagetimerio/timeutils'
 
 //
 // Timekeeper service
@@ -130,7 +130,7 @@ export function updateRoomState (newState) {
     ...newState,
   }
 
-  const isTimezoneChange = newState.roomTimezone !== instance.state.room.roomTimezone
+  const isTimezoneChange = updatedState.roomTimezone !== instance.state.room.roomTimezone
 
   instance.log('debug', `room: ${JSON.stringify(updatedState)}`)
 
@@ -180,7 +180,15 @@ export function updatePlaybackState (newState) {
     stopTimeKeeper.call(this)
   }
 
+  const timezone = instance.state.room?.roomTimezone || 'UTC'
+  const appearance = instance.state.current_timer.appearance
+  const timeDisplay = formatTimeDisplay(updatedState, { appearance, timezone })
+
   instance.setVariableValues({
+    [variableType.timeDisplay]: timeDisplay.display,
+    [variableType.timeDisplayHours]: timeDisplay.displayHours,
+    [variableType.timeDisplayMinutes]: timeDisplay.displayMinutes,
+    [variableType.timeDisplaySeconds]: timeDisplay.displaySeconds,
     [variableType.currentTimerRemaining]: updatedState.remainingAsHuman,
     [variableType.currentTimerRemainingAsMs]: updatedState.remainingAsMs,
     [variableType.currentTimerRemainingHours]: updatedState.remainingHours,
@@ -214,6 +222,8 @@ export function updateCurrentTimerState (newState) {
     ...newState,
   }
 
+  const isAppearanceChange = updatedState.appearance !== instance.state.current_timer.appearance
+
   instance.log('debug', `current_timer: ${JSON.stringify(updatedState)}`)
 
   instance.state.current_timer = updatedState
@@ -244,6 +254,11 @@ export function updateCurrentTimerState (newState) {
     feedbackType.isWarningYellow,
     feedbackType.isWarningRed,
   )
+
+  // Handle appearance change
+  if (isAppearanceChange && !instance.state.playback_status.isRunning) {
+    updatePlaybackState.call(instance)
+  }
 }
 
 /**
