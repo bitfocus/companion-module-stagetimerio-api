@@ -1,3 +1,5 @@
+import { parseDateAsToday, parseDate, hmsToMilliseconds } from '@stagetimerio/timeutils'
+
 /**
  * Converts an enum object to an array of objects for creating Companion action dropdowns.
  *
@@ -110,4 +112,26 @@ export function createTimeset (timeset) {
     remainingMinutes: remainingFormatted.mm,
     remainingSeconds: remainingFormatted.ss,
   }
+}
+
+/**
+ * @param  {TimerState} timer
+ * @param  {string} timezone
+ * @return {Date}
+ */
+export function timerToStartDate (timer, timezone) {
+  let start
+  if (timer.start_time) start = parseDateAsToday(timer.start_time, { timezone })
+  if (timer.start_time_uses_date) start = parseDate(timer.start_time, timezone)
+  return start
+}
+
+/**
+ * @param  {string} duration - In the format of 'hh:mm:ss'
+ * @return {number}
+ */
+export function durationToMs (duration) {
+  if (typeof duration !== 'string' || !duration) return
+  const [hours, minutes, seconds] = duration.split(':')
+  return hmsToMilliseconds({ hours, minutes, seconds })
 }

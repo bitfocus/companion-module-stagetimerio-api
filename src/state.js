@@ -1,8 +1,8 @@
 import { feedbackType } from './feedbacks.js'
-import { createTimeset } from './utils.js'
+import { createTimeset, timerToStartDate, durationToMs } from './utils.js'
 import { variableType } from './variables.js'
 import { timerAppearancesLabels } from './config.js'
-import { parseDateAsToday, parseDate, formatTimezone, formatTimeOfDay } from '@stagetimerio/timeutils'
+import { hmsToMilliseconds, formatTimezone, formatTimeOfDay } from '@stagetimerio/timeutils'
 
 //
 // Timekeeper service
@@ -181,11 +181,6 @@ export function updatePlaybackState (newState) {
   }
 
   instance.setVariableValues({
-    [variableType.currentTimerId]: updatedState.currentTimerId ?? undefined,
-
-    [variableType.currentTimerDuration]: updatedState.totalAsHuman,
-    [variableType.currentTimerDurationAsMs]: updatedState.totalAsMs,
-
     [variableType.currentTimerRemaining]: updatedState.remainingAsHuman,
     [variableType.currentTimerRemainingAsMs]: updatedState.remainingAsMs,
     [variableType.currentTimerRemainingHours]: updatedState.remainingHours,
@@ -219,6 +214,8 @@ export function updateCurrentTimerState (newState) {
     ...newState,
   }
 
+  instance.log('debug', `current_timer: ${JSON.stringify(updatedState)}`)
+
   instance.state.current_timer = updatedState
 
   // Update `phase` using `playback_status` and `timer` state
@@ -229,15 +226,15 @@ export function updateCurrentTimerState (newState) {
   )
 
   const timezone = instance.state.room?.roomTimezone || 'UTC'
-  let start
-  if (updatedState.start_time) start = parseDateAsToday(updatedState.start_time, { timezone })
-  if (updatedState.start_time_uses_date) start = parseDate(updatedState.start_time, timezone)
+  const start = timerToStartDate(updatedState, timezone)
 
   instance.setVariableValues({
+    [variableType.currentTimerId]: updatedState._id,
     [variableType.currentTimerName]: updatedState.name,
     [variableType.currentTimerNotes]: updatedState.notes,
     [variableType.currentTimerSpeaker]: updatedState.speaker,
     [variableType.currentTimerDuration]: updatedState.duration,
+    [variableType.currentTimerDurationAsMs]: durationToMs(updatedState.duration),
     [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
     [variableType.currentTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.currentTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
@@ -268,17 +265,15 @@ export function updateNextTimerState (newState) {
   instance.state.next_timer = updatedState
 
   const timezone = instance.state.room?.roomTimezone || 'UTC'
-  let start
-  if (updatedState.start_time) start = parseDateAsToday(updatedState.start_time, { timezone })
-  if (updatedState.start_time_uses_date) start = parseDate(updatedState.start_time, timezone)
-
-  instance.log('debug', `timezone: ${timezone}`)
+  const start = timerToStartDate(updatedState, timezone)
 
   instance.setVariableValues({
+    [variableType.nextTimerId]: updatedState._id,
     [variableType.nextTimerName]: updatedState.name,
     [variableType.nextTimerNotes]: updatedState.notes,
     [variableType.nextTimerSpeaker]: updatedState.speaker,
     [variableType.nextTimerDuration]: updatedState.duration,
+    [variableType.nextTimerDurationAsMs]: durationToMs(updatedState.duration),
     [variableType.nextTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
     [variableType.nextTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.nextTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
