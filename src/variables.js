@@ -11,6 +11,10 @@ export const variableType = {
   roomTimezone: 'roomTimezone',
 
   // Playback Snapshot
+  timeDisplay: 'timeDisplay',
+  timeDisplayHours: 'timeDisplayHours',
+  timeDisplayMinutes: 'timeDisplayMinutes',
+  timeDisplaySeconds: 'timeDisplaySeconds',
   currentTimerRemaining: 'currentTimerRemaining',
   currentTimerRemainingAsMs: 'currentTimerRemainingAsMs',
   currentTimerRemainingHours: 'currentTimerRemainingHours',
@@ -50,6 +54,10 @@ const variables = [
   { variableId: variableType.roomTimezone, name: 'Room timezone' },
 
   // Playback Snapshot
+  { variableId: variableType.timeDisplay, name: 'Formatted timer display' },
+  { variableId: variableType.timeDisplayHours, name: 'Formatted timer display (hours)' },
+  { variableId: variableType.timeDisplayMinutes, name: 'Formatted timer display (minutes)' },
+  { variableId: variableType.timeDisplaySeconds, name: 'Formatted timer display (seconds)' },
   { variableId: variableType.currentTimerRemaining, name: 'Remaining time' },
   { variableId: variableType.currentTimerRemainingAsMs, name: 'Remaining time (ms)' },
   { variableId: variableType.currentTimerRemainingHours, name: 'Remaining time (hours)' },

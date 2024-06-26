@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@companion-module/base": "~1.8.0",
-    "@stagetimerio/timeutils": "^1.4.6",
+    "@stagetimerio/shared": "^1.6.4",
+    "@stagetimerio/timeutils": "^1.6.1",
     "socket.io-client": "^4.7.1"
   },
   "devDependencies": {

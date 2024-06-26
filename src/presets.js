@@ -197,11 +197,11 @@ function generatePresets () {
 
     Viewer: [
       {
-        name: 'Time remaining',
+        name: 'Time display',
         actionId: '',
         style: {
-          size: '18',
-          text: `$(stagetimer:${variableType.currentTimerRemaining})`,
+          size: 'auto',
+          text: `$(stagetimer:${variableType.timeDisplay})`,
           color: colors.white,
           bgcolor: colors.black,
         },
@@ -213,11 +213,11 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Time remaining (hours)',
+        name: 'Time display (hours)',
         actionId: '',
         style: {
           size: 'auto',
-          text: `\n$(stagetimer:${variableType.currentTimerRemainingHours})`,
+          text: `\n$(stagetimer:${variableType.timeDisplayHours})`,
           color: colors.white,
           bgcolor: colors.black,
         },
@@ -229,11 +229,11 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Time remaining (minutes)',
+        name: 'Time display (minutes)',
         actionId: '',
         style: {
           size: 'auto',
-          text: `\n$(stagetimer:${variableType.currentTimerRemainingMinutes})`,
+          text: `\n$(stagetimer:${variableType.timeDisplayMinutes})`,
           color: colors.white,
           bgcolor: colors.black,
         },
@@ -245,11 +245,11 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Time remaining (seconds)',
+        name: 'Time display (seconds)',
         actionId: '',
         style: {
           size: 'auto',
-          text: `\n$(stagetimer:${variableType.currentTimerRemainingSeconds})`,
+          text: `\n$(stagetimer:${variableType.timeDisplaySeconds})`,
           color: colors.white,
           bgcolor: colors.black,
         },
@@ -260,7 +260,6 @@ function generatePresets () {
           getFeedbackDefaults(feedbackType.isWarningRed),
         ],
       },
-
       {
         name: 'Wrap-up indicator',
         actionId: '',
