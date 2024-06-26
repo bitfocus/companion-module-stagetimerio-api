@@ -5,7 +5,6 @@ import {
   updateRoomState,
   updateCurrentTimerState,
   updateNextTimerState,
-  updateTimerState,
   updateFlashingState,
   updateMessageState,
 } from './state.js'
@@ -298,10 +297,11 @@ export function socketStart (instance) {
 }
 
 /**
- *
  * @param {string} timer_id
  * @this {ModuleInstance}
  * @throws
+ *
+ * @deprecated Retained as legacy fallback until all clients return new `current_timer` and `next_timer` socket events.
  */
 function getTimerAndUpdateState (timer_id) {
 
@@ -316,7 +316,7 @@ function getTimerAndUpdateState (timer_id) {
 
       const { name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
 
-      updateTimerState.call(this, {
+      updateCurrentTimerState.call(this, {
         name,
         speaker,
         notes,

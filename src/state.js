@@ -72,7 +72,7 @@ export const initialState = {
     roomName: undefined,
     roomBlackout: false,
     roomFocus: false,
-    roomTimezone: '',
+    roomTimezone: 'UTC',
   },
   viewer: {
     isFlashing: false,
@@ -107,16 +107,6 @@ export const initialState = {
     start_time: '',
     start_time_uses_date: '',
   },
-  // OBSOLETE
-  timer: {
-    name: '',
-    speaker: '',
-    notes: '',
-    duration: '',
-    appearance: '',
-    wrap_up_yellow: 0,
-    wrap_up_red: 0,
-  },
   message: {
     showing: false,
     text: '',
@@ -140,6 +130,10 @@ export function updateRoomState (newState) {
     ...newState,
   }
 
+  const isTimezoneChange = newState.roomTimezone !== instance.state.room.roomTimezone
+
+  instance.log('debug', `room: ${JSON.stringify(updatedState)}`)
+
   instance.state.room = updatedState
 
   instance.setVariableValues({
@@ -153,6 +147,11 @@ export function updateRoomState (newState) {
     feedbackType.focusEnabled,
   )
 
+  // Handle timezone change
+  if (isTimezoneChange) {
+    updateCurrentTimerState.call(instance)
+    updateNextTimerState.call(instance)
+  }
 }
 
 /**
@@ -168,8 +167,8 @@ export function updatePlaybackState (newState) {
 
   updatedState.phase = getTimerPhase(
     updatedState.remainingAsMs ?? 0,
-    instance.state.timer.wrap_up_yellow,
-    instance.state.timer.wrap_up_red,
+    instance.state.current_timer.wrap_up_yellow,
+    instance.state.current_timer.wrap_up_red,
   )
 
   instance.state.playback_status = updatedState
@@ -220,14 +219,11 @@ export function updateCurrentTimerState (newState) {
     ...newState,
   }
 
-  instance.state.timer = updatedState
   instance.state.current_timer = updatedState
 
   // Update `phase` using `playback_status` and `timer` state
   instance.state.playback_status.phase = getTimerPhase(
     instance.state.playback_status.remainingAsMs ?? 0,
-    instance.state.timer.wrap_up_yellow,
-    instance.state.timer.wrap_up_red,
     instance.state.current_timer.wrap_up_yellow,
     instance.state.current_timer.wrap_up_red,
   )
@@ -267,12 +263,16 @@ export function updateNextTimerState (newState) {
     ...newState,
   }
 
+  instance.log('debug', `next_timer: ${JSON.stringify(updatedState)}`)
+
   instance.state.next_timer = updatedState
 
   const timezone = instance.state.room?.roomTimezone || 'UTC'
   let start
   if (updatedState.start_time) start = parseDateAsToday(updatedState.start_time, { timezone })
   if (updatedState.start_time_uses_date) start = parseDate(updatedState.start_time, timezone)
+
+  instance.log('debug', `timezone: ${timezone}`)
 
   instance.setVariableValues({
     [variableType.nextTimerName]: updatedState.name,
@@ -283,44 +283,6 @@ export function updateNextTimerState (newState) {
     [variableType.nextTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.nextTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
   })
-}
-
-/**
- * @param { TimerState } newState
- * @this {ModuleInstance}
- * @returns {void}
- */
-export function updateTimerState (newState) {
-
-  const instance = this
-
-  const updatedState = {
-    ...instance.state.timer,
-    ...newState,
-  }
-
-  instance.state.timer = updatedState
-
-  // Update `phase` using `playback_status` and `timer` state
-  instance.state.playback_status.phase = getTimerPhase(
-    instance.state.playback_status.remainingAsMs ?? 0,
-    instance.state.timer.wrap_up_yellow,
-    instance.state.timer.wrap_up_red,
-  )
-
-  instance.setVariableValues({
-    [variableType.currentTimerName]: updatedState.name,
-    [variableType.currentTimerNotes]: updatedState.notes,
-    [variableType.currentTimerSpeaker]: updatedState.speaker,
-    [variableType.currentTimerDuration]: updatedState.duration,
-    [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
-  })
-
-  instance.checkFeedbacks(
-    feedbackType.isWarningYellow,
-    feedbackType.isWarningRed,
-  )
-
 }
 
 /**
