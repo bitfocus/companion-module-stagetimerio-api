@@ -218,6 +218,7 @@ export function socketStart (instance) {
     instance.log('debug', 'Event: current_timer')
 
     const {
+      _id,
       name,
       speaker,
       notes,
@@ -230,6 +231,7 @@ export function socketStart (instance) {
     } = payload
 
     updateCurrentTimerState.call(instance, {
+      _id,
       name,
       speaker,
       notes,
@@ -246,6 +248,7 @@ export function socketStart (instance) {
     instance.log('debug', 'Event: next_timer')
 
     const {
+      _id,
       name,
       speaker,
       notes,
@@ -258,6 +261,7 @@ export function socketStart (instance) {
     } = payload
 
     updateNextTimerState.call(instance, {
+      _id,
       name,
       speaker,
       notes,
@@ -314,9 +318,10 @@ function getTimerAndUpdateState (timer_id) {
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {
 
-      const { name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
+      const { _id, name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
 
       updateCurrentTimerState.call(this, {
+        _id,
         name,
         speaker,
         notes,
