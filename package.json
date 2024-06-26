@@ -1,6 +1,7 @@
 {
   "name": "stagetimerio-api",
-  "version": "2.1.0",
+  "version": "2.2",
+  "description": "Stagetimer.io module for Companion v3",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
@@ -8,6 +9,7 @@
     "test": "node --test"
   },
   "license": "MIT",
+  "author": "Lukas Hermann <lukas@stagetimer.io>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bitfocus/companion-module-stagetimerio-api.git"
