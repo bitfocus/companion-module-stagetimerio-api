@@ -3,7 +3,8 @@ import { io } from 'socket.io-client'
 import {
   updatePlaybackState,
   updateRoomState,
-  updateTimerState,
+  updateCurrentTimerState,
+  updateNextTimerState,
   updateFlashingState,
   updateMessageState,
 } from './state.js'
@@ -21,6 +22,8 @@ let socket = null
 export const stagetimerEvents = {
   playback_status: 'playback_status',
   room: 'room',
+  current_timer: 'current_timer',
+  next_timer: 'next_timer',
   flash: 'flash',
   message: 'message',
 }
@@ -82,6 +85,11 @@ export function socketStart (instance) {
       throw Error('API client not ready')
     }
 
+    /**
+     * @DEPRECATED
+     * The API socket now emits room, playback_status, current_timer and next_timer on connect.
+     * Temporarily retained for backwards compatibility.
+     */
     instance.apiClient.send(actionIdType.get_room, {})
       .then(({ data }) => {
 
@@ -99,10 +107,18 @@ export function socketStart (instance) {
         instance.log('error', error.toString())
       })
 
+    /**
+     * @DEPRECATED
+     * The API socket now emits room, playback_status, current_timer and next_timer on connect.
+     * Temporarily retained for backwards compatibility.
+     */
     instance.apiClient.send(actionIdType.get_status, {})
       .then(({ data }) => {
 
-        const { timer_id, running, start, finish, pause } = /** @type {StatusData} */(data)
+        const { timer_id, running, start, finish, pause, server_time } = /** @type {StatusData} */(data)
+
+        const serverTimeDiff = Date.now() - server_time
+        instance.log('debug', `Difference between system and server time: ${serverTimeDiff}ms`)
 
         updatePlaybackState.call(instance, {
           currentTimerId: timer_id,
@@ -110,6 +126,7 @@ export function socketStart (instance) {
           kickoff: start,
           deadline: finish,
           lastStop: pause,
+          serverTimeDiff,
         })
 
         return timer_id
@@ -168,7 +185,10 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.playback_status, (payload) => {
     instance.log('debug', 'Event: playback_status')
 
-    const { timer_id, running, start, finish, pause } = payload
+    const { timer_id, running, start, finish, pause, server_time } = payload
+
+    const serverTimeDiff = Date.now() - server_time
+    instance.log('debug', `Difference between system and server time: ${serverTimeDiff}ms`)
 
     updatePlaybackState.call(instance, {
       currentTimerId: timer_id,
@@ -176,6 +196,7 @@ export function socketStart (instance) {
       kickoff: start,
       deadline: finish,
       lastStop: pause,
+      serverTimeDiff,
     })
 
     getTimerAndUpdateState.call(instance, timer_id)
@@ -190,6 +211,66 @@ export function socketStart (instance) {
       roomBlackout: blackout,
       roomFocus: focus_message,
       roomTimezone: timezone,
+    })
+  })
+
+  socket.on(stagetimerEvents.current_timer, (payload) => {
+    instance.log('debug', 'Event: current_timer')
+
+    const {
+      _id,
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
+    } = payload
+
+    updateCurrentTimerState.call(instance, {
+      _id,
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
+    })
+  })
+
+  socket.on(stagetimerEvents.next_timer, (payload) => {
+    instance.log('debug', 'Event: next_timer')
+
+    const {
+      _id,
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
+    } = payload
+
+    updateNextTimerState.call(instance, {
+      _id,
+      name,
+      speaker,
+      notes,
+      duration,
+      appearance,
+      wrap_up_yellow,
+      wrap_up_red,
+      start_time,
+      start_time_uses_date,
     })
   })
 
@@ -220,10 +301,11 @@ export function socketStart (instance) {
 }
 
 /**
- *
  * @param {string} timer_id
  * @this {ModuleInstance}
  * @throws
+ *
+ * @deprecated Retained as legacy fallback until all clients return new `current_timer` and `next_timer` socket events.
  */
 function getTimerAndUpdateState (timer_id) {
 
@@ -236,9 +318,10 @@ function getTimerAndUpdateState (timer_id) {
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {
 
-      const { name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
+      const { _id, name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
 
-      updateTimerState.call(this, {
+      updateCurrentTimerState.call(this, {
+        _id,
         name,
         speaker,
         notes,

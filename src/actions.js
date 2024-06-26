@@ -16,6 +16,7 @@ export const actionIdType = {
   start: 'start',
   stop: 'stop',
   start_or_stop: 'start_or_stop',
+  reset: 'reset',
   next: 'next',
   previous: 'previous',
   add_time: 'add_time',
@@ -290,20 +291,26 @@ export function loadActions (instance) {
     // Transport actions
     [actionIdType.start]: {
       name: 'Transport: Start',
-      description: 'Start or resume the highlighted timer in the room',
+      description: 'Start or resume the highlighted timer',
       options: [],
       callback: actionCallback,
     },
     [actionIdType.stop]: {
       name: 'Transport: Stop',
-      description: 'Stop the highlighted timer in the room',
+      description: 'Stop the highlighted timer',
       options: [],
       callback: actionCallback,
     },
     [actionIdType.start_or_stop]: {
       name: 'Transport: Start/stop',
-      description: 'Start/stop the highlighted timer in the room',
+      description: 'Start/stop the highlighted timer',
       options: [],
+      callback: actionCallback,
+    },
+    [actionIdType.reset]: {
+      name: 'Transport: Reset',
+      description: 'Reset or restart the highlighted timer',
+      options: actionOptions.autostart,
       callback: actionCallback,
     },
     [actionIdType.next]: {
