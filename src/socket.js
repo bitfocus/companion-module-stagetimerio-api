@@ -217,6 +217,8 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.current_timer, (payload) => {
     instance.log('debug', 'Event: current_timer')
 
+    if (!payload) return updateCurrentTimerState.call(instance, {})
+
     const {
       _id,
       name,
@@ -246,6 +248,8 @@ export function socketStart (instance) {
 
   socket.on(stagetimerEvents.next_timer, (payload) => {
     instance.log('debug', 'Event: next_timer')
+
+    if (!payload) return updateNextTimerState.call(instance, {})
 
     const {
       _id,
