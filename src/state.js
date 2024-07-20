@@ -132,8 +132,6 @@ export function updateRoomState (newState) {
 
   const isTimezoneChange = updatedState.roomTimezone !== instance.state.room.roomTimezone
 
-  instance.log('debug', `room: ${JSON.stringify(updatedState)}`)
-
   instance.state.room = updatedState
 
   instance.setVariableValues({
@@ -224,8 +222,6 @@ export function updateCurrentTimerState (newState) {
 
   const isAppearanceChange = updatedState.appearance !== instance.state.current_timer.appearance
 
-  instance.log('debug', `current_timer: ${JSON.stringify(updatedState)}`)
-
   instance.state.current_timer = updatedState
 
   // Update `phase` using `playback_status` and `timer` state
@@ -274,8 +270,6 @@ export function updateNextTimerState (newState) {
     ...instance.state.next_timer,
     ...newState,
   }
-
-  instance.log('debug', `next_timer: ${JSON.stringify(updatedState)}`)
 
   instance.state.next_timer = updatedState
 
