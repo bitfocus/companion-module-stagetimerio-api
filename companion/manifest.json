@@ -3,7 +3,7 @@
   "name": "stagetimer",
   "shortname": "stagetimer",
   "description": "Stagetimer.io module for Companion v3",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "license": "MIT",
   "repository": "git+https://github.com/bitfocus/companion-module-stagetimerio-api.git",
   "bugs": "https://github.com/bitfocus/companion-module-stagetimerio-api/issues",
