@@ -1,6 +1,6 @@
 {
   "name": "stagetimerio-api",
-  "version": "2.2",
+  "version": "2.2.0",
   "description": "Stagetimer.io module for Companion v3",
   "main": "src/index.js",
   "type": "module",
