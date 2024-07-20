@@ -1,7 +1,7 @@
 import { createDropdownOptions } from './utils.js'
 
 // Regular Expressions for validation
-const roomIdRegExp = /^[123456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/
+const roomIdRegExp = /^[A-Z0-9]{8}$/
 const apiKeyRegExp = /^[a-f0-9-]{32}$/
 const apiUrlRegExp = /^https?:\/\/.*(\/v1\/)$/
 

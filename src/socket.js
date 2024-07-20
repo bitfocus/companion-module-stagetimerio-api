@@ -183,7 +183,7 @@ export function socketStart (instance) {
   //
 
   socket.on(stagetimerEvents.playback_status, (payload) => {
-    instance.log('debug', 'Event: playback_status')
+    instance.log('debug', `Event: 'playback_status' ${JSON.stringify(payload)}`)
 
     const { timer_id, running, start, finish, pause, server_time } = payload
 
@@ -203,7 +203,7 @@ export function socketStart (instance) {
   })
 
   socket.on(stagetimerEvents.room, (payload) => {
-    instance.log('debug', 'Event: room')
+    instance.log('debug', `Event: 'room' ${JSON.stringify(payload)}`)
 
     const { blackout, focus_message, timezone } = payload
 
@@ -215,7 +215,9 @@ export function socketStart (instance) {
   })
 
   socket.on(stagetimerEvents.current_timer, (payload) => {
-    instance.log('debug', 'Event: current_timer')
+    instance.log('debug', `Event: 'current_timer' ${JSON.stringify(payload)}`)
+
+    if (!payload) return updateCurrentTimerState.call(instance, {})
 
     const {
       _id,
@@ -245,7 +247,9 @@ export function socketStart (instance) {
   })
 
   socket.on(stagetimerEvents.next_timer, (payload) => {
-    instance.log('debug', 'Event: next_timer')
+    instance.log('debug', `Event: 'next_timer' ${JSON.stringify(payload)}`)
+
+    if (!payload) return updateNextTimerState.call(instance, {})
 
     const {
       _id,
@@ -275,7 +279,7 @@ export function socketStart (instance) {
   })
 
   socket.on(stagetimerEvents.message, (payload) => {
-    instance.log('debug', 'Event: message')
+    instance.log('debug', `Event: 'message' ${JSON.stringify(payload)}`)
 
     const { showing, text, color, bold, uppercase } = payload
 
@@ -289,7 +293,7 @@ export function socketStart (instance) {
   })
 
   socket.on(stagetimerEvents.flash, (payload) => {
-    instance.log('debug', 'Event: flash')
+    instance.log('debug', `Event: 'flash' ${JSON.stringify(payload)}`)
 
     const { count } = payload
 
