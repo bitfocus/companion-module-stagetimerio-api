@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "lint": "eslint ./src",
-    "test": "node --test"
+    "test": "node --test",
+    "version": "node syncVersions.js && git add ."
   },
   "license": "MIT",
   "author": "Lukas Hermann <lukas@stagetimer.io>",
