@@ -22,7 +22,8 @@
     "socket.io-client": "^4.7.1"
   },
   "devDependencies": {
-    "@companion-module/tools": "^2.0.0"
+    "@companion-module/tools": "^2.0.0",
+    "eslint": "^9.39.2"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@4.12.0"
 }
