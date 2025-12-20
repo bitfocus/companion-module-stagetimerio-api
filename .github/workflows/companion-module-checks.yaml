@@ -9,10 +9,28 @@ jobs:
 
     if: ${{ !contains(github.repository, 'companion-module-template-') }}
 
+    runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       packages: read
 
-    uses: bitfocus/actions/.github/workflows/module-checks.yaml@main
-    secrets: inherit
-    # with:
-    #   upload-artifact: true # uncomment this to upload the built package as an artifact to this workflow that you can download and share with others
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Configure Yarn for GitHub Packages
+        run: yarn config set npmScopes.stagetimerio.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Build/Package
+        run: yarn companion-module-build
