@@ -71,6 +71,8 @@ export function socketStart (instance) {
     reconnectionAttempts: 5,
     // Prevent infinite exponential backoff
     reconnectionDelayMax: 10000,
+    // Enable cookie handling for sticky session support with load balancing
+    withCredentials: true,
   })
 
   //
