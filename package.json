@@ -17,12 +17,12 @@
   },
   "dependencies": {
     "@companion-module/base": "^1.14.0",
-    "@stagetimerio/shared": "^1.6.4",
-    "@stagetimerio/timeutils": "^1.6.1",
-    "socket.io-client": "^4.7.1"
+    "@stagetimerio/shared": "^1.16.0",
+    "@stagetimerio/timeutils": "^1.10.4",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
-    "@companion-module/tools": "^2.0.0",
+    "@companion-module/tools": "^2.5.0",
     "eslint": "^9.39.2"
   },
   "packageManager": "yarn@4.12.0"
