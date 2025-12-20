@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Configure Yarn for GitHub Packages
         run: yarn config set npmScopes.stagetimerio.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
 
