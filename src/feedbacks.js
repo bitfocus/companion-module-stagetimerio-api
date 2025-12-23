@@ -22,6 +22,7 @@ export const feedbackType = {
   isFlashing: 'isFlashing',
   blackoutEnabled: 'blackoutEnabled',
   focusEnabled: 'focusEnabled',
+  onAirEnabled: 'onAirEnabled',
   messageIsShowing: 'messageIsShowing',
 }
 
@@ -147,6 +148,19 @@ function generateFeedbacks (instance) {
       options: [],
       callback: (_feedback) => {
         return instance.state.room.roomFocus
+      },
+    },
+
+    [feedbackType.onAirEnabled]: {
+      name: 'ON AIR mode',
+      type: 'boolean',
+      defaultStyle: {
+        bgcolor: colors.red,
+        color: colors.white,
+      },
+      options: [],
+      callback: (_feedback) => {
+        return instance.state.room.roomOnAir
       },
     },
 

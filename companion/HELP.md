@@ -100,8 +100,14 @@ The following Actions are available:
     Stops any flashing timers and message on the screen.
 - **Viewer: Toggle blackout mode**  
     Toggle (enable/disable) blackout mode in the room
-- **Viewer: Toggle focus mode**  
+- **Viewer: Toggle focus mode**
     Toggle (enable/disable) focus mode in the room
+- **Viewer: Enable ON AIR**
+    Enable ON AIR mode in the room
+- **Viewer: Disable ON AIR**
+    Disable ON AIR mode in the room
+- **Viewer: Toggle ON AIR**
+    Toggle (enable/disable) ON AIR mode in the room
 
 **Utility actions:**
 
@@ -163,6 +169,7 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - Blackout mode
 - Flashing
 - Focus mode
+- ON AIR mode
 - Message showing
 - Playback running
 - Playback stopped

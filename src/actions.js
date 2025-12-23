@@ -31,6 +31,9 @@ export const actionIdType = {
   enable_focus: 'enable_focus',
   disable_focus: 'disable_focus',
   toggle_focus: 'toggle_focus',
+  enable_on_air: 'enable_on_air',
+  disable_on_air: 'disable_on_air',
+  toggle_on_air: 'toggle_on_air',
 
   // Timer
   start_timer: 'start_timer',
@@ -384,6 +387,24 @@ export function loadActions (instance) {
     [actionIdType.toggle_focus]: {
       name: 'Viewer: Toggle focus mode',
       description: 'Toggle (enable/disable) focus mode in the room',
+      options: [],
+      callback: actionCallback,
+    },
+    [actionIdType.enable_on_air]: {
+      name: 'Viewer: Enable ON AIR',
+      description: 'Enable ON AIR mode in the room',
+      options: [],
+      callback: actionCallback,
+    },
+    [actionIdType.disable_on_air]: {
+      name: 'Viewer: Disable ON AIR',
+      description: 'Disable ON AIR mode in the room',
+      options: [],
+      callback: actionCallback,
+    },
+    [actionIdType.toggle_on_air]: {
+      name: 'Viewer: Toggle ON AIR',
+      description: 'Toggle (enable/disable) ON AIR mode in the room',
       options: [],
       callback: actionCallback,
     },

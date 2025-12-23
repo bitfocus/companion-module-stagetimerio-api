@@ -95,13 +95,14 @@ export function socketStart (instance) {
     instance.apiClient.send(actionIdType.get_room, {})
       .then(({ data }) => {
 
-        const { _id, name, blackout, focus_message, timezone } = /** @type {RoomData} */(data)
+        const { _id, name, blackout, focus_message, on_air, timezone } = /** @type {RoomData} */(data)
 
         updateRoomState.call(instance, {
           roomId: _id,
           roomName: name,
           roomBlackout: blackout,
           roomFocus: focus_message,
+          roomOnAir: on_air,
           roomTimezone: timezone,
         })
       })
@@ -207,11 +208,12 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.room, (payload) => {
     instance.log('debug', `Event: 'room' ${JSON.stringify(payload)}`)
 
-    const { blackout, focus_message, timezone } = payload
+    const { blackout, focus_message, on_air, timezone } = payload
 
     updateRoomState.call(instance, {
       roomBlackout: blackout,
       roomFocus: focus_message,
+      roomOnAir: on_air,
       roomTimezone: timezone,
     })
   })

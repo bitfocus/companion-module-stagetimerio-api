@@ -72,6 +72,7 @@ export const initialState = {
     roomName: undefined,
     roomBlackout: false,
     roomFocus: false,
+    roomOnAir: false,
     roomTimezone: 'UTC',
   },
   viewer: {
@@ -143,6 +144,7 @@ export function updateRoomState (newState) {
   instance.checkFeedbacks(
     feedbackType.blackoutEnabled,
     feedbackType.focusEnabled,
+    feedbackType.onAirEnabled,
   )
 
   // Handle timezone change

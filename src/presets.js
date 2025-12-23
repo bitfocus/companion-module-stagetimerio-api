@@ -383,6 +383,22 @@ function generatePresets () {
           }),
         ],
       },
+      {
+        name: 'Toggle ON AIR mode',
+        actionId: actionIdType.toggle_on_air,
+        style: {
+          size: '14',
+          text: 'ON AIR',
+          alignment: 'center:bottom',
+          png64: icons.onAir,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.onAirEnabled),
+        ],
+      },
     ],
 
     Timer: [
