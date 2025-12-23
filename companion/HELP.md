@@ -1,4 +1,6 @@
-![Stagetimer.io logo](https://stagetimer.io/assets/logo-full-dark.svg)
+<img src="https://r2.stagetimer.io/logo/logo-full-dark.png" alt="Stagetimer Logo" width="285" height="50">
+
+&nbsp;
 
 # Stagetimer.io module for Companion
 
