@@ -1,6 +1,6 @@
 {
   "name": "stagetimerio-api",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Stagetimer.io module for Companion v3",
   "main": "src/index.js",
   "type": "module",
@@ -16,13 +16,14 @@
     "url": "git+https://github.com/bitfocus/companion-module-stagetimerio-api.git"
   },
   "dependencies": {
-    "@companion-module/base": "~1.10.0",
-    "@stagetimerio/shared": "^1.6.4",
-    "@stagetimerio/timeutils": "^1.6.1",
-    "socket.io-client": "^4.7.1"
+    "@companion-module/base": "^1.14.0",
+    "@stagetimerio/shared": "^1.16.0",
+    "@stagetimerio/timeutils": "^1.10.4",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
-    "@companion-module/tools": "^2.0.0"
+    "@companion-module/tools": "^2.5.0",
+    "eslint": "^9.39.2"
   },
-  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  "packageManager": "yarn@4.12.0"
 }

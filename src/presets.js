@@ -307,6 +307,26 @@ function generatePresets () {
         },
       },
       {
+        name: 'Current timer labels',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.currentTimerLabels})`,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Next timer labels',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.nextTimerLabels})`,
+          color: colors.lightGray,
+          bgcolor: colors.black,
+        },
+      },
+      {
         name: 'Timezone',
         actionId: '',
         style: {
@@ -381,6 +401,22 @@ function generatePresets () {
           getFeedbackDefaults(feedbackType.focusEnabled, {
             png64: icons.focusOff,
           }),
+        ],
+      },
+      {
+        name: 'Toggle ON AIR mode',
+        actionId: actionIdType.toggle_on_air,
+        style: {
+          size: '14',
+          text: 'ON AIR',
+          alignment: 'center:bottom',
+          png64: icons.onAir,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.onAirEnabled),
         ],
       },
     ],

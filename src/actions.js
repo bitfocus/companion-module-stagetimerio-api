@@ -31,6 +31,9 @@ export const actionIdType = {
   enable_focus: 'enable_focus',
   disable_focus: 'disable_focus',
   toggle_focus: 'toggle_focus',
+  enable_on_air: 'enable_on_air',
+  disable_on_air: 'disable_on_air',
+  toggle_on_air: 'toggle_on_air',
 
   // Timer
   start_timer: 'start_timer',
@@ -39,6 +42,7 @@ export const actionIdType = {
   reset_timer: 'reset_timer',
   get_timer: 'get_timer',
   create_timer: 'create_timer',
+  update_timer: 'update_timer',
 
   // Message
   show_or_hide_message: 'show_or_hide_message',
@@ -168,6 +172,48 @@ const actionOptions = {
       min: 0,
       max: 9999,
       tooltip: 'Red wrap-up time (in seconds from the end).',
+    },
+    {
+      id: 'labels_header',
+      type: 'static-text',
+      label: 'Labels:',
+      value: 'Colored tags visible on the controller page.',
+    },
+    {
+      id: 'label1_name',
+      type: 'textinput',
+      label: 'Label 1 name',
+      tooltip: 'Name of the first label.',
+    },
+    {
+      id: 'label1_color',
+      type: 'textinput',
+      label: 'Label 1 color',
+      tooltip: 'Color of the first label in hexadecimal format (e.g., #F44336).',
+    },
+    {
+      id: 'label2_name',
+      type: 'textinput',
+      label: 'Label 2 name',
+      tooltip: 'Name of the second label.',
+    },
+    {
+      id: 'label2_color',
+      type: 'textinput',
+      label: 'Label 2 color',
+      tooltip: 'Color of the second label in hexadecimal format (e.g., #4CAF50).',
+    },
+    {
+      id: 'label3_name',
+      type: 'textinput',
+      label: 'Label 3 name',
+      tooltip: 'Name of the third label.',
+    },
+    {
+      id: 'label3_color',
+      type: 'textinput',
+      label: 'Label 3 color',
+      tooltip: 'Color of the third label in hexadecimal format (e.g., #2196F3).',
     },
     {
       id: 'advanced',
@@ -387,6 +433,24 @@ export function loadActions (instance) {
       options: [],
       callback: actionCallback,
     },
+    [actionIdType.enable_on_air]: {
+      name: 'Viewer: Enable ON AIR',
+      description: 'Enable ON AIR mode in the room',
+      options: [],
+      callback: actionCallback,
+    },
+    [actionIdType.disable_on_air]: {
+      name: 'Viewer: Disable ON AIR',
+      description: 'Disable ON AIR mode in the room',
+      options: [],
+      callback: actionCallback,
+    },
+    [actionIdType.toggle_on_air]: {
+      name: 'Viewer: Toggle ON AIR',
+      description: 'Toggle (enable/disable) ON AIR mode in the room',
+      options: [],
+      callback: actionCallback,
+    },
 
     // Timer actions
     [actionIdType.start_timer]: {
@@ -417,6 +481,12 @@ export function loadActions (instance) {
       name: 'Timer: Create new timer',
       description: 'Create a new timer in the room',
       options: actionOptions.timerCreate,
+      callback: actionCallback,
+    },
+    [actionIdType.update_timer]: {
+      name: 'Timer: Update timer',
+      description: 'Update an existing timer in the room',
+      options: [...actionOptions.timer, ...actionOptions.timerCreate],
       callback: actionCallback,
     },
 
@@ -494,6 +564,9 @@ async function sendActionToApi ({ actionId, options }) {
 
   const params = assignTruthyOptionsToParams(options)
 
+  // Convert label options to labels array format
+  convertLabelsToApiFormat(params)
+
   try {
     const { message } = await instance.apiClient.send(actionId, params)
 
@@ -516,4 +589,40 @@ function assignTruthyOptionsToParams (options) {
   return Object.fromEntries(
     Object.entries(options).filter(([_key, value]) => value),
   )
+}
+
+/**
+ * Converts label1_name, label1_color, etc. to the API's indexed labels array format.
+ * Modifies the params object in place.
+ *
+ * @param {object} params
+ * @returns {void}
+ */
+function convertLabelsToApiFormat (params) {
+  const labels = []
+
+  for (let i = 1; i <= 3; i++) {
+    const nameKey = `label${i}_name`
+    const colorKey = `label${i}_color`
+
+    if (params[nameKey]) {
+      labels.push({
+        name: params[nameKey],
+        color: params[colorKey] || '#808080',
+      })
+    }
+
+    // Clean up the individual label params
+    delete params[nameKey]
+    delete params[colorKey]
+  }
+
+  // Only add labels if there are any
+  if (labels.length > 0) {
+    // Convert to indexed notation for query string
+    labels.forEach((label, index) => {
+      params[`labels[${index}][name]`] = label.name
+      params[`labels[${index}][color]`] = label.color
+    })
+  }
 }

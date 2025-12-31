@@ -1,7 +1,50 @@
 # companion-module-stagetimerio-api
 
-This module lets you remotely control your [Stagetimer.io](https://stagetimer.io/) timers.
+A [Bitfocus Companion](https://bitfocus.io/companion) module for controlling [Stagetimer.io](https://stagetimer.io/) timers remotely.
 
-See [HELP.md](./companion/HELP.md) for usage instructions.
+## Features
 
-Module development setup: https://github.com/bitfocus/companion-module-base/wiki
+- **Transport controls** – Start, stop, reset, next, previous, add/subtract time
+- **Timer actions** – Control specific timers by ID
+- **Viewer controls** – Flash screen, blackout mode, focus mode
+- **Message actions** – Show, hide, toggle, and create messages
+- **Real-time feedback** – Playback state, timer phases (yellow/red warnings), viewer modes
+- **Variables** – Room info, current/next timer details, time display values
+- **Presets** – Pre-configured buttons for common operations
+
+The module connects via the [Stagetimer HTTP RPC API](https://stagetimer.io/docs/api-v1) and [Socket.io endpoint](https://stagetimer.io/docs/api-v1/#socket-io-endpoint) for real-time updates.
+
+## Usage
+
+See [HELP.md](./companion/HELP.md) for configuration and usage instructions.
+
+**Requirements:** Stagetimer Pro or Premium plan, Room ID, and API Key.
+
+## Development Setup
+
+Refer to the [Companion Module Base Wiki](https://github.com/bitfocus/companion-module-base/wiki) for detailed instructions.
+
+**Quick start:**
+
+1. Install Node.js 22 (recommended via [fnm](https://github.com/Schniz/fnm)):
+   ```sh
+   fnm install 22 && fnm use 22 && corepack enable
+   ```
+
+2. Clone this repository into your Companion dev modules folder:
+   ```sh
+   git clone https://github.com/stagetimerio/companion-module-stagetimerio-api.git
+   ```
+
+3. Install dependencies:
+   ```sh
+   yarn install
+   ```
+
+4. In Companion settings, set **Developer modules path** to your dev folder.
+
+5. The module will auto-reload on file changes. Run linting and tests with:
+   ```sh
+   yarn lint
+   yarn test
+   ```

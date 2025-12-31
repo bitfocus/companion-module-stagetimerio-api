@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v2.3.0
+
+New features:
+- Adds ON AIR mode support with new actions and feedback:
+  - `Viewer: Enable ON AIR` - Enable ON AIR mode in the room
+  - `Viewer: Disable ON AIR` - Disable ON AIR mode in the room
+  - `Viewer: Toggle ON AIR` - Toggle ON AIR mode in the room
+  - New feedback `ON AIR mode` to indicate when ON AIR is active
+  - New preset button for toggling ON AIR mode
+- Adds timer labels support:
+  - New options in `Create Timer` and `Update Timer` actions to set up to 3 labels with custom names and colors
+  - New variables for current timer labels:
+    - `$(stagetimer:currentTimerLabels)` - Labels (comma-separated)
+    - `$(stagetimer:currentTimerLabel1)` - Label 1
+    - `$(stagetimer:currentTimerLabel2)` - Label 2
+    - `$(stagetimer:currentTimerLabel3)` - Label 3
+  - New variables for next timer labels:
+    - `$(stagetimer:nextTimerLabels)` - Labels (comma-separated)
+    - `$(stagetimer:nextTimerLabel1)` - Label 1
+    - `$(stagetimer:nextTimerLabel2)` - Label 2
+    - `$(stagetimer:nextTimerLabel3)` - Label 3
+
+Fixes:
+- Enables sticky session cookie support for improved connection reliability with load-balanced servers.
+
 ## v2.2.1
 
 - Fixes new accepted alphabet for room IDs.

@@ -71,6 +71,8 @@ export function socketStart (instance) {
     reconnectionAttempts: 5,
     // Prevent infinite exponential backoff
     reconnectionDelayMax: 10000,
+    // Enable cookie handling for sticky session support with load balancing
+    withCredentials: true,
   })
 
   //
@@ -93,13 +95,14 @@ export function socketStart (instance) {
     instance.apiClient.send(actionIdType.get_room, {})
       .then(({ data }) => {
 
-        const { _id, name, blackout, focus_message, timezone } = /** @type {RoomData} */(data)
+        const { _id, name, blackout, focus_message, on_air, timezone } = /** @type {RoomData} */(data)
 
         updateRoomState.call(instance, {
           roomId: _id,
           roomName: name,
           roomBlackout: blackout,
           roomFocus: focus_message,
+          roomOnAir: on_air,
           roomTimezone: timezone,
         })
       })
@@ -205,11 +208,12 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.room, (payload) => {
     instance.log('debug', `Event: 'room' ${JSON.stringify(payload)}`)
 
-    const { blackout, focus_message, timezone } = payload
+    const { blackout, focus_message, on_air, timezone } = payload
 
     updateRoomState.call(instance, {
       roomBlackout: blackout,
       roomFocus: focus_message,
+      roomOnAir: on_air,
       roomTimezone: timezone,
     })
   })
@@ -230,6 +234,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     } = payload
 
     updateCurrentTimerState.call(instance, {
@@ -243,6 +248,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     })
   })
 
@@ -262,6 +268,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     } = payload
 
     updateNextTimerState.call(instance, {
@@ -275,6 +282,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     })
   })
 

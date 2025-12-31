@@ -77,6 +77,7 @@
  * @property {string} name
  * @property {boolean} blackout
  * @property {boolean} focus_message
+ * @property {boolean} on_air
  * @property {string} logo
  * @property {string} timezone
  */
@@ -97,6 +98,7 @@
  * @property {number} wrap_up_red
  * @property {number} start_time
  * @property {number} start_time_uses_date
+ * @property {{ name: string, color: string }[]} labels
  */
 
 /**
@@ -116,6 +118,7 @@
  * @property {string} [roomName]
  * @property {boolean} roomBlackout
  * @property {boolean} roomFocus
+ * @property {boolean} roomOnAir
  * @property {string} roomTimezone
  */
 

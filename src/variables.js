@@ -32,6 +32,10 @@ export const variableType = {
 
   currentTimerDuration: 'currentTimerDuration',
   currentTimerDurationAsMs: 'currentTimerDurationAsMs',
+  currentTimerLabels: 'currentTimerLabels',
+  currentTimerLabel1: 'currentTimerLabel1',
+  currentTimerLabel2: 'currentTimerLabel2',
+  currentTimerLabel3: 'currentTimerLabel3',
 
   // Next Timer
   nextTimerId: 'nextTimerId',
@@ -44,6 +48,10 @@ export const variableType = {
 
   nextTimerDuration: 'nextTimerDuration',
   nextTimerDurationAsMs: 'nextTimerDurationAsMs',
+  nextTimerLabels: 'nextTimerLabels',
+  nextTimerLabel1: 'nextTimerLabel1',
+  nextTimerLabel2: 'nextTimerLabel2',
+  nextTimerLabel3: 'nextTimerLabel3',
 }
 
 /** @type {CompanionVariableDefinition[]} */
@@ -75,6 +83,10 @@ const variables = [
 
   { variableId: variableType.currentTimerDuration, name: 'Current timer duration' },
   { variableId: variableType.currentTimerDurationAsMs, name: 'Current timer duration (ms)' },
+  { variableId: variableType.currentTimerLabels, name: 'Current timer labels (comma-separated)' },
+  { variableId: variableType.currentTimerLabel1, name: 'Current timer label 1' },
+  { variableId: variableType.currentTimerLabel2, name: 'Current timer label 2' },
+  { variableId: variableType.currentTimerLabel3, name: 'Current timer label 3' },
 
   // Next Timer
   { variableId: variableType.nextTimerId, name: 'Next timer ID' },
@@ -87,6 +99,10 @@ const variables = [
 
   { variableId: variableType.nextTimerDuration, name: 'Next timer duration' },
   { variableId: variableType.nextTimerDurationAsMs, name: 'Next timer duration (ms)' },
+  { variableId: variableType.nextTimerLabels, name: 'Next timer labels (comma-separated)' },
+  { variableId: variableType.nextTimerLabel1, name: 'Next timer label 1' },
+  { variableId: variableType.nextTimerLabel2, name: 'Next timer label 2' },
+  { variableId: variableType.nextTimerLabel3, name: 'Next timer label 3' },
 ]
 
 /**
