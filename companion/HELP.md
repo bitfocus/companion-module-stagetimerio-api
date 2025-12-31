@@ -8,6 +8,9 @@ This module lets you remotely control [Stagetimer](https://stagetimer.io/) using
 
 It connects using the [Stagetimer HTTP RPC API](https://stagetimer.io/docs/api-v1) and [Stagetimer Socket.io endpoint](https://stagetimer.io/docs/api-v1/#socket-io-endpoint).
 
+For a comprehensive guide with video tutorials, see the full documentation:
+**[Controlling Stagetimer via Companion for Stream Deck](https://stagetimer.io/docs/integration-with-streamdeck-companion/)**
+
 ---
 
 ## Requirements
@@ -30,10 +33,17 @@ To use this module you need:
 
 ## Presets
 
-There are multiple presets available for the most common actions, ready to drop into  your button layout.
+There are multiple presets available for the most common actions, ready to drop into your button layout.
 
-Find a complete list in the **Presets** section of this guide in the Stagetimer docs:  
-  **[Controlling Stagetimer via Companion for Stream Deck (Comprehensive Guide)](https://stagetimer.io/docs/integration-with-streamdeck-companion/#presets)**
+The presets are organized into categories:
+
+- **Transport**: Start/Stop, Previous, Next, Add/Subtract time
+- **Viewer**: Time display, Wrap-up indicator, Flash, Blackout, Focus mode
+- **Timer**: Reset, Start, Stop specific timers
+- **Message**: Toggle, Show, Hide, Create messages
+
+Find a complete reference with button images in the Stagetimer docs:
+**[Controlling Stagetimer via Companion for Stream Deck](https://stagetimer.io/docs/integration-with-streamdeck-companion/#presets)**
 
 ---
 
@@ -124,6 +134,8 @@ The following Actions are available:
 
 ## Variables
 
+Variables let you display live data from Stagetimer on your Stream Deck buttons.
+
 **Room**
 - `$(stagetimer:roomId)` - Room ID
 - `$(stagetimer:roomName)` - Room name
@@ -187,3 +199,43 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - Timer is running and on time
 - Timer is showing red wrap-up warning
 - Timer is showing yellow wrap-up warning
+
+---
+
+## Using with the Desktop App
+
+This module also works with the [Stagetimer desktop app](https://stagetimer.io/desktop-app/) for offline use.
+
+1. In the desktop app, go to **Menu → API** to find the Room ID, API Key, and API URL.
+2. Enter these details in the Companion module configuration.
+3. Make sure to update the **API URL** field to match your desktop app's local address (e.g., `http://127.0.0.1:3000`).
+
+---
+
+## Controlling Multiple Rooms
+
+You can control multiple Stagetimer rooms by adding multiple connections:
+
+1. Change the label of your first connection to something distinctive (e.g., `stagetimer-1`).
+2. Add another "stagetimer.io: Stagetimer API" connection.
+3. Configure with a unique label (e.g., `stagetimer-2`) and the second room's credentials.
+
+Reference variables by connection label:
+- Room 1: `$(stagetimer-1:currentTimerName)`
+- Room 2: `$(stagetimer-2:currentTimerName)`
+
+---
+
+## Troubleshooting
+
+**Connection fails:**
+- Verify your Room ID and API Key are correct
+- Ensure you have an active *Pro* or *Premium* subscription
+- Check the Companion Logs tab for detailed error messages
+
+**Variables not updating:**
+- The module uses Socket.io for real-time updates
+- If variables are stale, try disabling and re-enabling the connection
+
+**Need more help?**
+Visit the [Stagetimer documentation](https://stagetimer.io/docs/) or contact support at support@stagetimer.io
