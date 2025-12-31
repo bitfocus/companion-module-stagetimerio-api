@@ -62,8 +62,10 @@ The following Actions are available:
     Stop a specific timer in the room
 - **Timer: Toggle playback**  
     Toggle (start/stop) a specific timer in the room
-- **Timer: Create new timer**  
+- **Timer: Create new timer**
     Create a new timer in the room
+- **Timer: Update timer**
+    Update an existing timer in the room
 
 **Transport actions:**
 
@@ -150,6 +152,10 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - `$(stagetimer:currentTimerStartTime24h)`- Hard start time (24h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerDuration)` - Timer duration
 - `$(stagetimer:currentTimerDurationAsMs)` - Timer duration (ms)
+- `$(stagetimer:currentTimerLabels)` - Timer labels (comma-separated)
+- `$(stagetimer:currentTimerLabel1)` - Timer label 1
+- `$(stagetimer:currentTimerLabel2)` - Timer label 2
+- `$(stagetimer:currentTimerLabel3)` - Timer label 3
 
 **Next Timer**
 - `$(stagetimer:nextTimerId)` - Timer ID
@@ -161,6 +167,10 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - `$(stagetimer:nextTimerStartTime24h)`- Hard start time (24h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerDuration)` - Timer duration
 - `$(stagetimer:nextTimerDurationAsMs)` - Timer duration (ms)
+- `$(stagetimer:nextTimerLabels)` - Timer labels (comma-separated)
+- `$(stagetimer:nextTimerLabel1)` - Timer label 1
+- `$(stagetimer:nextTimerLabel2)` - Timer label 2
+- `$(stagetimer:nextTimerLabel3)` - Timer label 3
 
 ---
 

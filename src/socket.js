@@ -234,6 +234,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     } = payload
 
     updateCurrentTimerState.call(instance, {
@@ -247,6 +248,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     })
   })
 
@@ -266,6 +268,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     } = payload
 
     updateNextTimerState.call(instance, {
@@ -279,6 +282,7 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      labels,
     })
   })
 

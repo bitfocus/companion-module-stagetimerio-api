@@ -96,6 +96,7 @@ export const initialState = {
     wrap_up_red: 0,
     start_time: '',
     start_time_uses_date: '',
+    labels: [],
   },
   next_timer: {
     name: '',
@@ -107,6 +108,7 @@ export const initialState = {
     wrap_up_red: 0,
     start_time: '',
     start_time_uses_date: '',
+    labels: [],
   },
   message: {
     showing: false,
@@ -236,6 +238,8 @@ export function updateCurrentTimerState (newState) {
   const timezone = instance.state.room?.roomTimezone || 'UTC'
   const start = timerToStartDate(updatedState, timezone)
 
+  const labels = updatedState.labels || []
+
   instance.setVariableValues({
     [variableType.currentTimerId]: updatedState._id,
     [variableType.currentTimerName]: updatedState.name,
@@ -246,6 +250,10 @@ export function updateCurrentTimerState (newState) {
     [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
     [variableType.currentTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.currentTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
+    [variableType.currentTimerLabels]: labels.map(l => l.name).join(', '),
+    [variableType.currentTimerLabel1]: labels[0]?.name || '',
+    [variableType.currentTimerLabel2]: labels[1]?.name || '',
+    [variableType.currentTimerLabel3]: labels[2]?.name || '',
   })
 
   instance.checkFeedbacks(
@@ -278,6 +286,8 @@ export function updateNextTimerState (newState) {
   const timezone = instance.state.room?.roomTimezone || 'UTC'
   const start = timerToStartDate(updatedState, timezone)
 
+  const labels = updatedState.labels || []
+
   instance.setVariableValues({
     [variableType.nextTimerId]: updatedState._id,
     [variableType.nextTimerName]: updatedState.name,
@@ -288,6 +298,10 @@ export function updateNextTimerState (newState) {
     [variableType.nextTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
     [variableType.nextTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.nextTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
+    [variableType.nextTimerLabels]: labels.map(l => l.name).join(', '),
+    [variableType.nextTimerLabel1]: labels[0]?.name || '',
+    [variableType.nextTimerLabel2]: labels[1]?.name || '',
+    [variableType.nextTimerLabel3]: labels[2]?.name || '',
   })
 }
 

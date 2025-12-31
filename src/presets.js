@@ -307,6 +307,26 @@ function generatePresets () {
         },
       },
       {
+        name: 'Current timer labels',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.currentTimerLabels})`,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Next timer labels',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.nextTimerLabels})`,
+          color: colors.lightGray,
+          bgcolor: colors.black,
+        },
+      },
+      {
         name: 'Timezone',
         actionId: '',
         style: {

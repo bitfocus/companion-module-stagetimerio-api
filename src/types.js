@@ -98,6 +98,7 @@
  * @property {number} wrap_up_red
  * @property {number} start_time
  * @property {number} start_time_uses_date
+ * @property {{ name: string, color: string }[]} labels
  */
 
 /**
