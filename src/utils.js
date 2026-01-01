@@ -1,5 +1,5 @@
 import { parseDateAsToday, parseDate, hmsToMilliseconds, millisecondsToDhms, dhmsToDigits, formatTimeOfDay } from '@stagetimerio/timeutils'
-import { timerAppearances } from '@stagetimerio/shared'
+import { timerAppearances } from './config.js'
 
 /**
  * Converts an enum object to an array of objects for creating Companion action dropdowns.

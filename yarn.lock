@@ -283,15 +283,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stagetimerio/shared@npm:^1.16.0":
-  version: 1.16.0
-  resolution: "@stagetimerio/shared@npm:1.16.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40stagetimerio%2Fshared%2F1.16.0%2F8ddd6c3f723fd7fe1c9e58c200486114598d62e8"
-  dependencies:
-    lodash: "npm:^4.17.21"
-  checksum: 10c0/b00afd92c95e099476e320bee0e70b02941d00a2cb0a663b204e90013287d7057b6089f9975b456d2a6e7f658b264878ac629fb9c7c7074e2188c1bd4b5c93b1
-  languageName: node
-  linkType: hard
-
 "@stagetimerio/timeutils@npm:^1.10.4":
   version: 1.10.4
   resolution: "@stagetimerio/timeutils@npm:1.10.4::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40stagetimerio%2Ftimeutils%2F1.10.4%2Fdc5999f51f97e2bd20a0d985f30688b322c1bf20"
@@ -1550,13 +1541,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash@npm:4.17.21"
-  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
-  languageName: node
-  linkType: hard
-
 "merge-stream@npm:^2.0.0":
   version: 2.0.0
   resolution: "merge-stream@npm:2.0.0"
@@ -2053,7 +2037,6 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:^1.14.0"
     "@companion-module/tools": "npm:^2.5.0"
-    "@stagetimerio/shared": "npm:^1.16.0"
     "@stagetimerio/timeutils": "npm:^1.10.4"
     eslint: "npm:^9.39.2"
     socket.io-client: "npm:^4.8.1"
