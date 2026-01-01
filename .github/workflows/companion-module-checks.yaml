@@ -27,7 +27,7 @@ jobs:
         run: corepack enable
 
       - name: Configure Yarn for GitHub Packages
-        run: yarn config set npmScopes.stagetimerio.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
+        run: yarn config set 'npmRegistries["//npm.pkg.github.com"].npmAuthToken' "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install dependencies
         run: yarn install
