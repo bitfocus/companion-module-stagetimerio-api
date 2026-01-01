@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v2.3.1
+
+Internal:
+- Removes `@stagetimerio/shared` and `@stagetimerio/timeutils` dependencies by inlining the required utilities into `src/timeutils/` and `src/utils/` folders. This eliminates the need for GitHub Packages registry access.
+- Restores the standard Bitfocus reusable workflow for CI checks.
+
+Fixes:
+- Fixes information text not rendering HTML in module settings.
+
 ## v2.3.0
 
 New features:
