@@ -3,7 +3,7 @@ import { equal } from 'node:assert/strict'
 
 import { getTimerPhase } from '../src/state.js'
 import { deepEqual } from 'node:assert'
-import { createDropdownOptions } from '../src/utils.js'
+import { createDropdownOptions } from '../src/utils/index.js'
 import { timerTriggers } from '../src/config.js'
 
 const sec = /** @param {number} s */ s => s * 1000

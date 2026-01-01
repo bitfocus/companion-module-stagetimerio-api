@@ -64,13 +64,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@date-fns/tz@npm:^1.2.0":
-  version: 1.4.1
-  resolution: "@date-fns/tz@npm:1.4.1"
-  checksum: 10c0/9033fdc4682fe3d4d147625ce04fa88a8792653594e2de8d5a438c8f3bfc0990ee28fe773f91cac6810b06d818b5b281ae0608752ba8337257d0279ded3f019a
-  languageName: node
-  linkType: hard
-
 "@discoveryjs/json-ext@npm:^0.6.1":
   version: 0.6.3
   resolution: "@discoveryjs/json-ext@npm:0.6.3"
@@ -280,16 +273,6 @@ __metadata:
   version: 3.1.2
   resolution: "@socket.io/component-emitter@npm:3.1.2"
   checksum: 10c0/c4242bad66f67e6f7b712733d25b43cbb9e19a595c8701c3ad99cbeb5901555f78b095e24852f862fffb43e96f1d8552e62def885ca82ae1bb05da3668fd87d7
-  languageName: node
-  linkType: hard
-
-"@stagetimerio/timeutils@npm:^1.10.4":
-  version: 1.10.4
-  resolution: "@stagetimerio/timeutils@npm:1.10.4::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40stagetimerio%2Ftimeutils%2F1.10.4%2Fdc5999f51f97e2bd20a0d985f30688b322c1bf20"
-  dependencies:
-    "@date-fns/tz": "npm:^1.2.0"
-    date-fns: "npm:^4.1.0"
-  checksum: 10c0/ec1709f0b63cf51e05ba5dd89945e34b7c0b0eabfc7b1db5b0a0ae741935dc16d94726a079376d749dd35e5d1413d68771fc2d683007cdcc290081f9363cb177
   languageName: node
   linkType: hard
 
@@ -789,13 +772,6 @@ __metadata:
     shebang-command: "npm:^2.0.0"
     which: "npm:^2.0.1"
   checksum: 10c0/053ea8b2135caff68a9e81470e845613e374e7309a47731e81639de3eaeb90c3d01af0e0b44d2ab9d50b43467223b88567dfeb3262db942dc063b9976718ffc1
-  languageName: node
-  linkType: hard
-
-"date-fns@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "date-fns@npm:4.1.0"
-  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
   languageName: node
   linkType: hard
 
@@ -2037,7 +2013,6 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:^1.14.0"
     "@companion-module/tools": "npm:^2.5.0"
-    "@stagetimerio/timeutils": "npm:^1.10.4"
     eslint: "npm:^9.39.2"
     socket.io-client: "npm:^4.8.1"
   languageName: unknown

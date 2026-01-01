@@ -1,8 +1,8 @@
 import { feedbackType } from './feedbacks.js'
-import { createTimeset, timerToStartDate, durationToMs, formatTimeDisplay } from './utils.js'
+import { createTimeset, timerToStartDate, durationToMs, formatTimeDisplay } from './utils/index.js'
 import { variableType } from './variables.js'
 import { timerAppearancesLabels } from './config.js'
-import { formatTimezone, formatTimeOfDay } from '@stagetimerio/timeutils'
+import { formatTimezone, formatTimeOfDay } from './timeutils/index.js'
 
 //
 // Timekeeper service
