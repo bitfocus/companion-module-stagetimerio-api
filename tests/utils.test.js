@@ -1,8 +1,8 @@
 import { describe, test } from 'node:test'
 import { deepEqual } from 'node:assert/strict'
 
-import { millisecondsToDhms } from '@stagetimerio/timeutils'
-import { dhmsToFormatted } from '../src/utils.js'
+import { millisecondsToDhms } from '../src/timeutils/index.js'
+import { dhmsToFormatted } from '../src/utils/index.js'
 
 describe('utils.millisecondsToDhms', () => {
   test('conversion', () => {

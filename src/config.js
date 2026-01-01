@@ -1,4 +1,4 @@
-import { createDropdownOptions } from './utils.js'
+import { createDropdownOptions } from './utils/index.js'
 
 // Regular Expressions for validation
 const roomIdRegExp = /^[A-Z0-9]{8}$/
