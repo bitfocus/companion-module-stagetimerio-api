@@ -48,3 +48,29 @@ Refer to the [Companion Module Base Wiki](https://github.com/bitfocus/companion-
    yarn lint
    yarn test
    ```
+
+## Releasing
+
+1. **Bump the version** using npm's version command (this syncs `package.json` and `companion/manifest.json` automatically):
+   ```sh
+   npm version patch  # or minor, or major
+   ```
+
+2. **Push to your fork and create a PR:**
+   ```sh
+   git push origin main
+   ```
+   Then open a PR to the [bitfocus repository](https://github.com/bitfocus/companion-module-stagetimerio-api).
+
+3. **After the PR is merged**, push the tag to the Bitfocus remote:
+   ```sh
+   git push bitfocus --tags
+   ```
+
+4. **Submit via Developer Portal:**
+   - Go to the [Bitfocus Developer Portal](https://developer.bitfocus.io/) and log in with GitHub
+   - Navigate to **My Connections** → select this module
+   - Click **Submit Version** and choose the git tag you just pushed
+   - Mark as prerelease if applicable, then submit for review
+
+5. **Review:** Community volunteers review submissions. Once approved, the new version becomes available to Companion users (v4.0.0+).
