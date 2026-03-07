@@ -62,6 +62,7 @@ export class ApiClient {
       query = query && `?${query}`
 
       const url = `${this.apiUrl}${path}${query}`
+      console.log('[API] Request URL:', url)
 
       const response = await fetch(url, {
         // Time out before the default Companion IPC action timeout
