@@ -63,3 +63,10 @@ JSDoc typedefs for TypeScript-like type checking. Key types:
 - `@stagetimerio/shared` - Shared Stagetimer utilities
 - `@stagetimerio/timeutils` - Time formatting utilities
 - `socket.io-client` - WebSocket client for real-time updates
+
+## Documentation
+
+The user-facing documentation lives in the landing page repo:
+`stagetimer-landing/src/pages/docs/integration-with-streamdeck-companion.md`
+
+When updating the docs after code changes, also update the version badge at the top of the file to match the current module version in `package.json`.

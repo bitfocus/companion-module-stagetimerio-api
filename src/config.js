@@ -2,7 +2,7 @@ import { createDropdownOptions } from './utils/index.js'
 
 // Regular Expressions for validation
 const roomIdRegExp = /^[A-Z0-9]{8}$/
-const apiKeyRegExp = /^[a-f0-9-]{32}$/
+const apiKeyRegExp = /^([a-f0-9-]{32}|[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)$/
 const apiUrlRegExp = /^https?:\/\/.*(\/v1\/)$/
 
 /** @type {StagetimerConfig} */

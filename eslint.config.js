@@ -17,7 +17,7 @@ export default [
       'quotes': ['warn', 'single'],
       'semi': ['warn', 'never'],
       'comma-dangle': ['warn', 'always-multiline'],
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'no-unused-vars': ['warn', { 'args': 'all', 'argsIgnorePattern': '^_' }],
       'no-var': 'warn',
       'no-duplicate-imports': 'warn',
