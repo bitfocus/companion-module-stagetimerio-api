@@ -587,7 +587,8 @@ async function sendActionToApi ({ actionId, options }) {
  */
 function assignTruthyOptionsToParams (options) {
   return Object.fromEntries(
-    Object.entries(options).filter(([_key, value]) => value),
+    // Note: != null filters both null and undefined (loose equality)
+    Object.entries(options).filter(([_key, value]) => value != null && value !== false),
   )
 }
 
