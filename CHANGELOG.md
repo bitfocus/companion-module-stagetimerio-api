@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v2.3.2
+
+Fixes:
+- Accept new JWT API keys in addition to legacy hex keys.
+
 ## v2.3.1
 
 Internal:
