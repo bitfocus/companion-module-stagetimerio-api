@@ -1,6 +1,12 @@
 # Changelog
 
 
+## v2.4.0
+
+New features:
+- Adds `Utility: Switch room` action for dynamic room switching. Allows changing the active room on-the-fly using a team API key, without needing multiple connections or manual config edits. Supports variables in the Room ID field.
+- Adds `Connected` boolean feedback to indicate when the module is connected to a room.
+
 ## v2.3.2
 
 Fixes:
