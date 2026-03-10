@@ -1,6 +1,7 @@
 import { InstanceStatus } from '@companion-module/base'
 import { io } from 'socket.io-client'
 import {
+  updateConnectionState,
   updatePlaybackState,
   updateRoomState,
   updateCurrentTimerState,
@@ -84,6 +85,7 @@ export function socketStart (instance) {
   socket.on('connect', () => {
     instance.log('info', 'Connected!')
     instance.updateStatus(InstanceStatus.Ok)
+    updateConnectionState.call(instance, true)
 
     if (!instance.apiClient) {
       throw Error('API client not ready')
@@ -147,9 +149,11 @@ export function socketStart (instance) {
   socket.on('connect_error', (error) => {
     instance.log('warn', `Failed to connect! (${error.message})`)
     instance.updateStatus(InstanceStatus.ConnectionFailure)
+    updateConnectionState.call(instance, false)
   })
 
   socket.on('disconnect', (reason) => {
+    updateConnectionState.call(instance, false)
     if (reason === 'io client disconnect') { return }
     instance.log('warn', `Disconnected! Reason: ${reason}`)
     instance.updateStatus(InstanceStatus.Disconnected)
@@ -158,6 +162,7 @@ export function socketStart (instance) {
   socket.on('error', (error) => {
     instance.log('error', `Unexpected error: ${error.message}`)
     instance.updateStatus(InstanceStatus.UnknownError)
+    updateConnectionState.call(instance, false)
   })
 
   //

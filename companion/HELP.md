@@ -123,6 +123,8 @@ The following Actions are available:
 
 **Utility actions:**
 
+- **Utility: Switch room**
+    Change the active room. Requires a team API key that has access to the target room. The module will reconnect to the new room. Supports variables in the Room ID field.
 - **Utility: Get room**  
     Get status of the room
 - **Utility: Get status**  
@@ -189,6 +191,7 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 ## Feedbacks
 
 - Blackout mode
+- Connected
 - Flashing
 - Focus mode
 - ON AIR mode
@@ -214,7 +217,17 @@ This module also works with the [Stagetimer desktop app](https://stagetimer.io/d
 
 ## Controlling Multiple Rooms
 
-You can control multiple Stagetimer rooms by adding multiple connections:
+### Switching rooms dynamically
+
+Use the **Room: Switch room** action to change the active room on-the-fly with a single connection. This requires a **team API key** (generated from the dashboard), which has access to all rooms in your team.
+
+The Room ID field supports variables, so you can wire it to other inputs or triggers.
+
+The current room is available via `$(stagetimer:roomId)`.
+
+### Using multiple connections
+
+Alternatively, you can control multiple rooms simultaneously by adding multiple connections:
 
 1. Change the label of your first connection to something distinctive (e.g., `stagetimer-1`).
 2. Add another "stagetimer.io: Stagetimer API" connection.

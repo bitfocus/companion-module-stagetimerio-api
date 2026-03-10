@@ -24,6 +24,7 @@ export const feedbackType = {
   focusEnabled: 'focusEnabled',
   onAirEnabled: 'onAirEnabled',
   messageIsShowing: 'messageIsShowing',
+  isConnected: 'isConnected',
 }
 
 /**
@@ -174,6 +175,19 @@ function generateFeedbacks (instance) {
       options: [],
       callback: (_feedback) => {
         return instance.state.message.showing
+      },
+    },
+
+    [feedbackType.isConnected]: {
+      name: 'Connected',
+      type: 'boolean',
+      defaultStyle: {
+        bgcolor: colors.green,
+        color: colors.white,
+      },
+      options: [],
+      callback: (_feedback) => {
+        return instance.state.connection.isConnected
       },
     },
   }

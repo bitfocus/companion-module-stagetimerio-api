@@ -49,6 +49,9 @@ export const actionIdType = {
   show_message: 'show_message',
   hide_message: 'hide_message',
   create_message: 'create_message',
+
+  // Utility
+  set_room: 'set_room',
 }
 
 /**
@@ -57,6 +60,17 @@ export const actionIdType = {
  * @type {Object.<string, SomeCompanionActionInputField[]>}
  */
 const actionOptions = {
+  room: [
+    {
+      id: 'room_id',
+      type: 'textinput',
+      label: 'Room ID',
+      useVariables: true,
+      required: true,
+      regex: '/^[A-Z0-9]{8}$/',
+      tooltip: 'The 8-character Room ID to switch to.',
+    },
+  ],
   autostart: [
     {
       id: 'autostart',
@@ -517,6 +531,12 @@ export function loadActions (instance) {
     },
 
     // Developer and utility actions
+    [actionIdType.set_room]: {
+      name: 'Utility: Switch room',
+      description: 'Change the active room. Requires a team API key that has access to the target room. The module will reconnect to the new room.',
+      options: actionOptions.room,
+      callback: switchRoom.bind(instance),
+    },
     [actionIdType.test_auth]: {
       name: 'Utility: Test auth',
       description: 'Test connection and authentication',
@@ -538,6 +558,23 @@ export function loadActions (instance) {
   }
 
   instance.setActionDefinitions(all_actions)
+}
+
+/**
+ * Switches the active room by updating the module config
+ *
+ * @this {ModuleInstance}
+ * @param {CompanionActionEvent} event
+ * @returns {void}
+ */
+async function switchRoom ({ options }) {
+  const instance = this
+  const roomId = String(options.room_id).trim().toUpperCase()
+  if (roomId === instance.config.roomId) return
+  instance.log('info', `Switching room to ${roomId}`)
+  const newConfig = { ...instance.config, roomId }
+  instance.saveConfig(newConfig)
+  await instance.configure(newConfig)
 }
 
 /**
