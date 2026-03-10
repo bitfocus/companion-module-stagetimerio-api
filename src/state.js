@@ -67,6 +67,9 @@ export function getTimerPhase (timeRemaining, yellowTime = 0, redTime = 0) {
 
 /** @type {State} */
 export const initialState = {
+  connection: {
+    isConnected: false,
+  },
   room: {
     roomId: undefined,
     roomName: undefined,
@@ -117,6 +120,17 @@ export const initialState = {
     bold: false,
     uppercase: false,
   },
+}
+
+/**
+ * @param {boolean} isConnected
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+export function updateConnectionState (isConnected) {
+  const instance = this
+  instance.state.connection.isConnected = isConnected
+  instance.checkFeedbacks(feedbackType.isConnected)
 }
 
 /**

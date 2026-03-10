@@ -191,6 +191,7 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 ## Feedbacks
 
 - Blackout mode
+- Connected
 - Flashing
 - Focus mode
 - ON AIR mode
