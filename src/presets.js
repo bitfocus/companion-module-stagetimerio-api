@@ -386,24 +386,6 @@ function generatePresets () {
         ],
       },
       {
-        name: 'Toggle focus mode',
-        actionId: actionIdType.toggle_focus,
-        style: {
-          size: '14',
-          text: 'Focus',
-          alignment: 'center:bottom',
-          png64: icons.focus,
-          pngalignment: 'center:top',
-          color: colors.white,
-          bgcolor: colors.black,
-        },
-        feedbacks: [
-          getFeedbackDefaults(feedbackType.focusEnabled, {
-            png64: icons.focusOff,
-          }),
-        ],
-      },
-      {
         name: 'Toggle ON AIR mode',
         actionId: actionIdType.toggle_on_air,
         style: {
