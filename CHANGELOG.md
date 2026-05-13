@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v2.5.0
+
+New features:
+- Adds a `Fullscreen` checkbox option to the `Message: Show` and `Message: Toggle visibility` actions. Enabling it shows the message in fullscreen mode, covering all other output elements (sent as `focus=true` to the API). This matches the renamed "Fullscreen" mode in the Stagetimer UI.
+
+Changes:
+- Marks `Viewer: Enable focus mode`, `Viewer: Disable focus mode`, and `Viewer: Toggle focus mode` as `(legacy)`. Prefer `Message: Show` with the `Fullscreen` option going forward. Existing buttons using these actions continue to work.
+- Removes the `Toggle focus mode` preset. The underlying actions remain available.
+
 ## v2.4.0
 
 New features:

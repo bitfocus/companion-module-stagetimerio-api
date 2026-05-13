@@ -304,6 +304,31 @@ const actionOptions = {
       tooltip: 'The ID of the message you want to target.',
     },
   ],
+  messageShow: [
+    {
+      id: 'index',
+      type: 'number',
+      label: 'Message index',
+      // @ts-expect-error: According to Companion docs, `default: ''` should work for optional, but is of course a type error.
+      default: '',
+      min: 1,
+      max: 99,
+      tooltip: 'Index of a message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second message from the top, set `index=2`. Leave blank to target active or first message.',
+    },
+    {
+      id: 'message_id',
+      type: 'textinput',
+      label: 'Message ID',
+      tooltip: 'The ID of the message you want to target.',
+    },
+    {
+      id: 'focus',
+      type: 'checkbox',
+      label: 'Fullscreen',
+      default: false,
+      tooltip: 'Show the message in fullscreen mode, covering all other output elements.',
+    },
+  ],
   messageCreate: [
     {
       id: 'text',
@@ -430,20 +455,20 @@ export function loadActions (instance) {
       callback: actionCallback,
     },
     [actionIdType.enable_focus]: {
-      name: 'Viewer: Enable focus mode',
-      description: 'Enable focus mode in the room',
+      name: 'Viewer: Enable focus mode (legacy)',
+      description: 'Legacy: Use "Message: Show" with the "Fullscreen" option instead. Enables focus mode in the room.',
       options: [],
       callback: actionCallback,
     },
     [actionIdType.disable_focus]: {
-      name: 'Viewer: Disable focus mode',
-      description: 'Disable focus mode in the room',
+      name: 'Viewer: Disable focus mode (legacy)',
+      description: 'Legacy: Use "Message: Hide" instead. Disables focus mode in the room.',
       options: [],
       callback: actionCallback,
     },
     [actionIdType.toggle_focus]: {
-      name: 'Viewer: Toggle focus mode',
-      description: 'Toggle (enable/disable) focus mode in the room',
+      name: 'Viewer: Toggle focus mode (legacy)',
+      description: 'Legacy: Use "Message: Show" with the "Fullscreen" option instead. Toggles (enable/disable) focus mode in the room.',
       options: [],
       callback: actionCallback,
     },
@@ -507,8 +532,8 @@ export function loadActions (instance) {
     // Message actions
     [actionIdType.show_message]: {
       name: 'Message: Show',
-      description: 'Show a message in the room',
-      options: actionOptions.message,
+      description: 'Show a message in the room. Enable "Fullscreen" to cover all other output elements.',
+      options: actionOptions.messageShow,
       callback: actionCallback,
     },
     [actionIdType.hide_message]: {
@@ -519,8 +544,8 @@ export function loadActions (instance) {
     },
     [actionIdType.show_or_hide_message]: {
       name: 'Message: Toggle visibility',
-      description: 'Show/hide a message in the room',
-      options: actionOptions.message,
+      description: 'Show/hide a message in the room. When showing, enable "Fullscreen" to cover all other output elements.',
+      options: actionOptions.messageShow,
       callback: actionCallback,
     },
     [actionIdType.create_message]: {

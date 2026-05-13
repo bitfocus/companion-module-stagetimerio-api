@@ -38,7 +38,7 @@ There are multiple presets available for the most common actions, ready to drop 
 The presets are organized into categories:
 
 - **Transport**: Start/Stop, Previous, Next, Add/Subtract time
-- **Viewer**: Time display, Wrap-up indicator, Flash, Blackout, Focus mode
+- **Viewer**: Time display, Wrap-up indicator, Flash, Blackout
 - **Timer**: Reset, Start, Stop specific timers
 - **Message**: Toggle, Show, Hide, Create messages
 
@@ -56,9 +56,9 @@ The following Actions are available:
 - **Message: Hide**  
     Hide a message in the room
 - **Message: Show**  
-    Show a message in the room
+    Show a message in the room. Enable "Fullscreen" to cover all other output elements.
 - **Message: Toggle visibility**  
-    Show/hide a message in the room
+    Show/hide a message in the room. When showing, enable "Fullscreen" to cover all other output elements.
 - **Message: Create new message**  
     Create a new message in the room
 
@@ -100,26 +100,26 @@ The following Actions are available:
 
 - **Viewer: Disable blackout mode**  
     Disable blackout mode in the room
-- **Viewer: Disable focus mode**  
-    Disable focus mode in the room
 - **Viewer: Enable blackout mode**  
     Enable blackout mode in the room
-- **Viewer: Enable focus mode**  
-    Enable focus mode in the room
 - **Viewer: Flash the screen**  
     Flashes the screen in the room. Can be used to grab the attention of speakers.
 - **Viewer: Stop flashing**  
     Stops any flashing timers and message on the screen.
 - **Viewer: Toggle blackout mode**  
     Toggle (enable/disable) blackout mode in the room
-- **Viewer: Toggle focus mode**
-    Toggle (enable/disable) focus mode in the room
 - **Viewer: Enable ON AIR**
     Enable ON AIR mode in the room
 - **Viewer: Disable ON AIR**
     Disable ON AIR mode in the room
 - **Viewer: Toggle ON AIR**
     Toggle (enable/disable) ON AIR mode in the room
+- **Viewer: Enable focus mode (legacy)**  
+    Legacy: Use "Message: Show" with the "Fullscreen" option instead.
+- **Viewer: Disable focus mode (legacy)**  
+    Legacy: Use "Message: Hide" instead.
+- **Viewer: Toggle focus mode (legacy)**  
+    Legacy: Use "Message: Show" with the "Fullscreen" option instead.
 
 **Utility actions:**
 
