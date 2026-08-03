@@ -65,6 +65,30 @@ export function getTimerPhase (timeRemaining, yellowTime = 0, redTime = 0) {
   return timerPhases.default
 }
 
+/**
+ * A blank timer, used as the initial state and to clear `current_timer` /
+ * `next_timer` when the API reports there is none (null socket payload).
+ *
+ * Returns a fresh object every call so the two slices don't share a `labels` array.
+ *
+ * @returns {TimerState}
+ */
+export function createEmptyTimerState () {
+  return {
+    _id: '',
+    name: '',
+    speaker: '',
+    notes: '',
+    duration: '',
+    appearance: '',
+    wrap_up_yellow: 0,
+    wrap_up_red: 0,
+    start_time: '',
+    start_time_uses_date: false,
+    labels: [],
+  }
+}
+
 /** @type {State} */
 export const initialState = {
   connection: {
@@ -89,30 +113,8 @@ export const initialState = {
     lastStop: 0,
     phase: undefined,
   },
-  current_timer: {
-    name: '',
-    speaker: '',
-    notes: '',
-    duration: '',
-    appearance: '',
-    wrap_up_yellow: 0,
-    wrap_up_red: 0,
-    start_time: '',
-    start_time_uses_date: '',
-    labels: [],
-  },
-  next_timer: {
-    name: '',
-    speaker: '',
-    notes: '',
-    duration: '',
-    appearance: '',
-    wrap_up_yellow: 0,
-    wrap_up_red: 0,
-    start_time: '',
-    start_time_uses_date: '',
-    labels: [],
-  },
+  current_timer: createEmptyTimerState(),
+  next_timer: createEmptyTimerState(),
   message: {
     _id: '',
     showing: false,
@@ -261,8 +263,8 @@ export function updateCurrentTimerState (newState) {
     [variableType.currentTimerNotes]: updatedState.notes,
     [variableType.currentTimerSpeaker]: updatedState.speaker,
     [variableType.currentTimerDuration]: updatedState.duration,
-    [variableType.currentTimerDurationAsMs]: durationToMs(updatedState.duration),
-    [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
+    [variableType.currentTimerDurationAsMs]: durationToMs(updatedState.duration) ?? '',
+    [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance] ?? '',
     [variableType.currentTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.currentTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
     [variableType.currentTimerLabels]: labels.map(l => l.name).join(', '),
@@ -309,8 +311,8 @@ export function updateNextTimerState (newState) {
     [variableType.nextTimerNotes]: updatedState.notes,
     [variableType.nextTimerSpeaker]: updatedState.speaker,
     [variableType.nextTimerDuration]: updatedState.duration,
-    [variableType.nextTimerDurationAsMs]: durationToMs(updatedState.duration),
-    [variableType.nextTimerAppearance]: timerAppearancesLabels[updatedState.appearance],
+    [variableType.nextTimerDurationAsMs]: durationToMs(updatedState.duration) ?? '',
+    [variableType.nextTimerAppearance]: timerAppearancesLabels[updatedState.appearance] ?? '',
     [variableType.nextTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.nextTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
     [variableType.nextTimerLabels]: labels.map(l => l.name).join(', '),

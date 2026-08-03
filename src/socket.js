@@ -8,6 +8,7 @@ import {
   updateNextTimerState,
   updateFlashingState,
   updateMessageState,
+  createEmptyTimerState,
 } from './state.js'
 import { actionIdType } from './actions.js'
 
@@ -228,7 +229,8 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.current_timer, (payload) => {
     instance.log('debug', `Event: 'current_timer' ${JSON.stringify(payload)}`)
 
-    if (!payload) return updateCurrentTimerState.call(instance, {})
+    // A null payload means no timer is selected, clear the state
+    if (!payload) return updateCurrentTimerState.call(instance, createEmptyTimerState())
 
     const {
       _id,
@@ -262,7 +264,8 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.next_timer, (payload) => {
     instance.log('debug', `Event: 'next_timer' ${JSON.stringify(payload)}`)
 
-    if (!payload) return updateNextTimerState.call(instance, {})
+    // A null payload means this is the last timer, clear the state
+    if (!payload) return updateNextTimerState.call(instance, createEmptyTimerState())
 
     const {
       _id,
