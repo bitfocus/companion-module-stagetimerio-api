@@ -77,6 +77,8 @@ The following Actions are available:
 - **Timer: Update timer**
     Update an existing timer in the room
 
+The `Timer: *` and `Message: *` actions target either an index (position in the list, starting at 1) or an ID. Use one or the other — if both fields are filled, the ID wins. Both fields accept variables, so setting `Timer ID` to `$(stagetimer:currentTimerId)` and clearing `Timer index` targets the currently highlighted timer.
+
 **Transport actions:**
 
 - **Transport: Add time**  
@@ -185,6 +187,13 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - `$(stagetimer:nextTimerLabel1)` - Timer label 1
 - `$(stagetimer:nextTimerLabel2)` - Timer label 2
 - `$(stagetimer:nextTimerLabel3)` - Timer label 3
+
+**Current Message**  
+The message currently showing on the viewer. These variables are empty while no message is showing.
+
+- `$(stagetimer:currentMessageId)` - Message ID
+- `$(stagetimer:currentMessageText)` - Message text
+- `$(stagetimer:currentMessageColor)` - Message color
 
 ---
 

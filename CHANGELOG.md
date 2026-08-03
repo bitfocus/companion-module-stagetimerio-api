@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v2.6.0
+
+New features:
+- Adds variables for the message currently showing on the viewer:
+  - `$(stagetimer:currentMessageId)` - Message ID
+  - `$(stagetimer:currentMessageText)` - Message text
+  - `$(stagetimer:currentMessageColor)` - Message color
+  - The variables are empty while no message is showing.
+
+Fixes:
+- Fixes targeting a timer by ID in the `Timer: Start`, `Timer: Stop`, `Timer: Toggle playback`, `Timer: Reset`, and `Timer: Update timer` actions. The `Timer ID` field now supports variables (e.g. `$(stagetimer:currentTimerId)`), and the `Timer index` field can be left blank. Previously the index was always sent alongside the ID, which the API rejects, so the action did nothing.
+- Adds variable support to the `Message ID` field of the message actions.
+
+Changes:
+- The `Timer index` and `Message index` fields are now text inputs (instead of number inputs) so they can be cleared and accept variables. Existing buttons keep working unchanged.
+- When both an index and an ID are set, the ID now takes precedence instead of the request failing.
+
 ## v2.5.0
 
 New features:
