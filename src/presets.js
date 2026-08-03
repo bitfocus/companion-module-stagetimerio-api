@@ -408,7 +408,7 @@ function generatePresets () {
         name: 'Reset a timer',
         actionId: actionIdType.reset_timer,
         actionOptions: {
-          index: 1,
+          index: '1',
         },
         style: {
           size: '14',
@@ -425,7 +425,7 @@ function generatePresets () {
         name: 'Start a timer',
         actionId: actionIdType.start_timer,
         actionOptions: {
-          index: 2,
+          index: '2',
         },
         style: {
           size: '14',
@@ -442,7 +442,7 @@ function generatePresets () {
         name: 'Stop a timer',
         actionId: actionIdType.stop_timer,
         actionOptions: {
-          index: 2,
+          index: '2',
         },
         style: {
           size: '14',

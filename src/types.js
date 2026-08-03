@@ -147,6 +147,7 @@
 
 /**
  * @typedef {object} MessageState
+ * @property {string} [_id]
  * @property {boolean} showing
  * @property {string} text
  * @property {string} color

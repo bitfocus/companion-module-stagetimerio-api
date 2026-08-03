@@ -1,6 +1,6 @@
 import { InstanceBase, runEntrypoint, InstanceStatus } from '@companion-module/base'
 import { initialConfig, validateConfig, configFields } from './config.js'
-import { initialState } from './state.js'
+import { initialState, updateMessageState } from './state.js'
 import { ApiClient } from './api.js'
 import { socketStart, socketStop } from './socket.js'
 import { loadActions } from './actions.js'
@@ -58,6 +58,10 @@ export class ModuleInstance extends InstanceBase {
       loadFeedbacks(this)
       loadVariables(this)
       loadPresets(this)
+
+      // The API only emits a `message` event when a message is active, so seed
+      // the message variables to keep them from showing up as undefined.
+      updateMessageState.call(this)
     } catch (error) {
       if(error instanceof Error) {
         throw new Error(`Failed to start. Error: ${error.message}`)
