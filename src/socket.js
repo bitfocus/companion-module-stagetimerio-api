@@ -296,9 +296,10 @@ export function socketStart (instance) {
   socket.on(stagetimerEvents.message, (payload) => {
     instance.log('debug', `Event: 'message' ${JSON.stringify(payload)}`)
 
-    const { showing, text, color, bold, uppercase } = payload
+    const { _id, showing, text, color, bold, uppercase } = payload
 
     updateMessageState.call(instance, {
+      _id,
       showing,
       text,
       color,

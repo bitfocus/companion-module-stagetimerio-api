@@ -47,7 +47,7 @@ describe('actions.resolveTargetParams', () => {
     )
   })
 
-  test('numeric index from actions saved before v2.6.0 still works', () => {
+  test('numeric index from actions saved with older module versions still works', () => {
     deepEqual(toParams({ index: 1, timer_id: '' }), { index: 1 })
     deepEqual(toParams({ index: 1, timer_id: 'abc' }), { timer_id: 'abc' })
   })

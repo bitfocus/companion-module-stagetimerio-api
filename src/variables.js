@@ -52,6 +52,11 @@ export const variableType = {
   nextTimerLabel1: 'nextTimerLabel1',
   nextTimerLabel2: 'nextTimerLabel2',
   nextTimerLabel3: 'nextTimerLabel3',
+
+  // Current Message
+  currentMessageId: 'currentMessageId',
+  currentMessageText: 'currentMessageText',
+  currentMessageColor: 'currentMessageColor',
 }
 
 /** @type {CompanionVariableDefinition[]} */
@@ -103,6 +108,11 @@ const variables = [
   { variableId: variableType.nextTimerLabel1, name: 'Next timer label 1' },
   { variableId: variableType.nextTimerLabel2, name: 'Next timer label 2' },
   { variableId: variableType.nextTimerLabel3, name: 'Next timer label 3' },
+
+  // Current Message
+  { variableId: variableType.currentMessageId, name: 'Current message ID' },
+  { variableId: variableType.currentMessageText, name: 'Current message text' },
+  { variableId: variableType.currentMessageColor, name: 'Current message color' },
 ]
 
 /**

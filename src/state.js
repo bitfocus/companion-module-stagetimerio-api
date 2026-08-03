@@ -114,6 +114,7 @@ export const initialState = {
     labels: [],
   },
   message: {
+    _id: '',
     showing: false,
     text: '',
     color: '',
@@ -320,7 +321,7 @@ export function updateNextTimerState (newState) {
 }
 
 /**
- * @param { MessageState } newState
+ * @param { MessageState } [newState]
  * @this {ModuleInstance}
  * @returns {void}
  */
@@ -328,10 +329,22 @@ export function updateMessageState (newState) {
 
   const instance = this
 
-  instance.state.message = {
+  const updatedState = {
     ...instance.state.message,
     ...newState,
   }
+
+  instance.state.message = updatedState
+
+  // The API keeps sending the message after it was hidden, but a message that
+  // isn't on the viewer is not the "current" message.
+  const showing = updatedState.showing
+
+  instance.setVariableValues({
+    [variableType.currentMessageId]: showing ? updatedState._id || '' : '',
+    [variableType.currentMessageText]: showing ? updatedState.text : '',
+    [variableType.currentMessageColor]: showing ? updatedState.color : '',
+  })
 
   instance.checkFeedbacks(
     feedbackType.messageIsShowing,
