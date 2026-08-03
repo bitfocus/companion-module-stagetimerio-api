@@ -1,7 +1,7 @@
 import { describe, test } from 'node:test'
 import { equal } from 'node:assert/strict'
 
-import { getTimerPhase, initialState, updateMessageState } from '../src/state.js'
+import { createEmptyTimerState, getTimerPhase, initialState, updateMessageState, updateNextTimerState } from '../src/state.js'
 import { deepEqual } from 'node:assert'
 import { createDropdownOptions } from '../src/utils/index.js'
 import { timerTriggers } from '../src/config.js'
@@ -88,6 +88,77 @@ describe('message state', () => {
       currentMessageText: '',
       currentMessageColor: '',
     })
+  })
+
+})
+
+describe('next timer state', () => {
+
+  /** Minimal stand-in for the module instance, capturing the variable values */
+  function createInstance () {
+    return {
+      state: structuredClone(initialState),
+      variables: /** @type {Record<string, any>} */ ({}),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      checkFeedbacks () {},
+    }
+  }
+
+  const timer = {
+    _id: '63a422789477ef3e82c3597b',
+    name: 'Introduction',
+    speaker: 'Tom',
+    notes: 'Keep it short',
+    duration: '0:05:00',
+    appearance: 'COUNTDOWN',
+    wrap_up_yellow: 60,
+    wrap_up_red: 15,
+    start_time: '',
+    start_time_uses_date: false,
+    labels: [{ name: 'VT', color: '#F44336' }],
+  }
+
+  test('exposes the next timer', () => {
+    const instance = createInstance()
+
+    updateNextTimerState.call(instance, timer)
+
+    equal(instance.variables.nextTimerId, '63a422789477ef3e82c3597b')
+    equal(instance.variables.nextTimerName, 'Introduction')
+    equal(instance.variables.nextTimerDurationAsMs, min(5))
+  })
+
+  // The socket sends a null payload once the last timer is selected
+  test('clears the variables when there is no next timer', () => {
+    const instance = createInstance()
+
+    updateNextTimerState.call(instance, timer)
+    updateNextTimerState.call(instance, createEmptyTimerState())
+
+    deepEqual(instance.variables, {
+      nextTimerId: '',
+      nextTimerName: '',
+      nextTimerNotes: '',
+      nextTimerSpeaker: '',
+      nextTimerDuration: '',
+      nextTimerDurationAsMs: '',
+      nextTimerAppearance: '',
+      nextTimerStartTime12h: '',
+      nextTimerStartTime24h: '',
+      nextTimerLabels: '',
+      nextTimerLabel1: '',
+      nextTimerLabel2: '',
+      nextTimerLabel3: '',
+    })
+  })
+
+  test('empty timer states do not share a labels array', () => {
+    const a = createEmptyTimerState()
+    const b = createEmptyTimerState()
+
+    a.labels.push({ name: 'VT', color: '#F44336' })
+
+    equal(b.labels.length, 0)
   })
 
 })

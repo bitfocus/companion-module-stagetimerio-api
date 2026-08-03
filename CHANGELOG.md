@@ -1,6 +1,12 @@
 # Changelog
 
 
+## v2.6.1
+
+Fixes:
+- Fixes the current and next timer variables keeping stale values when there is no such timer. The next timer variables now go empty once the last timer is selected, and the current timer variables go empty when no timer is selected. This makes `$(stagetimer:nextTimerId)` usable to detect the end of the rundown, for example to loop back to the first timer or stop playback. ([#20](https://github.com/bitfocus/companion-module-stagetimerio-api/issues/20))
+- Fixes `$(stagetimer:currentTimerDurationAsMs)`, `$(stagetimer:nextTimerDurationAsMs)`, `$(stagetimer:currentTimerAppearance)`, and `$(stagetimer:nextTimerAppearance)` showing `$NA` instead of an empty value when no timer is set.
+
 ## v2.6.0
 
 New features:

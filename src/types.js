@@ -157,6 +157,7 @@
 
 /**
  * @typedef {object} TimerState
+ * @property {string} [_id]
  * @property {string} name
  * @property {string} notes
  * @property {string} speaker
