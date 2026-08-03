@@ -104,18 +104,18 @@ const actionOptions = {
   timer: [
     {
       id: 'index',
-      type: 'number',
+      type: 'textinput',
       label: 'Timer index',
-      default: 1,
-      min: 1,
-      max: 99,
-      tooltip: 'Index of a timer to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second timer from the top, set `index=2`.',
+      default: '1',
+      useVariables: true,
+      tooltip: 'Index of a timer to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second timer from the top, set `index=2`. Leave blank when targeting a timer by ID.',
     },
     {
       id: 'timer_id',
       type: 'textinput',
       label: 'Timer ID',
-      tooltip: 'The ID of the timer you want to target.',
+      useVariables: true,
+      tooltip: 'The ID of the timer you want to target. Takes precedence over the timer index. Tip: Use `$(stagetimer:currentTimerId)` to target the currently highlighted timer.',
     },
   ],
   timerCreate: [
@@ -289,37 +289,35 @@ const actionOptions = {
   message: [
     {
       id: 'index',
-      type: 'number',
+      type: 'textinput',
       label: 'Message index',
-      // @ts-expect-error: According to Companion docs, `default: ''` should work for optional, but is of course a type error.
       default: '',
-      min: 1,
-      max: 99,
+      useVariables: true,
       tooltip: 'Index of a message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second message from the top, set `index=2`. Leave blank to target active or first message.',
     },
     {
       id: 'message_id',
       type: 'textinput',
       label: 'Message ID',
-      tooltip: 'The ID of the message you want to target.',
+      useVariables: true,
+      tooltip: 'The ID of the message you want to target. Takes precedence over the message index.',
     },
   ],
   messageShow: [
     {
       id: 'index',
-      type: 'number',
+      type: 'textinput',
       label: 'Message index',
-      // @ts-expect-error: According to Companion docs, `default: ''` should work for optional, but is of course a type error.
       default: '',
-      min: 1,
-      max: 99,
+      useVariables: true,
       tooltip: 'Index of a message to target in a room. Note: Index is not zero-based, it starts at 1. Example: To target the second message from the top, set `index=2`. Leave blank to target active or first message.',
     },
     {
       id: 'message_id',
       type: 'textinput',
       label: 'Message ID',
-      tooltip: 'The ID of the message you want to target.',
+      useVariables: true,
+      tooltip: 'The ID of the message you want to target. Takes precedence over the message index.',
     },
     {
       id: 'focus',
@@ -626,6 +624,9 @@ async function sendActionToApi ({ actionId, options }) {
 
   const params = assignTruthyOptionsToParams(options)
 
+  // Make sure only one of `index` and `timer_id`/`message_id` is sent
+  resolveTargetParams(params)
+
   // Convert label options to labels array format
   convertLabelsToApiFormat(params)
 
@@ -642,16 +643,35 @@ async function sendActionToApi ({ actionId, options }) {
 
 /**
  * Filters Action options ({@link CompanionOptionValues}) for falsy values,
- * so that only truthy ones are used as query params.
+ * so that only truthy ones are used as query params. Empty strings are kept,
+ * because they are a valid value for text fields like `text` or `name`.
  *
  * @param {CompanionOptionValues} options
  * @returns {object}
  */
-function assignTruthyOptionsToParams (options) {
+export function assignTruthyOptionsToParams (options) {
   return Object.fromEntries(
     // Note: != null filters both null and undefined (loose equality)
     Object.entries(options).filter(([_key, value]) => value != null && value !== false),
   )
+}
+
+/**
+ * The API requires either `index` OR an ID to identify a timer/message and
+ * rejects requests containing both. Trims the values, drops the blank ones,
+ * and lets the ID win. Modifies the params object in place.
+ *
+ * @param {object} params
+ * @returns {void}
+ */
+export function resolveTargetParams (params) {
+  for (const key of ['index', 'timer_id', 'message_id']) {
+    if (typeof params[key] !== 'string') continue
+    params[key] = params[key].trim()
+    if (!params[key]) delete params[key]
+  }
+
+  if (params.timer_id || params.message_id) delete params.index
 }
 
 /**
