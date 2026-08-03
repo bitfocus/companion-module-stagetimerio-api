@@ -158,7 +158,9 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - `$(stagetimer:currentTimerRemainingMinutes)` - Timer remaining time (minutes)
 - `$(stagetimer:currentTimerRemainingSeconds)` - Timer remaining time (seconds)
 
-**Current Timer**
+**Current Timer**  
+The timer currently selected in the room. These variables are empty while no timer is selected.
+
 - `$(stagetimer:currentTimerId)` - Timer ID
 - `$(stagetimer:currentTimerName)` - Timer name
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
@@ -173,7 +175,9 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - `$(stagetimer:currentTimerLabel2)` - Timer label 2
 - `$(stagetimer:currentTimerLabel3)` - Timer label 3
 
-**Next Timer**
+**Next Timer**  
+The timer that follows the current one. These variables are empty when the last timer is selected, so `$(stagetimer:nextTimerId)` can be used to detect the end of the rundown.
+
 - `$(stagetimer:nextTimerId)` - Timer ID
 - `$(stagetimer:nextTimerName)` - Timer name
 - `$(stagetimer:nextTimerSpeaker)` - Timer speaker
