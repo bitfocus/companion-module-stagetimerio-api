@@ -37,7 +37,7 @@ There are multiple presets available for the most common actions, ready to drop 
 
 The presets are organized into categories:
 
-- **Transport**: Start/Stop, Previous, Next, Add/Subtract time
+- **Transport**: Start/Stop, Previous, Next, Jump back/forward, Add/Subtract time
 - **Viewer**: Time display, Wrap-up indicator, Flash, Blackout
 - **Timer**: Reset, Start, Stop specific timers
 - **Message**: Toggle, Show, Hide, Create messages
@@ -83,6 +83,8 @@ The `Timer: *` and `Message: *` actions target either an index (position in the 
 
 - **Transport: Add time**  
     Add an amount of time to the selected timer in the room.
+- **Transport: Jump playhead**  
+    Jump the playhead of the selected timer forward or back. The duration does not change. A positive number of milliseconds jumps forward, a negative number jumps back. It cannot jump back past the start of the timer. If it would, the timer does not move.
 - **Transport: Next**  
     Select the next timer in the list
 - **Transport: Previous**  

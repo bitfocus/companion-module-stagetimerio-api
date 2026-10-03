@@ -434,7 +434,7 @@ export function loadActions (instance) {
     },
     [actionIdType.jump]: {
       name: 'Transport: Jump playhead',
-      description: 'Jump the playhead of the selected timer forward or back. The duration does not change.',
+      description: 'Jump the playhead of the selected timer forward or back. The duration does not change. It cannot jump back past the start of the timer. If it would, the timer does not move.',
       options: actionOptions.milliseconds,
       callback: actionCallback,
     },
