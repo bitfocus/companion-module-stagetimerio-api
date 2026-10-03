@@ -1,6 +1,12 @@
 # Changelog
 
 
+## v2.7.0
+
+New features:
+- Adds the `Transport: Jump playhead` action. It jumps the playhead of the selected timer forward or back by a number of milliseconds (positive jumps forward, negative jumps back). The duration does not change. It cannot jump back past the start of the timer. If it would, the timer does not move.
+- Adds the `Jump back 10s` and `Jump forward 10s` presets to the Transport category.
+
 ## v2.6.1
 
 Fixes:
