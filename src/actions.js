@@ -21,6 +21,7 @@ export const actionIdType = {
   previous: 'previous',
   add_time: 'add_time',
   subtract_time: 'subtract_time',
+  jump: 'jump',
 
   // Viewer
   start_flashing: 'start_flashing',
@@ -88,6 +89,17 @@ const actionOptions = {
       default: '1m',
       required: true,
       tooltip: 'An amount of time specified by a number followed by a divison of time. Eg. `5s` for 5 seconds, `10m` for 10 minutes, etc.',
+    },
+  ],
+  milliseconds: [
+    {
+      id: 'milliseconds',
+      type: 'number',
+      label: 'Milliseconds',
+      default: 10000,
+      min: -86400000,
+      max: 86400000,
+      tooltip: 'Positive values jump forward, negative values jump back. Eg. `10000` jumps 10 seconds forward, `-10000` jumps 10 seconds back.',
     },
   ],
   count: [
@@ -418,6 +430,12 @@ export function loadActions (instance) {
       name: 'Transport: Subtract time',
       description: 'Subtract an amount of time from the selected timer in the room.',
       options: actionOptions.amount,
+      callback: actionCallback,
+    },
+    [actionIdType.jump]: {
+      name: 'Transport: Jump playhead',
+      description: 'Jump the playhead of the selected timer forward or back. The duration does not change.',
+      options: actionOptions.milliseconds,
       callback: actionCallback,
     },
 

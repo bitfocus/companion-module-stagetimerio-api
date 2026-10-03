@@ -108,6 +108,36 @@ function generatePresets () {
         },
       },
 
+      // Jump playhead
+      {
+        name: 'Jump back 10s',
+        actionId: actionIdType.jump,
+        actionOptions: {
+          milliseconds: -10000,
+        },
+        style: {
+          size: '24',
+          text: '10s\n←',
+          alignment: 'center:center',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Jump forward 10s',
+        actionId: actionIdType.jump,
+        actionOptions: {
+          milliseconds: 10000,
+        },
+        style: {
+          size: '24',
+          text: '10s\n→',
+          alignment: 'center:center',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+      },
+
       // Variations of add/subtract time
       {
         name: '+1min',
