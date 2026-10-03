@@ -37,7 +37,7 @@ There are multiple presets available for the most common actions, ready to drop 
 
 The presets are organized into categories:
 
-- **Transport**: Start/Stop, Previous, Next, Add/Subtract time
+- **Transport**: Start/Stop, Previous, Next, Jump back/forward, Add/Subtract time
 - **Viewer**: Time display, Wrap-up indicator, Flash, Blackout
 - **Timer**: Reset, Start, Stop specific timers
 - **Message**: Toggle, Show, Hide, Create messages
@@ -77,26 +77,28 @@ The following Actions are available:
 - **Timer: Update timer**
     Update an existing timer in the room
 
-The `Timer: *` and `Message: *` actions target either an index (position in the list, starting at 1) or an ID. Use one or the other — if both fields are filled, the ID wins. Both fields accept variables, so setting `Timer ID` to `$(stagetimer:currentTimerId)` and clearing `Timer index` targets the currently highlighted timer.
+The `Timer: *` and `Message: *` actions target either an index (position in the list, starting at 1) or an ID. Use one or the other — if both fields are filled, the ID wins. Both fields accept variables, so setting `Timer ID` to `$(stagetimer:currentTimerId)` and clearing `Timer index` targets the currently selected timer.
 
 **Transport actions:**
 
 - **Transport: Add time**  
-    Add an amount of time to the highlighted timer in the room.
+    Add an amount of time to the selected timer in the room.
+- **Transport: Jump playhead**  
+    Jump the playhead of the selected timer forward or back. The duration does not change. A positive number of milliseconds jumps forward, a negative number jumps back. It cannot jump back past the start of the timer. If it would, the timer does not move.
 - **Transport: Next**  
-    Highlight the next timer in the list
+    Select the next timer in the list
 - **Transport: Previous**  
-    Reset the highlighted timer in the room if it is running. If the highlighted timer is not running, highlight the previous timer in the list. Optionally, you can automatically start the previous timer once it's highlighted.
+    Reset the selected timer in the room if it is running. If the selected timer is not running, select the previous timer in the list. Optionally, you can automatically start the previous timer once it's selected.
 - **Transport: Start**  
-    Start or resume the highlighted timer in the room
+    Start or resume the selected timer in the room
 - **Transport: Start/stop**  
-    Start/stop the highlighted timer in the room
+    Start/stop the selected timer in the room
 - **Transport: Stop**  
-    Stop the highlighted timer in the room
+    Stop the selected timer in the room
 - **Transport: Reset**  
-    Reset or restart the currently highlighted timer.
+    Reset or restart the currently selected timer.
 - **Transport: Subtract time**  
-    Subtract an amount of time from the highlighted timer in the room.
+    Subtract an amount of time from the selected timer in the room.
 
 **Viewer actions:**
 
