@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v2.7.1
+
+Fixes:
+- The logs no longer show the API key. They now show only if an API key is set. Logs written by earlier versions can contain the key. If you shared those logs, rotate your API key in Stagetimer and enter the new key in the Companion connection.
+
 ## v2.7.0
 
 New features:
