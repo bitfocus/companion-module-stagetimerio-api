@@ -61,7 +61,7 @@ export function socketStart (instance) {
 
   instance.log('info', 'Connecting to Stagetimer.io...')
   console.info('[Socket] Origin:', url.origin, 'Path:', url.pathname + 'socket.io')
-  console.info('[Socket] Auth:', JSON.stringify({ room_id: roomId, api_key: apiKey }))
+  console.info('[Socket] Room:', roomId, 'API key:', apiKey ? 'present' : 'missing')
   instance.updateStatus(InstanceStatus.Connecting)
 
   // Configure socket
