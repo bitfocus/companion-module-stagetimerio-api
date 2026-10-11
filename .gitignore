@@ -3,11 +3,12 @@ node_modules/
 package-lock.json
 
 # yarn
-.yarn/
+/.yarn
 
 # companion
 /pkg
-/pkg.tgz
+/*.tgz
+DEBUG-*
 
 # other
 .DS_Store

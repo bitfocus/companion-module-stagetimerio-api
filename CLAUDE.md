@@ -10,7 +10,7 @@ This is a Bitfocus Companion module for controlling [Stagetimer.io](https://stag
 
 - `yarn lint` - Run ESLint on `./src`
 - `yarn test` - Run tests using Node.js built-in test runner
-- `yarn version` - Sync versions and stage changes (used during release)
+- `yarn package` - Build the module archive (the build copies the `package.json` version into the manifest)
 
 ## Code Style
 

@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "eslint ./src",
     "test": "node --test",
-    "version": "node syncVersions.js && git add ."
+    "format": "prettier -w .",
+    "package": "companion-module-build"
   },
   "license": "MIT",
   "author": "Lukas Hermann <lukas@stagetimer.io>",
@@ -15,13 +16,19 @@
     "type": "git",
     "url": "git+https://github.com/bitfocus/companion-module-stagetimerio-api.git"
   },
+  "engines": {
+    "node": "^22.20",
+    "yarn": "^4"
+  },
   "dependencies": {
     "@companion-module/base": "^1.14.1",
     "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@companion-module/tools": "^2.8.0",
-    "eslint": "^10.8.0"
+    "eslint": "^10.8.0",
+    "prettier": "^3.7.4"
   },
+  "prettier": "@companion-module/tools/.prettierrc.json",
   "packageManager": "yarn@4.12.0"
 }
