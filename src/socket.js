@@ -8,6 +8,7 @@ import {
   updateNextTimerState,
   updateFlashingState,
   updateMessageState,
+  updateStartSignal,
   createEmptyTimerState,
 } from './state.js'
 import { actionIdType } from './actions.js'
@@ -71,9 +72,6 @@ export function socketStart (instance) {
       room_id: roomId,
       api_key: apiKey,
     },
-    // Prevent infinite retries
-    reconnectionAttempts: 5,
-    // Prevent infinite exponential backoff
     reconnectionDelayMax: 10000,
     // Enable cookie handling for sticky session support with load balancing
     withCredentials: true,
@@ -180,11 +178,6 @@ export function socketStart (instance) {
     instance.updateStatus(InstanceStatus.Ok)
   })
 
-  socket.io.on('reconnect_failed', () => {
-    instance.log('error', 'Unable to connect to Stagetimer.io!')
-    instance.updateStatus(InstanceStatus.ConnectionFailure)
-  })
-
   socket.io.on('error', (error) => {
     instance.log('debug', `[Socket manager] Unexpected error: ${error}`)
   })
@@ -209,6 +202,8 @@ export function socketStart (instance) {
       lastStop: pause,
       serverTimeDiff,
     })
+
+    updateStartSignal.call(instance, payload)
 
     getTimerAndUpdateState.call(instance, timer_id)
   })
@@ -243,7 +238,9 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
       labels,
+      fields,
     } = payload
 
     updateCurrentTimerState.call(instance, {
@@ -257,7 +254,9 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
       labels,
+      fields,
     })
   })
 
@@ -278,7 +277,9 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
       labels,
+      fields,
     } = payload
 
     updateNextTimerState.call(instance, {
@@ -292,7 +293,9 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
       labels,
+      fields,
     })
   })
 
@@ -341,7 +344,7 @@ function getTimerAndUpdateState (timer_id) {
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {
 
-      const { _id, name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
+      const { _id, name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red, index, labels, fields } = /** @type {TimerData} */ (data)
 
       updateCurrentTimerState.call(this, {
         _id,
@@ -352,6 +355,9 @@ function getTimerAndUpdateState (timer_id) {
         appearance,
         wrap_up_yellow,
         wrap_up_red,
+        index,
+        labels,
+        fields,
       })
     })
     .catch((error) => {

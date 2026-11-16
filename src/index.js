@@ -1,6 +1,6 @@
 import { InstanceBase, runEntrypoint, InstanceStatus } from '@companion-module/base'
 import { initialConfig, validateConfig, configFields } from './config.js'
-import { initialState, updateMessageState } from './state.js'
+import { initialState, updateConnectionState, updateMessageState } from './state.js'
 import { ApiClient } from './api.js'
 import { socketStart, socketStop } from './socket.js'
 import { loadActions } from './actions.js'
@@ -18,6 +18,9 @@ export class ModuleInstance extends InstanceBase {
 
   /** @type {ApiClient | null} */
   apiClient = null
+
+  /** @type {Set<string>} Field variables only grow, so an action that uses one survives a timer without it */
+  fieldSlugs = new Set()
 
   /**
    * @param {StagetimerConfig} config
@@ -59,6 +62,7 @@ export class ModuleInstance extends InstanceBase {
       loadVariables(this)
       loadPresets(this)
 
+      updateConnectionState.call(this, this.state.connection.isConnected)
       // The API only emits a `message` event when a message is active, so seed
       // the message variables to keep them from showing up as undefined.
       updateMessageState.call(this)

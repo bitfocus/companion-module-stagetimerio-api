@@ -1,3 +1,5 @@
+import { fieldVariableDefinitions } from './fieldVariables.js'
+
 /**
  * Enum of allowed variables
  *
@@ -9,6 +11,7 @@ export const variableType = {
   roomId: 'roomId',
   roomName: 'roomName',
   roomTimezone: 'roomTimezone',
+  connected: 'connected',
 
   // Playback Snapshot
   timeDisplay: 'timeDisplay',
@@ -20,10 +23,13 @@ export const variableType = {
   currentTimerRemainingHours: 'currentTimerRemainingHours',
   currentTimerRemainingMinutes: 'currentTimerRemainingMinutes',
   currentTimerRemainingSeconds: 'currentTimerRemainingSeconds',
+  running: 'running',
+  lastStartedAt: 'lastStartedAt',
 
   // Current Timer
   currentTimerId: 'currentTimerId',
   currentTimerName: 'currentTimerName',
+  currentTimerIndex: 'currentTimerIndex',
   currentTimerSpeaker: 'currentTimerSpeaker',
   currentTimerNotes: 'currentTimerNotes',
   currentTimerAppearance: 'currentTimerAppearance',
@@ -36,10 +42,12 @@ export const variableType = {
   currentTimerLabel1: 'currentTimerLabel1',
   currentTimerLabel2: 'currentTimerLabel2',
   currentTimerLabel3: 'currentTimerLabel3',
+  currentTimerFields: 'currentTimerFields',
 
   // Next Timer
   nextTimerId: 'nextTimerId',
   nextTimerName: 'nextTimerName',
+  nextTimerIndex: 'nextTimerIndex',
   nextTimerSpeaker: 'nextTimerSpeaker',
   nextTimerNotes: 'nextTimerNotes',
   nextTimerAppearance: 'nextTimerAppearance',
@@ -52,6 +60,7 @@ export const variableType = {
   nextTimerLabel1: 'nextTimerLabel1',
   nextTimerLabel2: 'nextTimerLabel2',
   nextTimerLabel3: 'nextTimerLabel3',
+  nextTimerFields: 'nextTimerFields',
 
   // Current Message
   currentMessageId: 'currentMessageId',
@@ -65,6 +74,7 @@ const variables = [
   { variableId: variableType.roomId, name: 'Room ID' },
   { variableId: variableType.roomName, name: 'Room name' },
   { variableId: variableType.roomTimezone, name: 'Room timezone' },
+  { variableId: variableType.connected, name: 'Connected to Stagetimer (true/false)' },
 
   // Playback Snapshot
   { variableId: variableType.timeDisplay, name: 'Formatted timer display' },
@@ -76,10 +86,13 @@ const variables = [
   { variableId: variableType.currentTimerRemainingHours, name: 'Remaining time (hours)' },
   { variableId: variableType.currentTimerRemainingMinutes, name: 'Remaining time (minutes)' },
   { variableId: variableType.currentTimerRemainingSeconds, name: 'Remaining time (seconds)' },
+  { variableId: variableType.running, name: 'Timer running (true/false)' },
+  { variableId: variableType.lastStartedAt, name: 'Last fresh timer start (Unix time in ms)' },
 
   // Current Timer
   { variableId: variableType.currentTimerId, name: 'Current timer ID' },
   { variableId: variableType.currentTimerName, name: 'Current timer name' },
+  { variableId: variableType.currentTimerIndex, name: 'Current timer number, for example 2.1' },
   { variableId: variableType.currentTimerSpeaker, name: 'Current timer speaker' },
   { variableId: variableType.currentTimerNotes, name: 'Current timer notes' },
   { variableId: variableType.currentTimerAppearance, name: 'Current timer appearance' },
@@ -92,10 +105,12 @@ const variables = [
   { variableId: variableType.currentTimerLabel1, name: 'Current timer label 1' },
   { variableId: variableType.currentTimerLabel2, name: 'Current timer label 2' },
   { variableId: variableType.currentTimerLabel3, name: 'Current timer label 3' },
+  { variableId: variableType.currentTimerFields, name: 'Current timer fields (JSON)' },
 
   // Next Timer
   { variableId: variableType.nextTimerId, name: 'Next timer ID' },
   { variableId: variableType.nextTimerName, name: 'Next timer name' },
+  { variableId: variableType.nextTimerIndex, name: 'Next timer number, for example 2.1' },
   { variableId: variableType.nextTimerSpeaker, name: 'Next timer speaker' },
   { variableId: variableType.nextTimerNotes, name: 'Next timer notes' },
   { variableId: variableType.nextTimerAppearance, name: 'Next timer appearance' },
@@ -108,6 +123,7 @@ const variables = [
   { variableId: variableType.nextTimerLabel1, name: 'Next timer label 1' },
   { variableId: variableType.nextTimerLabel2, name: 'Next timer label 2' },
   { variableId: variableType.nextTimerLabel3, name: 'Next timer label 3' },
+  { variableId: variableType.nextTimerFields, name: 'Next timer fields (JSON)' },
 
   // Current Message
   { variableId: variableType.currentMessageId, name: 'Current message ID' },
@@ -120,5 +136,5 @@ const variables = [
  * @returns {void}
  */
 export function loadVariables (instance) {
-  instance.setVariableDefinitions(variables)
+  instance.setVariableDefinitions([...variables, ...fieldVariableDefinitions(instance.fieldSlugs)])
 }

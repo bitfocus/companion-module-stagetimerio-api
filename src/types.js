@@ -98,7 +98,9 @@
  * @property {number} wrap_up_red
  * @property {number} start_time
  * @property {number} start_time_uses_date
+ * @property {string | null} index - number as the controller shows it, for example `2.1`
  * @property {{ name: string, color: string }[]} labels
+ * @property {Record<string, unknown>} fields
  */
 
 /**
@@ -109,7 +111,14 @@
  * @property {ViewerState} viewer
  * @property {PlaybackState} playback_status
  * @property {TimerState} timer
+ * @property {StartSignalState} start_signal
  * @property {MessageState} message
+ */
+
+/**
+ * @typedef {object} StartSignalState
+ * @property {number} lastSeenStart
+ * @property {{ timerId: string, startedAt: number } | null} pending
  */
 
 /**
@@ -165,6 +174,8 @@
  * @property {string} appearance
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
+ * @property {string | null} [index]
+ * @property {Record<string, unknown>} [fields]
  */
 
 /**

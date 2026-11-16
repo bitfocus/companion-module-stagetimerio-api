@@ -1,6 +1,8 @@
 import { feedbackType } from './feedbacks.js'
 import { createTimeset, timerToStartDate, durationToMs, formatTimeDisplay } from './utils/index.js'
-import { variableType } from './variables.js'
+import { loadVariables, variableType } from './variables.js'
+import { buildCurrentFieldValues, buildNextFieldValues, formatFieldsJson } from './fieldVariables.js'
+import { isLiveFreshStart } from './startSignal.js'
 import { timerAppearancesLabels } from './config.js'
 import { formatTimezone, formatTimeOfDay } from './timeutils/index.js'
 
@@ -85,8 +87,25 @@ export function createEmptyTimerState () {
     wrap_up_red: 0,
     start_time: '',
     start_time_uses_date: false,
+    index: null,
     labels: [],
+    fields: {},
   }
+}
+
+/**
+ * @param {ModuleInstance} instance
+ * @param {typeof buildCurrentFieldValues} buildValues
+ * @param {Record<string, unknown>} [fields]
+ * @returns {void}
+ */
+function syncFieldVariables (instance, buildValues, fields) {
+  const { newSlugs, values } = buildValues(instance.fieldSlugs, fields)
+  if (newSlugs.length) {
+    newSlugs.forEach((slug) => instance.fieldSlugs.add(slug))
+    loadVariables(instance)
+  }
+  if (Object.keys(values).length) instance.setVariableValues(values)
 }
 
 /** @type {State} */
@@ -115,6 +134,10 @@ export const initialState = {
   },
   current_timer: createEmptyTimerState(),
   next_timer: createEmptyTimerState(),
+  start_signal: {
+    lastSeenStart: 0,
+    pending: null,
+  },
   message: {
     _id: '',
     showing: false,
@@ -133,6 +156,7 @@ export const initialState = {
 export function updateConnectionState (isConnected) {
   const instance = this
   instance.state.connection.isConnected = isConnected
+  instance.setVariableValues({ [variableType.connected]: isConnected })
   instance.checkFeedbacks(feedbackType.isConnected)
 }
 
@@ -213,6 +237,7 @@ export function updatePlaybackState (newState) {
     [variableType.currentTimerRemainingHours]: updatedState.remainingHours,
     [variableType.currentTimerRemainingMinutes]: updatedState.remainingMinutes,
     [variableType.currentTimerRemainingSeconds]: updatedState.remainingSeconds,
+    [variableType.running]: updatedState.isRunning,
   })
 
   instance.checkFeedbacks(
@@ -260,6 +285,7 @@ export function updateCurrentTimerState (newState) {
   instance.setVariableValues({
     [variableType.currentTimerId]: updatedState._id,
     [variableType.currentTimerName]: updatedState.name,
+    [variableType.currentTimerIndex]: updatedState.index ?? '',
     [variableType.currentTimerNotes]: updatedState.notes,
     [variableType.currentTimerSpeaker]: updatedState.speaker,
     [variableType.currentTimerDuration]: updatedState.duration,
@@ -271,7 +297,11 @@ export function updateCurrentTimerState (newState) {
     [variableType.currentTimerLabel1]: labels[0]?.name || '',
     [variableType.currentTimerLabel2]: labels[1]?.name || '',
     [variableType.currentTimerLabel3]: labels[2]?.name || '',
+    [variableType.currentTimerFields]: formatFieldsJson(updatedState.fields),
   })
+
+  syncFieldVariables(instance, buildCurrentFieldValues, updatedState.fields)
+  releasePendingStart.call(instance)
 
   instance.checkFeedbacks(
     feedbackType.isWarningYellow,
@@ -282,6 +312,36 @@ export function updateCurrentTimerState (newState) {
   if (isAppearanceChange && !instance.state.playback_status.isRunning) {
     updatePlaybackState.call(instance)
   }
+}
+
+/**
+ * The start waits for the timer it started, so a trigger on `lastStartedAt` reads that timer's variables.
+ *
+ * @param {StatusData} status - `playback_status` payload
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+export function updateStartSignal (status) {
+  const instance = this
+  if (isLiveFreshStart(status, instance.state.start_signal.lastSeenStart)) {
+    instance.state.start_signal = {
+      lastSeenStart: status.start,
+      pending: { timerId: status.timer_id, startedAt: status.start },
+    }
+  }
+  releasePendingStart.call(instance)
+}
+
+/**
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+function releasePendingStart () {
+  const instance = this
+  const { pending } = instance.state.start_signal
+  if (!pending || pending.timerId !== instance.state.current_timer._id) return
+  instance.state.start_signal.pending = null
+  instance.setVariableValues({ [variableType.lastStartedAt]: pending.startedAt })
 }
 
 /**
@@ -308,6 +368,7 @@ export function updateNextTimerState (newState) {
   instance.setVariableValues({
     [variableType.nextTimerId]: updatedState._id,
     [variableType.nextTimerName]: updatedState.name,
+    [variableType.nextTimerIndex]: updatedState.index ?? '',
     [variableType.nextTimerNotes]: updatedState.notes,
     [variableType.nextTimerSpeaker]: updatedState.speaker,
     [variableType.nextTimerDuration]: updatedState.duration,
@@ -319,7 +380,10 @@ export function updateNextTimerState (newState) {
     [variableType.nextTimerLabel1]: labels[0]?.name || '',
     [variableType.nextTimerLabel2]: labels[1]?.name || '',
     [variableType.nextTimerLabel3]: labels[2]?.name || '',
+    [variableType.nextTimerFields]: formatFieldsJson(updatedState.fields),
   })
+
+  syncFieldVariables(instance, buildNextFieldValues, updatedState.fields)
 }
 
 /**
