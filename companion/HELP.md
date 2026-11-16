@@ -171,6 +171,8 @@ The timer currently selected in the room. These variables are empty while no tim
 - `$(stagetimer:currentTimerId)` - Timer ID
 - `$(stagetimer:currentTimerName)` - Timer name
 - `$(stagetimer:currentTimerIndex)` - Timer number as the controller shows it, for example `2.1` in a group
+- `$(stagetimer:currentTimerGroup)` - Title of the group that holds the timer. Empty outside a group
+- `$(stagetimer:currentTimerGroupId)` - ID of that group. A trigger on this variable runs when the show enters another group
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
 - `$(stagetimer:currentTimerNotes)` - Timer notes
 - `$(stagetimer:currentTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
@@ -189,6 +191,8 @@ The timer that follows the current one. These variables are empty when the last 
 - `$(stagetimer:nextTimerId)` - Timer ID
 - `$(stagetimer:nextTimerName)` - Timer name
 - `$(stagetimer:nextTimerIndex)` - Timer number as the controller shows it, for example `2.1` in a group
+- `$(stagetimer:nextTimerGroup)` - Title of the group that holds the timer. Empty outside a group
+- `$(stagetimer:nextTimerGroupId)` - ID of that group. A trigger on this variable runs when the show enters another group
 - `$(stagetimer:nextTimerSpeaker)` - Timer speaker
 - `$(stagetimer:nextTimerNotes)` - Timer notes
 - `$(stagetimer:nextTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))

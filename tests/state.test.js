@@ -143,6 +143,8 @@ describe('next timer state', () => {
       nextTimerId: '',
       nextTimerName: '',
       nextTimerIndex: '',
+      nextTimerGroup: '',
+      nextTimerGroupId: '',
       nextTimerNotes: '',
       nextTimerSpeaker: '',
       nextTimerDuration: '',
@@ -315,5 +317,40 @@ describe('timer index', () => {
     }
     updateNextTimerState.call(instance, { ...createEmptyTimerState(), index: '2.1' })
     equal(instance.variables.nextTimerIndex, '2.1')
+  })
+})
+
+describe('timer group', () => {
+  test('sets the group title and ID, and clears them outside a group', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions () {},
+      checkFeedbacks () {},
+    }
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: { _id: 'g1', title: 'Keynotes', color: 'red' } })
+    equal(instance.variables.nextTimerGroup, 'Keynotes')
+    equal(instance.variables.nextTimerGroupId, 'g1')
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: null })
+    equal(instance.variables.nextTimerGroup, '')
+    equal(instance.variables.nextTimerGroupId, '')
+  })
+
+  test('is empty when an older server sends no group key', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions () {},
+      checkFeedbacks () {},
+    }
+    const { group: _group, ...olderPayload } = createEmptyTimerState()
+    updateCurrentTimerState.call(instance, { ...olderPayload, _id: 'a', name: 'Intro', group: undefined })
+    equal(instance.variables.currentTimerGroup, '')
+    equal(instance.variables.currentTimerGroupId, '')
+    equal(instance.variables.currentTimerName, 'Intro')
   })
 })

@@ -99,6 +99,7 @@
  * @property {number} start_time
  * @property {number} start_time_uses_date
  * @property {string | null} index - number as the controller shows it, for example `2.1`
+ * @property {{ _id: string, title: string, color: string | null } | null} group
  * @property {{ name: string, color: string }[]} labels
  * @property {Record<string, unknown>} fields
  */
@@ -175,6 +176,7 @@
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
  * @property {string | null} [index]
+ * @property {{ _id: string, title: string, color: string | null } | null} [group]
  * @property {Record<string, unknown>} [fields]
  */
 
