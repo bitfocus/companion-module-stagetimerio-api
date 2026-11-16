@@ -289,6 +289,7 @@ export function updateCurrentTimerState (newState) {
     [variableType.currentTimerIndex]: updatedState.index ?? '',
     [variableType.currentTimerGroup]: updatedState.group?.title ?? '',
     [variableType.currentTimerGroupId]: updatedState.group?._id ?? '',
+    [variableType.currentTimerGroupColor]: updatedState.group?.color ?? '',
     [variableType.currentTimerNotes]: updatedState.notes,
     [variableType.currentTimerSpeaker]: updatedState.speaker,
     [variableType.currentTimerDuration]: updatedState.duration,
@@ -309,6 +310,7 @@ export function updateCurrentTimerState (newState) {
   instance.checkFeedbacks(
     feedbackType.isWarningYellow,
     feedbackType.isWarningRed,
+    feedbackType.groupColor,
   )
 
   // Handle appearance change
@@ -374,6 +376,7 @@ export function updateNextTimerState (newState) {
     [variableType.nextTimerIndex]: updatedState.index ?? '',
     [variableType.nextTimerGroup]: updatedState.group?.title ?? '',
     [variableType.nextTimerGroupId]: updatedState.group?._id ?? '',
+    [variableType.nextTimerGroupColor]: updatedState.group?.color ?? '',
     [variableType.nextTimerNotes]: updatedState.notes,
     [variableType.nextTimerSpeaker]: updatedState.speaker,
     [variableType.nextTimerDuration]: updatedState.duration,
@@ -389,6 +392,7 @@ export function updateNextTimerState (newState) {
   })
 
   syncFieldVariables(instance, buildNextFieldValues, updatedState.fields)
+  instance.checkFeedbacks(feedbackType.groupColor)
 }
 
 /**

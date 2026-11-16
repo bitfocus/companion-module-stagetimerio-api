@@ -145,6 +145,7 @@ describe('next timer state', () => {
       nextTimerIndex: '',
       nextTimerGroup: '',
       nextTimerGroupId: '',
+      nextTimerGroupColor: '',
       nextTimerNotes: '',
       nextTimerSpeaker: '',
       nextTimerDuration: '',
@@ -330,12 +331,14 @@ describe('timer group', () => {
       setVariableDefinitions () {},
       checkFeedbacks () {},
     }
-    updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: { _id: 'g1', title: 'Keynotes', color: 'red' } })
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: { _id: 'g1', title: 'Keynotes', color: '#9f1239' } })
     equal(instance.variables.nextTimerGroup, 'Keynotes')
     equal(instance.variables.nextTimerGroupId, 'g1')
+    equal(instance.variables.nextTimerGroupColor, '#9f1239')
     updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: null })
     equal(instance.variables.nextTimerGroup, '')
     equal(instance.variables.nextTimerGroupId, '')
+    equal(instance.variables.nextTimerGroupColor, '')
   })
 
   test('is empty when an older server sends no group key', () => {
@@ -351,6 +354,7 @@ describe('timer group', () => {
     updateCurrentTimerState.call(instance, { ...olderPayload, _id: 'a', name: 'Intro', group: undefined })
     equal(instance.variables.currentTimerGroup, '')
     equal(instance.variables.currentTimerGroupId, '')
+    equal(instance.variables.currentTimerGroupColor, '')
     equal(instance.variables.currentTimerName, 'Intro')
   })
 })

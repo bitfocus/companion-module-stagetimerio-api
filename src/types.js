@@ -21,7 +21,7 @@
 /** @typedef {import('@companion-module/base').CompanionFeedbackDefinitions} CompanionFeedbackDefinitions */
 /** @typedef {import('@companion-module/base').CompanionBooleanFeedbackDefinition} CompanionBooleanFeedbackDefinition */
 
-/** @typedef {Object<string, import('@companion-module/base').CompanionBooleanFeedbackDefinition>} Feedbacks */
+/** @typedef {Object<string, import('@companion-module/base').CompanionFeedbackDefinition>} Feedbacks */
 /** @typedef {Object<string, import('@companion-module/base').CompanionPresetFeedback>} PresetFeedbacks */
 
 //

@@ -37,13 +37,16 @@ There are multiple presets available for the most common actions, ready to drop 
 
 The presets are organized into categories:
 
-- **Transport**: Start/Stop, Previous, Next, Jump back/forward, Add/Subtract time
-- **Viewer**: Time display, Wrap-up indicator, Flash, Blackout
-- **Timer**: Reset, Start, Stop specific timers
-- **Message**: Toggle, Show, Hide, Create messages
+- **Transport**: Start/Stop, Start, Stop, Reset, Previous, Next, Jump back/forward, Add/Subtract time
+- **Viewer**: Time display, Wrap-up indicator, Timer appearance, Current timer, Speaker, Labels, Current/next group, Timezone, Flash, Blackout, ON AIR
+- **Timer**: Reset, Start, Stop, Create specific timers
+- **Message**: Toggle, Toggle fullscreen, Show, Hide, Create messages
 
 Find a complete reference with button images in the Stagetimer docs:
 **[Controlling Stagetimer via Companion for Stream Deck](https://stagetimer.io/docs/integration-with-streamdeck-companion/#presets)**
+
+On Companion 5.0 or newer, you can also import a ready-made page with all Stagetimer buttons:
+**[Ready-made Button Page](https://stagetimer.io/docs/integration-with-streamdeck-companion/#ready-made-button-page)**
 
 ---
 
@@ -173,6 +176,7 @@ The timer currently selected in the room. These variables are empty while no tim
 - `$(stagetimer:currentTimerIndex)` - Timer number as the controller shows it, for example `2.1` in a group
 - `$(stagetimer:currentTimerGroup)` - Title of the group that holds the timer. Empty outside a group
 - `$(stagetimer:currentTimerGroupId)` - ID of that group. A trigger on this variable runs when the show enters another group
+- `$(stagetimer:currentTimerGroupColor)` - Color of that group as hex, for example `#7c3aed`
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
 - `$(stagetimer:currentTimerNotes)` - Timer notes
 - `$(stagetimer:currentTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
@@ -193,6 +197,7 @@ The timer that follows the current one. These variables are empty when the last 
 - `$(stagetimer:nextTimerIndex)` - Timer number as the controller shows it, for example `2.1` in a group
 - `$(stagetimer:nextTimerGroup)` - Title of the group that holds the timer. Empty outside a group
 - `$(stagetimer:nextTimerGroupId)` - ID of that group. A trigger on this variable runs when the show enters another group
+- `$(stagetimer:nextTimerGroupColor)` - Color of that group as hex, for example `#7c3aed`
 - `$(stagetimer:nextTimerSpeaker)` - Timer speaker
 - `$(stagetimer:nextTimerNotes)` - Timer notes
 - `$(stagetimer:nextTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
@@ -229,7 +234,8 @@ The message currently showing on the viewer. These variables are empty while no 
 - Blackout mode
 - Connected
 - Flashing
-- Focus mode
+- Message is fullscreen
+- Group color: the background takes the color of the current or next timer's group
 - ON AIR mode
 - Message showing
 - Playback running

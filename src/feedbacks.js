@@ -1,4 +1,5 @@
 import { colors } from './assets.js'
+import { hexToCompanionColor } from './groupColor.js'
 import { timerPhases } from './state.js'
 
 /**
@@ -25,6 +26,7 @@ export const feedbackType = {
   onAirEnabled: 'onAirEnabled',
   messageIsShowing: 'messageIsShowing',
   isConnected: 'isConnected',
+  groupColor: 'groupColor',
 }
 
 /**
@@ -140,7 +142,7 @@ function generateFeedbacks (instance) {
     },
 
     [feedbackType.focusEnabled]: {
-      name: 'Focus mode',
+      name: 'Message is fullscreen',
       type: 'boolean',
       defaultStyle: {
         bgcolor: colors.red,
@@ -188,6 +190,24 @@ function generateFeedbacks (instance) {
       options: [],
       callback: (_feedback) => {
         return instance.state.connection.isConnected
+      },
+    },
+
+    [feedbackType.groupColor]: {
+      name: 'Group color',
+      description: 'Background in the color of the timer\'s group. No change outside a group',
+      type: 'advanced',
+      options: [{
+        type: 'dropdown',
+        id: 'timer',
+        label: 'Timer',
+        default: 'current',
+        choices: [{ id: 'current', label: 'Current timer' }, { id: 'next', label: 'Next timer' }],
+      }],
+      callback: (feedback) => {
+        const timer = feedback.options.timer === 'next' ? instance.state.next_timer : instance.state.current_timer
+        const bgcolor = hexToCompanionColor(timer.group?.color)
+        return bgcolor === null ? {} : { bgcolor, color: colors.white }
       },
     },
   }
