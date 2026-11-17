@@ -8,6 +8,7 @@ import {
   updateNextTimerState,
   updateFlashingState,
   updateMessageState,
+  updateStartSignal,
   createEmptyTimerState,
 } from './state.js'
 import { actionIdType } from './actions.js'
@@ -35,6 +36,20 @@ export const stagetimerEvents = {
  *
  * @returns {void}
  */
+/**
+ * Servers before 3.8 send none of these fields.
+ *
+ * @param {Pick<RoomData, 'overtime_prefix'|'overtime_behavior'|'tod_format'>} room
+ * @returns {Pick<RoomState, 'roomOvertimePrefix'|'roomOvertimeBehavior'|'roomTodFormat'>}
+ */
+function roomDisplaySettings ({ overtime_prefix, overtime_behavior, tod_format }) {
+  return {
+    roomOvertimePrefix: overtime_prefix || '+',
+    roomOvertimeBehavior: overtime_behavior || 'continue',
+    roomTodFormat: tod_format || 'AUTO',
+  }
+}
+
 export function socketStop () {
   if (socket) {
     socket.disconnect()
@@ -71,9 +86,6 @@ export function socketStart (instance) {
       room_id: roomId,
       api_key: apiKey,
     },
-    // Prevent infinite retries
-    reconnectionAttempts: 5,
-    // Prevent infinite exponential backoff
     reconnectionDelayMax: 10000,
     // Enable cookie handling for sticky session support with load balancing
     withCredentials: true,
@@ -100,7 +112,7 @@ export function socketStart (instance) {
     instance.apiClient.send(actionIdType.get_room, {})
       .then(({ data }) => {
 
-        const { _id, name, blackout, focus_message, on_air, timezone } = /** @type {RoomData} */(data)
+        const { _id, name, blackout, focus_message, on_air, timezone, overtime_prefix, overtime_behavior, tod_format } = /** @type {RoomData} */(data)
 
         updateRoomState.call(instance, {
           roomId: _id,
@@ -109,6 +121,7 @@ export function socketStart (instance) {
           roomFocus: focus_message,
           roomOnAir: on_air,
           roomTimezone: timezone,
+          ...roomDisplaySettings({ overtime_prefix, overtime_behavior, tod_format }),
         })
       })
       .catch((error) => {
@@ -180,11 +193,6 @@ export function socketStart (instance) {
     instance.updateStatus(InstanceStatus.Ok)
   })
 
-  socket.io.on('reconnect_failed', () => {
-    instance.log('error', 'Unable to connect to Stagetimer.io!')
-    instance.updateStatus(InstanceStatus.ConnectionFailure)
-  })
-
   socket.io.on('error', (error) => {
     instance.log('debug', `[Socket manager] Unexpected error: ${error}`)
   })
@@ -210,19 +218,22 @@ export function socketStart (instance) {
       serverTimeDiff,
     })
 
+    updateStartSignal.call(instance, payload)
+
     getTimerAndUpdateState.call(instance, timer_id)
   })
 
   socket.on(stagetimerEvents.room, (payload) => {
     instance.log('debug', `Event: 'room' ${JSON.stringify(payload)}`)
 
-    const { blackout, focus_message, on_air, timezone } = payload
+    const { blackout, focus_message, on_air, timezone, overtime_prefix, overtime_behavior, tod_format } = payload
 
     updateRoomState.call(instance, {
       roomBlackout: blackout,
       roomFocus: focus_message,
       roomOnAir: on_air,
       roomTimezone: timezone,
+      ...roomDisplaySettings({ overtime_prefix, overtime_behavior, tod_format }),
     })
   })
 
@@ -243,7 +254,10 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
+      group,
       labels,
+      fields,
     } = payload
 
     updateCurrentTimerState.call(instance, {
@@ -257,7 +271,10 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
+      group,
       labels,
+      fields,
     })
   })
 
@@ -278,7 +295,10 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
+      group,
       labels,
+      fields,
     } = payload
 
     updateNextTimerState.call(instance, {
@@ -292,7 +312,10 @@ export function socketStart (instance) {
       wrap_up_red,
       start_time,
       start_time_uses_date,
+      index,
+      group,
       labels,
+      fields,
     })
   })
 
@@ -341,7 +364,7 @@ function getTimerAndUpdateState (timer_id) {
   instance.apiClient.send(actionIdType.get_timer, { timer_id })
     .then(({ data }) => {
 
-      const { _id, name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red } = /** @type {TimerData} */ (data)
+      const { _id, name, speaker, notes, duration, appearance, wrap_up_yellow, wrap_up_red, index, group, labels, fields } = /** @type {TimerData} */ (data)
 
       updateCurrentTimerState.call(this, {
         _id,
@@ -352,6 +375,10 @@ function getTimerAndUpdateState (timer_id) {
         appearance,
         wrap_up_yellow,
         wrap_up_red,
+        index,
+        group,
+        labels,
+        fields,
       })
     })
     .catch((error) => {

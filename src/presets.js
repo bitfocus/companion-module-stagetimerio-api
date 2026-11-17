@@ -357,12 +357,47 @@ function generatePresets () {
         },
       },
       {
+        name: 'Current group',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.currentTimerGroupId}) ? concat('Group: ', $(stagetimer:${variableType.currentTimerGroup})) : 'No group'`,
+          textExpression: true,
+          color: colors.lightBlue,
+          bgcolor: colors.black,
+        },
+        feedbacks: [{ feedbackId: feedbackType.groupColor, options: { timer: 'current' } }],
+      },
+      {
+        name: 'Next group',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.nextTimerGroupId}) ? concat('Next group: ', $(stagetimer:${variableType.nextTimerGroup})) : 'No next group'`,
+          textExpression: true,
+          color: colors.lightGray,
+          bgcolor: colors.black,
+        },
+        feedbacks: [{ feedbackId: feedbackType.groupColor, options: { timer: 'next' } }],
+      },
+      {
         name: 'Timezone',
         actionId: '',
         style: {
           size: 'auto',
           text: `$(stagetimer:${variableType.roomTimezone})`,
           color: colors.lightGray,
+          bgcolor: colors.black,
+        },
+      },
+      {
+        name: 'Time of day',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `replaceAll($(stagetimer:${variableType.timeOfDay}), ' ', '\\n')`,
+          textExpression: true,
+          color: colors.white,
           bgcolor: colors.black,
         },
       },
@@ -521,6 +556,28 @@ function generatePresets () {
         style: {
           size: '14',
           text: 'Toggle',
+          alignment: 'center:bottom',
+          png64: icons.message,
+          pngalignment: 'center:top',
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+        feedbacks: [
+          getFeedbackDefaults(feedbackType.messageIsShowing, {
+            png64: icons.messageOff,
+          }),
+        ],
+      },
+      {
+        name: 'Show/hide message fullscreen',
+        actionId: actionIdType.show_or_hide_message,
+        actionOptions: {
+          index: '',
+          focus: true,
+        },
+        style: {
+          size: '12',
+          text: 'Fullscreen',
           alignment: 'center:bottom',
           png64: icons.message,
           pngalignment: 'center:top',

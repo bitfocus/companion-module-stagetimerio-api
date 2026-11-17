@@ -12,10 +12,11 @@ function zeroPad (number) {
  * Formats a Dhms object into formatted segments.
  *
  * @param {DhmsObj} dhms
+ * @param {string} [overtimePrefix='+']
  * @returns {FormattedDhmsObj}
  */
-export function dhmsToFormatted (dhms) {
-  const prefix = dhms.negative ? '+' : ''
+export function dhmsToFormatted (dhms, overtimePrefix = '+') {
+  const prefix = dhms.negative ? overtimePrefix : ''
 
   const hhh = `${prefix}${dhms.hours + (dhms.days * 24)}`
   const mm  = zeroPad(dhms.minutes)

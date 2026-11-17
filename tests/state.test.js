@@ -1,7 +1,7 @@
 import { describe, test } from 'node:test'
 import { equal } from 'node:assert/strict'
 
-import { createEmptyTimerState, getTimerPhase, initialState, updateMessageState, updateNextTimerState } from '../src/state.js'
+import { createEmptyTimerState, getTimerPhase, initialState, updateConnectionState, updateCurrentTimerState, updateMessageState, updateNextTimerState, updateStartSignal } from '../src/state.js'
 import { deepEqual } from 'node:assert'
 import { createDropdownOptions } from '../src/utils/index.js'
 import { timerTriggers } from '../src/config.js'
@@ -37,6 +37,8 @@ describe('message state', () => {
       state: structuredClone(initialState),
       variables: /** @type {Record<string, any>} */ ({}),
       setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions (definitions) { this.definitions = definitions },
+      fieldSlugs: new Set(),
       checkFeedbacks () {},
     }
   }
@@ -100,6 +102,8 @@ describe('next timer state', () => {
       state: structuredClone(initialState),
       variables: /** @type {Record<string, any>} */ ({}),
       setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions (definitions) { this.definitions = definitions },
+      fieldSlugs: new Set(),
       checkFeedbacks () {},
     }
   }
@@ -138,17 +142,23 @@ describe('next timer state', () => {
     deepEqual(instance.variables, {
       nextTimerId: '',
       nextTimerName: '',
+      nextTimerIndex: '',
+      nextTimerGroup: '',
+      nextTimerGroupId: '',
+      nextTimerGroupColor: '',
       nextTimerNotes: '',
       nextTimerSpeaker: '',
       nextTimerDuration: '',
       nextTimerDurationAsMs: '',
       nextTimerAppearance: '',
+      nextTimerStartTime: '',
       nextTimerStartTime12h: '',
       nextTimerStartTime24h: '',
       nextTimerLabels: '',
       nextTimerLabel1: '',
       nextTimerLabel2: '',
       nextTimerLabel3: '',
+      nextTimerFields: '',
     })
   })
 
@@ -178,4 +188,174 @@ describe('enums', () => {
     )
   })
 
+})
+
+describe('state timer fields', () => {
+  function createInstance () {
+    return {
+      state: structuredClone(initialState),
+      variables: {},
+      definitions: [],
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions (definitions) { this.definitions = definitions },
+      checkFeedbacks () {},
+      log () {},
+    }
+  }
+
+  test('defines a variable for a new key and sets its value', () => {
+    const instance = createInstance()
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), fields: { 'VT image': 'a.png' } })
+    equal(instance.variables['nextTimerField.vt_image'], 'a.png')
+    const ids = instance.definitions.map((definition) => definition.variableId)
+    equal(ids.includes('nextTimerField.vt_image'), true)
+    equal(ids.includes('currentTimerField.vt_image'), true)
+    equal(ids.includes('nextTimerName'), true)
+  })
+
+  test('clears the value but keeps the definition on a timer without the key', () => {
+    const instance = createInstance()
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), fields: { vlc: 14 } })
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), fields: { other: 1 } })
+    equal(instance.variables['nextTimerField.vlc'], undefined)
+    equal(instance.variables['nextTimerField.other'], 1)
+    equal(instance.definitions.some((definition) => definition.variableId === 'nextTimerField.vlc'), true)
+  })
+
+  test('clears the value when the empty state replaces the timer', () => {
+    const instance = createInstance()
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), fields: { vlc: 14 } })
+    updateNextTimerState.call(instance, createEmptyTimerState())
+    equal(instance.variables['nextTimerField.vlc'], undefined)
+  })
+})
+
+describe('connection state', () => {
+  test('sets the connected variable', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      checkFeedbacks () {},
+    }
+    updateConnectionState.call(instance, true)
+    equal(instance.variables.connected, true)
+    updateConnectionState.call(instance, false)
+    equal(instance.variables.connected, false)
+  })
+})
+
+describe('start signal', () => {
+  const now = 1_800_000_000_000
+
+  function createInstance () {
+    return {
+      state: structuredClone(initialState),
+      variables: {},
+      definitions: [],
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions (definitions) { this.definitions = definitions },
+      checkFeedbacks () {},
+    }
+  }
+
+  const status = (timer_id) => ({ timer_id, running: true, start: now, pause: now, finish: now + 60_000, server_time: now + 50 })
+
+  test('sets lastStartedAt at once when the started timer is the current timer', () => {
+    const instance = createInstance()
+    updateCurrentTimerState.call(instance, { ...createEmptyTimerState(), _id: 'a' })
+    updateStartSignal.call(instance, status('a'))
+    equal(instance.variables.lastStartedAt, now)
+  })
+
+  test('waits for the current timer event when the start changes the timer', () => {
+    const instance = createInstance()
+    updateCurrentTimerState.call(instance, { ...createEmptyTimerState(), _id: 'a' })
+    updateStartSignal.call(instance, status('b'))
+    equal(instance.variables.lastStartedAt, undefined)
+    updateCurrentTimerState.call(instance, { ...createEmptyTimerState(), _id: 'b', fields: { vt: 'b.mp4' } })
+    equal(instance.variables.lastStartedAt, now)
+    equal(instance.variables['currentTimerField.vt'], 'b.mp4')
+  })
+
+  test('sets lastStartedAt only once for a repeated status', () => {
+    const instance = createInstance()
+    updateCurrentTimerState.call(instance, { ...createEmptyTimerState(), _id: 'a' })
+    updateStartSignal.call(instance, status('a'))
+    instance.variables.lastStartedAt = undefined
+    updateStartSignal.call(instance, status('a'))
+    equal(instance.variables.lastStartedAt, undefined)
+  })
+})
+
+describe('timer fields as JSON', () => {
+  test('sets the whole fields object as a JSON string', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions () {},
+      checkFeedbacks () {},
+    }
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), fields: { 'Größe': 'XL', vlc: 14 } })
+    equal(instance.variables.nextTimerFields, '{"Größe":"XL","vlc":14}')
+    updateNextTimerState.call(instance, createEmptyTimerState())
+    equal(instance.variables.nextTimerFields, '')
+  })
+})
+
+describe('timer index', () => {
+  test('sets the number as the controller shows it', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions () {},
+      checkFeedbacks () {},
+    }
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), index: '2.1' })
+    equal(instance.variables.nextTimerIndex, '2.1')
+  })
+})
+
+describe('timer group', () => {
+  test('sets the group title and ID, and clears them outside a group', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions () {},
+      checkFeedbacks () {},
+    }
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: { _id: 'g1', title: 'Keynotes', color: '#9f1239' } })
+    equal(instance.variables.nextTimerGroup, 'Keynotes')
+    equal(instance.variables.nextTimerGroupId, 'g1')
+    equal(instance.variables.nextTimerGroupColor, '#9f1239')
+    updateNextTimerState.call(instance, { ...createEmptyTimerState(), group: null })
+    equal(instance.variables.nextTimerGroup, '')
+    equal(instance.variables.nextTimerGroupId, '')
+    equal(instance.variables.nextTimerGroupColor, '')
+  })
+
+  test('is empty when an older server sends no group key', () => {
+    const instance = {
+      state: structuredClone(initialState),
+      variables: {},
+      fieldSlugs: new Set(),
+      setVariableValues (values) { Object.assign(this.variables, values) },
+      setVariableDefinitions () {},
+      checkFeedbacks () {},
+    }
+    const { group: _group, ...olderPayload } = createEmptyTimerState()
+    updateCurrentTimerState.call(instance, { ...olderPayload, _id: 'a', name: 'Intro', group: undefined })
+    equal(instance.variables.currentTimerGroup, '')
+    equal(instance.variables.currentTimerGroupId, '')
+    equal(instance.variables.currentTimerGroupColor, '')
+    equal(instance.variables.currentTimerName, 'Intro')
+  })
 })

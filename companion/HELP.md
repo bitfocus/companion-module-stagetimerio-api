@@ -37,13 +37,16 @@ There are multiple presets available for the most common actions, ready to drop 
 
 The presets are organized into categories:
 
-- **Transport**: Start/Stop, Previous, Next, Jump back/forward, Add/Subtract time
-- **Viewer**: Time display, Wrap-up indicator, Flash, Blackout
-- **Timer**: Reset, Start, Stop specific timers
-- **Message**: Toggle, Show, Hide, Create messages
+- **Transport**: Start/Stop, Start, Stop, Reset, Previous, Next, Jump back/forward, Add/Subtract time
+- **Viewer**: Time display, Wrap-up indicator, Timer appearance, Current timer, Speaker, Labels, Current/next group, Timezone, Time of day, Flash, Blackout, ON AIR
+- **Timer**: Reset, Start, Stop, Create specific timers
+- **Message**: Toggle, Toggle fullscreen, Show, Hide, Create messages
 
 Find a complete reference with button images in the Stagetimer docs:
 **[Controlling Stagetimer via Companion for Stream Deck](https://stagetimer.io/docs/integration-with-streamdeck-companion/#presets)**
+
+On Companion 5.0 or newer, you can also import a ready-made page with all Stagetimer buttons:
+**[Download Page Template](https://stagetimer.io/docs/integration-with-streamdeck-companion/#download-page-template)**
 
 ---
 
@@ -146,9 +149,11 @@ Variables let you display live data from Stagetimer on your Stream Deck buttons.
 - `$(stagetimer:roomId)` - Room ID
 - `$(stagetimer:roomName)` - Room name
 - `$(stagetimer:roomTimezone)` - Room timezone ([Docs](https://stagetimer.io/docs/using-timers/#timezones))
+- `$(stagetimer:timeOfDay)` - Time of day in the room timezone and time of day format
+- `$(stagetimer:connected)` - `true` while the module is connected to Stagetimer, else `false`. The module tries again until the connection is back.
 
 **Playback Snapshot**  
-The time display is equal to the Stagetimer output, taking [timer appearance](https://stagetimer.io/docs/using-timers/#timer-appearances) into account ([Docs](https://stagetimer.io/docs/viewer/#3-timer)). The current time remaining is always strictly a countdown.
+The time display is equal to the Stagetimer output, taking [timer appearance](https://stagetimer.io/docs/using-timers/#timer-appearances) into account ([Docs](https://stagetimer.io/docs/viewer/#3-timer)). It also uses the room's overtime prefix and overtime behavior: with "stop" it stays at zero, with "hide" it is empty. The hours, minutes and seconds variables always have two digits. In overtime, the hours variable has the sign. The current time remaining is always strictly a countdown and runs into overtime. It uses the overtime prefix too.
 
 - `$(stagetimer:timeDisplay)` - Time Display
 - `$(stagetimer:timeDisplayHours)` - Time Display (hours)
@@ -159,15 +164,24 @@ The time display is equal to the Stagetimer output, taking [timer appearance](ht
 - `$(stagetimer:currentTimerRemainingHours)` - Timer remaining time (hours)
 - `$(stagetimer:currentTimerRemainingMinutes)` - Timer remaining time (minutes)
 - `$(stagetimer:currentTimerRemainingSeconds)` - Timer remaining time (seconds)
+- `$(stagetimer:running)` - `true` while the timer runs, else `false`
+- `$(stagetimer:lastStartedAt)` - Time of the last fresh timer start (Unix time in ms)
+
+A fresh start changes `lastStartedAt`. A resume after a pause does not change it. To run a button action at the moment a timer starts, make a Companion trigger with the event "On variable change" for `$(stagetimer:lastStartedAt)`. When the trigger runs, the current timer variables already show the timer that started, for example `$(stagetimer:currentTimerField.vt)`. The module ignores a start that is older than 2 seconds when it gets it, for example after a reconnect. This prevents a late cue.
 
 **Current Timer**  
 The timer currently selected in the room. These variables are empty while no timer is selected.
 
 - `$(stagetimer:currentTimerId)` - Timer ID
 - `$(stagetimer:currentTimerName)` - Timer name
+- `$(stagetimer:currentTimerIndex)` - Timer number as the controller shows it, for example `2.1` in a group
+- `$(stagetimer:currentTimerGroup)` - Title of the group that holds the timer. Empty outside a group
+- `$(stagetimer:currentTimerGroupId)` - ID of that group. A trigger on this variable runs when the show enters another group
+- `$(stagetimer:currentTimerGroupColor)` - Color of that group as hex, for example `#7c3aed`
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
 - `$(stagetimer:currentTimerNotes)` - Timer notes
 - `$(stagetimer:currentTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
+- `$(stagetimer:currentTimerStartTime)` - Hard start time (room time of day format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerStartTime12h)` - Hard start time (12h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerStartTime24h)`- Hard start time (24h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerDuration)` - Timer duration
@@ -182,9 +196,14 @@ The timer that follows the current one. These variables are empty when the last 
 
 - `$(stagetimer:nextTimerId)` - Timer ID
 - `$(stagetimer:nextTimerName)` - Timer name
+- `$(stagetimer:nextTimerIndex)` - Timer number as the controller shows it, for example `2.1` in a group
+- `$(stagetimer:nextTimerGroup)` - Title of the group that holds the timer. Empty outside a group
+- `$(stagetimer:nextTimerGroupId)` - ID of that group. A trigger on this variable runs when the show enters another group
+- `$(stagetimer:nextTimerGroupColor)` - Color of that group as hex, for example `#7c3aed`
 - `$(stagetimer:nextTimerSpeaker)` - Timer speaker
 - `$(stagetimer:nextTimerNotes)` - Timer notes
 - `$(stagetimer:nextTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
+- `$(stagetimer:nextTimerStartTime)` - Hard start time (room time of day format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerStartTime12h)` - Hard start time (12h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerStartTime24h)`- Hard start time (24h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerDuration)` - Timer duration
@@ -193,6 +212,16 @@ The timer that follows the current one. These variables are empty when the last 
 - `$(stagetimer:nextTimerLabel1)` - Timer label 1
 - `$(stagetimer:nextTimerLabel2)` - Timer label 2
 - `$(stagetimer:nextTimerLabel3)` - Timer label 3
+
+**Timer Fields**  
+A timer can hold custom fields, for example `VT image` or `vlc`. Each key gets one variable for the current timer and one for the next timer. The key is written in lowercase, and each run of other characters becomes `_`, so `VT image` becomes `vt_image`. Two keys with the same result share one variable.
+
+- `$(stagetimer:currentTimerField.vt_image)` - Field `VT image` of the current timer
+- `$(stagetimer:nextTimerField.vt_image)` - Field `VT image` of the next timer
+- `$(stagetimer:currentTimerFields)` - All fields of the current timer as a JSON string
+- `$(stagetimer:nextTimerFields)` - All fields of the next timer as a JSON string
+
+A variable appears when the module first sees the key, and it stays until the module restarts. It is empty when a timer does not have that key. A nested value is a JSON string. To read one part of it, use the `jsonpath` function (Companion 3.3 or later), for example `jsonpath($(stagetimer:currentTimerField.slides), '$[0].name')`. For a key that does not give a usable variable name, use the JSON of all fields, for example `jsonpath($(stagetimer:currentTimerFields), '$["Größe"]')`.
 
 **Current Message**  
 The message currently showing on the viewer. These variables are empty while no message is showing.
@@ -208,7 +237,8 @@ The message currently showing on the viewer. These variables are empty while no 
 - Blackout mode
 - Connected
 - Flashing
-- Focus mode
+- Message is fullscreen
+- Group color: the background takes the color of the current or next timer's group
 - ON AIR mode
 - Message showing
 - Playback running

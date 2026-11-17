@@ -1,0 +1,46 @@
+name: Release Package
+
+on:
+  push:
+    tags: ['**']
+
+jobs:
+  release:
+    name: Attach module package to the GitHub release
+
+    if: github.repository == 'bitfocus/companion-module-stagetimerio-api'
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      - name: Check that the tag matches package.json
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "$GITHUB_REF_NAME" != "v$VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $VERSION"
+            exit 1
+          fi
+
+      - run: corepack enable
+
+      - run: yarn install --immutable
+
+      - run: yarn package
+
+      - name: Create the release and attach the package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv stagetimerio-api-*.tgz companion-module-stagetimerio-api.tgz
+          gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes
+          gh release upload "$GITHUB_REF_NAME" companion-module-stagetimerio-api.tgz --clobber

@@ -21,7 +21,7 @@
 /** @typedef {import('@companion-module/base').CompanionFeedbackDefinitions} CompanionFeedbackDefinitions */
 /** @typedef {import('@companion-module/base').CompanionBooleanFeedbackDefinition} CompanionBooleanFeedbackDefinition */
 
-/** @typedef {Object<string, import('@companion-module/base').CompanionBooleanFeedbackDefinition>} Feedbacks */
+/** @typedef {Object<string, import('@companion-module/base').CompanionFeedbackDefinition>} Feedbacks */
 /** @typedef {Object<string, import('@companion-module/base').CompanionPresetFeedback>} PresetFeedbacks */
 
 //
@@ -80,6 +80,9 @@
  * @property {boolean} on_air
  * @property {string} logo
  * @property {string} timezone
+ * @property {'+'|'-'} [overtime_prefix]
+ * @property {'continue'|'stop'|'hide'} [overtime_behavior]
+ * @property {string} [tod_format]
  */
 
 /**
@@ -98,7 +101,10 @@
  * @property {number} wrap_up_red
  * @property {number} start_time
  * @property {number} start_time_uses_date
+ * @property {string | null} index - number as the controller shows it, for example `2.1`
+ * @property {{ _id: string, title: string, color: string | null } | null} group
  * @property {{ name: string, color: string }[]} labels
+ * @property {Record<string, unknown>} fields
  */
 
 /**
@@ -109,7 +115,14 @@
  * @property {ViewerState} viewer
  * @property {PlaybackState} playback_status
  * @property {TimerState} timer
+ * @property {StartSignalState} start_signal
  * @property {MessageState} message
+ */
+
+/**
+ * @typedef {object} StartSignalState
+ * @property {number} lastSeenStart
+ * @property {{ timerId: string, startedAt: number } | null} pending
  */
 
 /**
@@ -120,6 +133,9 @@
  * @property {boolean} roomFocus
  * @property {boolean} roomOnAir
  * @property {string} roomTimezone
+ * @property {string} roomOvertimePrefix
+ * @property {string} roomOvertimeBehavior
+ * @property {string} roomTodFormat
  */
 
 /**
@@ -165,6 +181,9 @@
  * @property {string} appearance
  * @property {number} wrap_up_yellow
  * @property {number} wrap_up_red
+ * @property {string | null} [index]
+ * @property {{ _id: string, title: string, color: string | null } | null} [group]
+ * @property {Record<string, unknown>} [fields]
  */
 
 /**
