@@ -38,7 +38,7 @@ There are multiple presets available for the most common actions, ready to drop 
 The presets are organized into categories:
 
 - **Transport**: Start/Stop, Start, Stop, Reset, Previous, Next, Jump back/forward, Add/Subtract time
-- **Viewer**: Time display, Wrap-up indicator, Timer appearance, Current timer, Speaker, Labels, Current/next group, Timezone, Flash, Blackout, ON AIR
+- **Viewer**: Time display, Wrap-up indicator, Timer appearance, Current timer, Speaker, Labels, Current/next group, Timezone, Time of day, Flash, Blackout, ON AIR
 - **Timer**: Reset, Start, Stop, Create specific timers
 - **Message**: Toggle, Toggle fullscreen, Show, Hide, Create messages
 

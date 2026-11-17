@@ -391,6 +391,16 @@ function generatePresets () {
         },
       },
       {
+        name: 'Time of day',
+        actionId: '',
+        style: {
+          size: 'auto',
+          text: `$(stagetimer:${variableType.timeOfDay})`,
+          color: colors.white,
+          bgcolor: colors.black,
+        },
+      },
+      {
         name: 'Start flashing',
         actionId: actionIdType.start_flashing,
         actionOptions: {
