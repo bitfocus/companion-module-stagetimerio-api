@@ -46,7 +46,7 @@ Find a complete reference with button images in the Stagetimer docs:
 **[Controlling Stagetimer via Companion for Stream Deck](https://stagetimer.io/docs/integration-with-streamdeck-companion/#presets)**
 
 On Companion 5.0 or newer, you can also import a ready-made page with all Stagetimer buttons:
-**[Ready-made Button Page](https://stagetimer.io/docs/integration-with-streamdeck-companion/#ready-made-button-page)**
+**[Download Page Template](https://stagetimer.io/docs/integration-with-streamdeck-companion/#download-page-template)**
 
 ---
 
@@ -153,7 +153,7 @@ Variables let you display live data from Stagetimer on your Stream Deck buttons.
 - `$(stagetimer:connected)` - `true` while the module is connected to Stagetimer, else `false`. The module tries again until the connection is back.
 
 **Playback Snapshot**  
-The time display is equal to the Stagetimer output, taking [timer appearance](https://stagetimer.io/docs/using-timers/#timer-appearances) into account ([Docs](https://stagetimer.io/docs/viewer/#3-timer)). It also uses the room's overtime prefix and overtime behavior: with "stop" it stays at zero, with "hide" it is empty. The current time remaining is always strictly a countdown and runs into overtime. It uses the overtime prefix too.
+The time display is equal to the Stagetimer output, taking [timer appearance](https://stagetimer.io/docs/using-timers/#timer-appearances) into account ([Docs](https://stagetimer.io/docs/viewer/#3-timer)). It also uses the room's overtime prefix and overtime behavior: with "stop" it stays at zero, with "hide" it is empty. The hours, minutes and seconds variables always have two digits. In overtime, the hours variable has the sign. The current time remaining is always strictly a countdown and runs into overtime. It uses the overtime prefix too.
 
 - `$(stagetimer:timeDisplay)` - Time Display
 - `$(stagetimer:timeDisplayHours)` - Time Display (hours)
