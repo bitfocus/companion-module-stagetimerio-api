@@ -395,7 +395,8 @@ function generatePresets () {
         actionId: '',
         style: {
           size: 'auto',
-          text: `$(stagetimer:${variableType.timeOfDay})`,
+          text: `replaceAll($(stagetimer:${variableType.timeOfDay}), ' ', '\\n')`,
+          textExpression: true,
           color: colors.white,
           bgcolor: colors.black,
         },
