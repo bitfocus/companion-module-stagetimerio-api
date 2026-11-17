@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v2.8.0
+
+New features:
+- Adds a variable for each custom field of the current and next timer, for example `$(stagetimer:currentTimerField.slides)`. `$(stagetimer:currentTimerFields)` and `$(stagetimer:nextTimerFields)` contain all fields as JSON.
+- Adds `$(stagetimer:currentTimerIndex)` and `$(stagetimer:nextTimerIndex)`, the timer number in the rundown.
+- Adds `$(stagetimer:running)` and `$(stagetimer:connected)`.
+- Adds `$(stagetimer:lastStartedAt)`. It changes when a timer starts from the beginning, not on a resume or a reconnect. Use it in an "On variable change" trigger to fire a cue.
+- Adds the group of the current and next timer: `$(stagetimer:currentTimerGroup)`, `$(stagetimer:currentTimerGroupId)`, `$(stagetimer:currentTimerGroupColor)` and the same for the next timer. They are empty when the timer is not in a group.
+- Adds the `Group color` feedback and the `Current group` and `Next group` presets.
+- Adds the `Show/hide message fullscreen` preset. The `Focus` feedback is now `Message is fullscreen`.
+- The time display follows the overtime settings of the room: the overtime prefix (`+` or `-`) and the overtime behavior (continue, stop at zero or hide).
+- Adds `$(stagetimer:timeOfDay)`, `$(stagetimer:currentTimerStartTime)` and `$(stagetimer:nextTimerStartTime)`. They use the time of day format of the room.
+- Adds the `Time of day` preset.
+
+Changes:
+- The hours, minutes and seconds variables always have two digits. In overtime, the sign is on the hours.
+- The module tries to reconnect without a limit.
+
+Notes:
+- The group, overtime and time of day format values need a current Stagetimer server. With an older server, the group variables are empty, the overtime prefix is `+` and the time of day uses the locale format.
+
 ## v2.7.1
 
 Fixes:
