@@ -61,7 +61,7 @@ describe('formatTimeDisplay overtime', () => {
 
   test('stop holds the countdown at zero and the count-up at the total', () => {
     deepEqual(formatTimeDisplay(timeset(-sec(75)), { overtimeBehavior: 'stop' }),
-      { display: '0:00', displayHours: '0', displayMinutes: '0', displaySeconds: '00' })
+      { display: '0:00', displayHours: '00', displayMinutes: '00', displaySeconds: '00' })
     equal(formatTimeDisplay(timeset(-sec(75)), { overtimeBehavior: 'stop', appearance: timerAppearances.COUNTUP }).display, '5:00')
   })
 
@@ -70,6 +70,13 @@ describe('formatTimeDisplay overtime', () => {
     deepEqual(formatTimeDisplay(timeset(-sec(75)), { overtimeBehavior: 'hide' }), empty)
     deepEqual(formatTimeDisplay(timeset(-sec(75)), { overtimeBehavior: 'hide', appearance: timerAppearances.COUNTUP }), empty)
     equal(formatTimeDisplay(timeset(sec(75)), { overtimeBehavior: 'hide' }).display, '1:15')
+  })
+
+  test('the split variables have two digits and the sign on the hours', () => {
+    deepEqual(formatTimeDisplay(timeset(-sec(88)), { overtimePrefix: '-' }),
+      { display: '-1:28', displayHours: '-00', displayMinutes: '01', displaySeconds: '28' })
+    deepEqual(formatTimeDisplay(timeset(-min(61) - sec(28))),
+      { display: '+1:01:28', displayHours: '+01', displayMinutes: '01', displaySeconds: '28' })
   })
 
   test('the count-up runs on past the total without a prefix', () => {

@@ -58,12 +58,13 @@ export function formatTimeDisplay (
 
   if (!display) return { display, displayHours: '', displayMinutes: '', displaySeconds: '' }
 
-  const [seconds, minutes, hours] = display.split(':').reverse()
+  const sign = display.match(/^[+-]/)?.[0] || ''
+  const [seconds, minutes, hours] = display.slice(sign.length).split(':').reverse()
 
   return {
     display,
-    displayHours: hours || '0',
-    displayMinutes: minutes || '00',
-    displaySeconds: seconds || '00',
+    displayHours: sign + (hours || '').padStart(2, '0'),
+    displayMinutes: (minutes || '').padStart(2, '0'),
+    displaySeconds: (seconds || '').padStart(2, '0'),
   }
 }
