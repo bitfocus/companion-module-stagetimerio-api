@@ -1,5 +1,6 @@
 import { feedbackType } from './feedbacks.js'
 import { createTimeset, timerToStartDate, durationToMs, formatTimeDisplay } from './utils/index.js'
+import { formatTod } from './utils/formatTod.js'
 import { loadVariables, variableType } from './variables.js'
 import { buildCurrentFieldValues, buildNextFieldValues, formatFieldsJson } from './fieldVariables.js'
 import { isLiveFreshStart } from './startSignal.js'
@@ -11,6 +12,36 @@ import { formatTimezone, formatTimeOfDay } from './timeutils/index.js'
 //
 /** @type {NodeJS.Timeout | null} */
 let timerKeeperId = null
+/** @type {NodeJS.Timeout | null} */
+let clockId = null
+
+/**
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+function updateClock () {
+  const { roomTimezone, roomTodFormat } = this.state.room
+  this.setVariableValues({
+    [variableType.timeOfDay]: formatTod(new Date(), { timezone: roomTimezone, todFormat: roomTodFormat }),
+  })
+}
+
+/**
+ * @this {ModuleInstance}
+ * @returns {void}
+ */
+export function startClock () {
+  if (clockId !== null) return
+  updateClock.call(this)
+  // @ts-expect-error: NodeJS.Timeout/Timer don't play well with TS atm
+  clockId = setInterval(updateClock.bind(this), 250)
+}
+
+/** @returns {void} */
+export function stopClock () {
+  if (clockId !== null) clearInterval(clockId)
+  clockId = null
+}
 
 /**
  * Start time keeping service
@@ -121,6 +152,9 @@ export const initialState = {
     roomFocus: false,
     roomOnAir: false,
     roomTimezone: 'UTC',
+    roomOvertimePrefix: '+',
+    roomOvertimeBehavior: 'continue',
+    roomTodFormat: 'AUTO',
   },
   viewer: {
     isFlashing: false,
@@ -175,7 +209,11 @@ export function updateRoomState (newState) {
     ...newState,
   }
 
-  const isTimezoneChange = updatedState.roomTimezone !== instance.state.room.roomTimezone
+  const previous = instance.state.room
+  const isTimeOfDayChange = updatedState.roomTimezone !== previous.roomTimezone
+    || updatedState.roomTodFormat !== previous.roomTodFormat
+  const isOvertimeChange = updatedState.roomOvertimePrefix !== previous.roomOvertimePrefix
+    || updatedState.roomOvertimeBehavior !== previous.roomOvertimeBehavior
 
   instance.state.room = updatedState
 
@@ -191,10 +229,14 @@ export function updateRoomState (newState) {
     feedbackType.onAirEnabled,
   )
 
-  // Handle timezone change
-  if (isTimezoneChange) {
+  if (isTimeOfDayChange) {
     updateCurrentTimerState.call(instance)
     updateNextTimerState.call(instance)
+  }
+
+  if (isTimeOfDayChange || isOvertimeChange) {
+    updateClock.call(instance)
+    updatePlaybackState.call(instance)
   }
 }
 
@@ -207,7 +249,8 @@ export function updatePlaybackState (newState) {
 
   const instance = this
 
-  const updatedState = createTimeset(newState || instance.state.playback_status)
+  const { roomTimezone, roomTodFormat, roomOvertimePrefix, roomOvertimeBehavior } = instance.state.room
+  const updatedState = createTimeset(newState || instance.state.playback_status, roomOvertimePrefix)
 
   updatedState.phase = getTimerPhase(
     updatedState.remainingAsMs ?? 0,
@@ -224,9 +267,13 @@ export function updatePlaybackState (newState) {
     stopTimeKeeper.call(this)
   }
 
-  const timezone = instance.state.room?.roomTimezone || 'UTC'
-  const appearance = instance.state.current_timer.appearance
-  const timeDisplay = formatTimeDisplay(updatedState, { appearance, timezone })
+  const timeDisplay = formatTimeDisplay(updatedState, {
+    appearance: instance.state.current_timer.appearance,
+    timezone: roomTimezone || 'UTC',
+    todFormat: roomTodFormat,
+    overtimePrefix: roomOvertimePrefix,
+    overtimeBehavior: roomOvertimeBehavior,
+  })
 
   instance.setVariableValues({
     [variableType.timeDisplay]: timeDisplay.display,
@@ -279,6 +326,7 @@ export function updateCurrentTimerState (newState) {
   )
 
   const timezone = instance.state.room?.roomTimezone || 'UTC'
+  const todFormat = instance.state.room?.roomTodFormat
   const start = timerToStartDate(updatedState, timezone)
 
   const labels = updatedState.labels || []
@@ -295,6 +343,7 @@ export function updateCurrentTimerState (newState) {
     [variableType.currentTimerDuration]: updatedState.duration,
     [variableType.currentTimerDurationAsMs]: durationToMs(updatedState.duration) ?? '',
     [variableType.currentTimerAppearance]: timerAppearancesLabels[updatedState.appearance] ?? '',
+    [variableType.currentTimerStartTime]: start ? formatTod(start, { timezone, todFormat }) : '',
     [variableType.currentTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.currentTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
     [variableType.currentTimerLabels]: labels.map(l => l.name).join(', '),
@@ -366,6 +415,7 @@ export function updateNextTimerState (newState) {
   instance.state.next_timer = updatedState
 
   const timezone = instance.state.room?.roomTimezone || 'UTC'
+  const todFormat = instance.state.room?.roomTodFormat
   const start = timerToStartDate(updatedState, timezone)
 
   const labels = updatedState.labels || []
@@ -382,6 +432,7 @@ export function updateNextTimerState (newState) {
     [variableType.nextTimerDuration]: updatedState.duration,
     [variableType.nextTimerDurationAsMs]: durationToMs(updatedState.duration) ?? '',
     [variableType.nextTimerAppearance]: timerAppearancesLabels[updatedState.appearance] ?? '',
+    [variableType.nextTimerStartTime]: start ? formatTod(start, { timezone, todFormat }) : '',
     [variableType.nextTimerStartTime12h]: start ? formatTimeOfDay(start, { timezone, format: '12h' }) : '',
     [variableType.nextTimerStartTime24h]: start ? formatTimeOfDay(start, { timezone, format: '24h' }) : '',
     [variableType.nextTimerLabels]: labels.map(l => l.name).join(', '),

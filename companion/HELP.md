@@ -149,10 +149,11 @@ Variables let you display live data from Stagetimer on your Stream Deck buttons.
 - `$(stagetimer:roomId)` - Room ID
 - `$(stagetimer:roomName)` - Room name
 - `$(stagetimer:roomTimezone)` - Room timezone ([Docs](https://stagetimer.io/docs/using-timers/#timezones))
+- `$(stagetimer:timeOfDay)` - Time of day in the room timezone and time of day format
 - `$(stagetimer:connected)` - `true` while the module is connected to Stagetimer, else `false`. The module tries again until the connection is back.
 
 **Playback Snapshot**  
-The time display is equal to the Stagetimer output, taking [timer appearance](https://stagetimer.io/docs/using-timers/#timer-appearances) into account ([Docs](https://stagetimer.io/docs/viewer/#3-timer)). The current time remaining is always strictly a countdown.
+The time display is equal to the Stagetimer output, taking [timer appearance](https://stagetimer.io/docs/using-timers/#timer-appearances) into account ([Docs](https://stagetimer.io/docs/viewer/#3-timer)). It also uses the room's overtime prefix and overtime behavior: with "stop" it stays at zero, with "hide" it is empty. The current time remaining is always strictly a countdown and runs into overtime. It uses the overtime prefix too.
 
 - `$(stagetimer:timeDisplay)` - Time Display
 - `$(stagetimer:timeDisplayHours)` - Time Display (hours)
@@ -180,6 +181,7 @@ The timer currently selected in the room. These variables are empty while no tim
 - `$(stagetimer:currentTimerSpeaker)` - Timer speaker
 - `$(stagetimer:currentTimerNotes)` - Timer notes
 - `$(stagetimer:currentTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
+- `$(stagetimer:currentTimerStartTime)` - Hard start time (room time of day format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerStartTime12h)` - Hard start time (12h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerStartTime24h)`- Hard start time (24h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:currentTimerDuration)` - Timer duration
@@ -201,6 +203,7 @@ The timer that follows the current one. These variables are empty when the last 
 - `$(stagetimer:nextTimerSpeaker)` - Timer speaker
 - `$(stagetimer:nextTimerNotes)` - Timer notes
 - `$(stagetimer:nextTimerAppearance)` – Timer appearance ([Docs](https://stagetimer.io/docs/using-timers/#timer-appearances))
+- `$(stagetimer:nextTimerStartTime)` - Hard start time (room time of day format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerStartTime12h)` - Hard start time (12h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerStartTime24h)`- Hard start time (24h format, [Docs](https://stagetimer.io/docs/using-timers/#using-the-start-time-properly))
 - `$(stagetimer:nextTimerDuration)` - Timer duration

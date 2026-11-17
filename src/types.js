@@ -80,6 +80,9 @@
  * @property {boolean} on_air
  * @property {string} logo
  * @property {string} timezone
+ * @property {'+'|'-'} [overtime_prefix]
+ * @property {'continue'|'stop'|'hide'} [overtime_behavior]
+ * @property {string} [tod_format]
  */
 
 /**
@@ -130,6 +133,9 @@
  * @property {boolean} roomFocus
  * @property {boolean} roomOnAir
  * @property {string} roomTimezone
+ * @property {string} roomOvertimePrefix
+ * @property {string} roomOvertimeBehavior
+ * @property {string} roomTodFormat
  */
 
 /**

@@ -5,10 +5,10 @@ import { dhmsToFormatted } from './dhmsToFormatted.js'
  * Adapted from `createMoment()` in Stagetimer codebase.
  *
  * @param {PlaybackState} timeset
- * @param {number} now Date in ms
+ * @param {string} [overtimePrefix='+']
  * @returns {PlaybackState}
  */
-export function createTimeset (timeset) {
+export function createTimeset (timeset, overtimePrefix = '+') {
   const tenMin = 60000
   const now = Date.now() - timeset.serverTimeDiff
 
@@ -32,7 +32,7 @@ export function createTimeset (timeset) {
   // Prepare remaining
   const remainingAsMsRounded = Math.ceil(remaining/1000) * 1000
   const remainingAsDhms = millisecondsToDhms(remainingAsMsRounded)
-  const remainingFormatted = dhmsToFormatted(remainingAsDhms)
+  const remainingFormatted = dhmsToFormatted(remainingAsDhms, overtimePrefix)
 
   return {
     ...timeset,

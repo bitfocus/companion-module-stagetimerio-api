@@ -151,6 +151,7 @@ describe('next timer state', () => {
       nextTimerDuration: '',
       nextTimerDurationAsMs: '',
       nextTimerAppearance: '',
+      nextTimerStartTime: '',
       nextTimerStartTime12h: '',
       nextTimerStartTime24h: '',
       nextTimerLabels: '',

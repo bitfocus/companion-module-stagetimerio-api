@@ -11,6 +11,7 @@ export const variableType = {
   roomId: 'roomId',
   roomName: 'roomName',
   roomTimezone: 'roomTimezone',
+  timeOfDay: 'timeOfDay',
   connected: 'connected',
 
   // Playback Snapshot
@@ -36,6 +37,7 @@ export const variableType = {
   currentTimerSpeaker: 'currentTimerSpeaker',
   currentTimerNotes: 'currentTimerNotes',
   currentTimerAppearance: 'currentTimerAppearance',
+  currentTimerStartTime: 'currentTimerStartTime',
   currentTimerStartTime12h: 'currentTimerStartTime12h',
   currentTimerStartTime24h: 'currentTimerStartTime24h',
 
@@ -57,6 +59,7 @@ export const variableType = {
   nextTimerSpeaker: 'nextTimerSpeaker',
   nextTimerNotes: 'nextTimerNotes',
   nextTimerAppearance: 'nextTimerAppearance',
+  nextTimerStartTime: 'nextTimerStartTime',
   nextTimerStartTime12h: 'nextTimerStartTime12h',
   nextTimerStartTime24h: 'nextTimerStartTime24h',
 
@@ -80,6 +83,7 @@ const variables = [
   { variableId: variableType.roomId, name: 'Room ID' },
   { variableId: variableType.roomName, name: 'Room name' },
   { variableId: variableType.roomTimezone, name: 'Room timezone' },
+  { variableId: variableType.timeOfDay, name: 'Time of day (room timezone and format)' },
   { variableId: variableType.connected, name: 'Connected to Stagetimer (true/false)' },
 
   // Playback Snapshot
@@ -105,6 +109,7 @@ const variables = [
   { variableId: variableType.currentTimerSpeaker, name: 'Current timer speaker' },
   { variableId: variableType.currentTimerNotes, name: 'Current timer notes' },
   { variableId: variableType.currentTimerAppearance, name: 'Current timer appearance' },
+  { variableId: variableType.currentTimerStartTime, name: 'Current timer start (time of day format, event time zone)' },
   { variableId: variableType.currentTimerStartTime12h, name: 'Current timer start (12h format, event time zone)' },
   { variableId: variableType.currentTimerStartTime24h, name: 'Current timer start (24h format, event time zone)' },
 
@@ -126,6 +131,7 @@ const variables = [
   { variableId: variableType.nextTimerSpeaker, name: 'Next timer speaker' },
   { variableId: variableType.nextTimerNotes, name: 'Next timer notes' },
   { variableId: variableType.nextTimerAppearance, name: 'Next timer appearance' },
+  { variableId: variableType.nextTimerStartTime, name: 'Next timer start (time of day format, event time zone)' },
   { variableId: variableType.nextTimerStartTime12h, name: 'Next timer start (12h format, event time zone)' },
   { variableId: variableType.nextTimerStartTime24h, name: 'Next timer start (24h format, event time zone)' },
 
